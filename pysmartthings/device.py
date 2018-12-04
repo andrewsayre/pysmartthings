@@ -6,17 +6,17 @@ class Device:
 
     # pylint: disable=too-many-instance-attributes
 
-    def __init__(self, parent, entity):
+    def __init__(self, api, entity):
         """
         Initialize a new device
 
-        :param parent: The parent API service
-        :type parent: smartthings.SmartThings
+        :param api: The API service
+        :type api: API
 
         :param entity: The json representation of the device form the API
         """
 
-        self._parent = parent
+        self._api = api
         self._device_id = entity["deviceId"]
         self._name = entity["name"]
         self._label = entity["label"]
@@ -39,7 +39,7 @@ class Device:
 
     def update(self):
         """Updates the status of the device"""
-        data = self._parent._update_device(self.device_id)
+        data = self._api.get_device_status(self.device_id)
         if data is None:
             return False
         for key, value in data.items():
