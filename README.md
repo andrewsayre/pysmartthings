@@ -1,5 +1,9 @@
 # pysmartthings
 [![Build Status](https://travis-ci.org/andrewsayre/pysmartthings.svg?branch=master)](https://travis-ci.org/andrewsayre/pysmartthings)
+[![image](https://img.shields.io/pypi/v/pysmartthings.svg)](https://pypi.org/project/requests/)
+[![image](https://img.shields.io/pypi/pyversions/pysmartthings.svg)](https://pypi.org/project/requests/)
+[![image](https://img.shields.io/pypi/l/pysmartthings.svg)](https://pypi.org/project/requests/)
+[![image](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 A python library for interacting with the SmartThings cloud API.  This is an early (beta / incomplete) version of the package.
 ## Usage
