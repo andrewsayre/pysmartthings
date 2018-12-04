@@ -1,10 +1,14 @@
 """SmartThings Cloud API"""
 from setuptools import find_packages, setup
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(name='pysmartthings',
       version='0.1.0',
       description='A python library for interacting with the SmartThings cloud API.',
-      long_description='A python library for interacting with the SmartThings cloud API.',
+      long_description=long_description,
+      long_description_content_type='text/markdown',
       url='https://github.com/andrewsayre/pysmartthings',
       author='Andrew Sayre',
       author_email='andrew@sayre.net',
@@ -13,7 +17,7 @@ setup(name='pysmartthings',
       install_requires=['requests'],
       tests_require=['tox'],
       platforms=['any'],
-      zip_safe=False,
+      keywords="smartthings",
       classifiers=[
           "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
