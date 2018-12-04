@@ -1,17 +1,17 @@
 """Define the SmartThings Cloud API"""
 
 import logging
-import requests
 import json
-
-from . import device
 from threading import Thread
+import requests
+from . import device
 
 _LOGGER = logging.getLogger(__name__)
 
 API_BASE: str = 'https://api.smartthings.com/v1/'
 API_RESOURCE_DEVICES: str = "devices"
 API_RESOURCE_DEVICE_STATUS: str = "devices/{device_id}/components/main/status"
+
 
 class SmartThings:
     """Define a class for interacting with the SmartThings Cloud API"""
@@ -41,10 +41,12 @@ class SmartThings:
             resp = requests.get(API_BASE + resource, headers=headers)
             if resp.ok:
                 return json.loads(resp.content)
-        except requests.exceptions.RequestException as re:
-            _LOGGER.warning("Exception: %s", re)
+        except requests.exceptions.RequestException as exception:
+            _LOGGER.warning("Exception: %s", exception)
+        return None
 
     def update(self):
+        """Retrieves the latest status for all devices"""
         threads = []
         for dev in self.devices:
             thread = Thread(target=dev.update)
@@ -52,7 +54,9 @@ class SmartThings:
             threads.append(thread)
         for thread in threads:
             thread.join()
+        return True
 
     @property
     def devices(self):
+        """Gets loaded devices"""
         return self._devices
