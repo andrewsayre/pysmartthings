@@ -1,4 +1,6 @@
 # pysmartthings
+[![Build Status](https://travis-ci.org/andrewsayre/pysmartthings.svg?branch=master)](https://travis-ci.org/andrewsayre/pysmartthings)
+
 A python library for interacting with the SmartThings cloud API.  This is an early (beta / incomplete) version of the package.
 ## Usage
 Create an instance of the SmartThings class and pass in your personal access token.  This will make an initial service call to populate the `devices` array.
