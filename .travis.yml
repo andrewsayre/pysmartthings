@@ -18,7 +18,7 @@ matrix:
 cache:
   directories:
     - $HOME/.cache/pip
-install: pip install tox
+install: pip install -U tox coveralls
 script: tox
 deploy:
   provider: pypi
