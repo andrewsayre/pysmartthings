@@ -2,8 +2,12 @@ language: python
 matrix:
   fast_finish: true
   include:
-  - python: '3.6'
-    env: TOXENV=pylint
+    - python: "3.7"
+      env: TOXENV=pylint
+      dist: xenial
+    - python: "3.7"
+      env: TOXENV=lint
+      dist: xenial
 install: pip install tox
 script: tox
 deploy:
