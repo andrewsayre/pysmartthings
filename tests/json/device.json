@@ -1,0 +1,56 @@
+{
+    "deviceId": "743de49f-036f-4e9c-839a-2f89d57607db",
+    "name": "GE In-Wall Smart Dimmer",
+    "label": "Front Porch Lights",
+    "deviceManufacturerCode": "0063-4944-3038",
+    "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+    "deviceTypeId": "8a9d4b1e3b9b1fe3013b9b206a7f000d",
+    "deviceTypeName": "Dimmer Switch",
+    "deviceNetworkType": "ZWAVE",
+    "components": [
+        {
+            "id": "main",
+            "capabilities": [
+                {
+                    "id": "switch",
+                    "version": 1
+                },
+                {
+                    "id": "switchLevel",
+                    "version": 1
+                },
+                {
+                    "id": "refresh",
+                    "version": 1
+                },
+                {
+                    "id": "indicator",
+                    "version": 1
+                },
+                {
+                    "id": "sensor",
+                    "version": 1
+                },
+                {
+                    "id": "actuator",
+                    "version": 1
+                },
+                {
+                    "id": "healthCheck",
+                    "version": 1
+                },
+                {
+                    "id": "light",
+                    "version": 1
+                }
+            ]
+        }
+    ],
+    "dth": {
+        "deviceTypeId": "8a9d4b1e3b9b1fe3013b9b206a7f000d",
+        "deviceTypeName": "Dimmer Switch",
+        "deviceNetworkType": "ZWAVE",
+        "completedSetup": false
+    },
+    "type": "DTH"
+}

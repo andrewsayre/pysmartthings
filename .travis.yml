@@ -8,6 +8,16 @@ matrix:
     - python: "3.7"
       env: TOXENV=lint
       dist: xenial
+    - python: "3.7"
+      env: TOXENV=cov
+      dist: xenial
+      after_success: coveralls
+    - python: "3.7"
+      env: TOXENV=py37
+      dist: xenial
+cache:
+  directories:
+    - $HOME/.cache/pip
 install: pip install tox
 script: tox
 deploy:

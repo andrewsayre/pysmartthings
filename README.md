@@ -1,5 +1,6 @@
 # pysmartthings
 [![Build Status](https://travis-ci.org/andrewsayre/pysmartthings.svg?branch=master)](https://travis-ci.org/andrewsayre/pysmartthings)
+[![Coverage Status](https://coveralls.io/repos/github/andrewsayre/pysmartthings/badge.svg?branch=master)](https://coveralls.io/github/andrewsayre/pysmartthings?branch=master)
 [![image](https://img.shields.io/pypi/v/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/pypi/pyversions/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/pypi/l/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
