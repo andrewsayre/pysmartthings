@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(name='pysmartthings',
-      version='0.1.0',
+      version='0.1.1',
       description='A python library for interacting with the SmartThings cloud API.',
       long_description=long_description,
       long_description_content_type='text/markdown',
@@ -26,7 +26,6 @@ setup(name='pysmartthings',
           "Operating System :: OS Independent",
           "Topic :: Software Development :: Libraries",
           "Topic :: Home Automation",
-          "Programming Language :: Python :: 3.5",
           "Programming Language :: Python :: 3.6",
           "Programming Language :: Python :: 3.7",
           ])
