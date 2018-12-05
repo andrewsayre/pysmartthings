@@ -1,4 +1,4 @@
-"""Define the SmartThings Cloud API"""
+"""Define the SmartThings Cloud API."""
 
 import logging
 from threading import Thread
@@ -9,10 +9,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class SmartThings:
-    """Define a class for interacting with the SmartThings Cloud API"""
+    """Define a class for interacting with the SmartThings Cloud API."""
+
     def __init__(self, token):
         """
-        Initialize the API
+        Initialize the API.
 
         :param token: The personal access token used to authenticate to the API
         :type token: str
@@ -28,7 +29,7 @@ class SmartThings:
             self._devices.append(Device(self._api, entity))
 
     def update(self):
-        """Retrieves the latest status for all devices"""
+        """Retrieve the latest status for all devices."""
         threads = []
         for dev in self.devices:
             thread = Thread(target=dev.update)
@@ -40,5 +41,5 @@ class SmartThings:
 
     @property
     def devices(self):
-        """Gets loaded devices"""
+        """Get loaded devices."""
         return self._devices

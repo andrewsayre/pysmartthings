@@ -1,6 +1,4 @@
-"""
-A python library for interacting with the SmartThings cloud API.
-"""
+"""A python library for interacting with the SmartThings cloud API."""
 
 from .smartthings import SmartThings
 
@@ -9,5 +7,5 @@ __version__ = "0.1.0"
 
 
 def create(token):
-    """Creates an instance of the SmartThings API with the specified token"""
+    """Create an instance of the SmartThings API with the specified token."""
     return SmartThings(token)

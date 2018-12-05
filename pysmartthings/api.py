@@ -1,4 +1,4 @@
-"""Utility for invoking the SmartThings Cloud API"""
+"""Utility for invoking the SmartThings Cloud API."""
 
 import logging
 import requests
@@ -11,17 +11,20 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class API:
-    """Utility for invoking the SmartThings Cloud API"""
+    """Utility for invoking the SmartThings Cloud API."""
+
     def __init__(self, token):
+        """Initialize a new instance of the API class."""
         self._token = token
 
     def get_devices(self):
-        """Gets the device definitions"""
+        """Get the device definitions."""
         return self._get_request(API_RESOURCE_DEVICES)
 
     def get_device_status(self, device_id):
-        """Gets the status of a specific device"""
-        return self._get_request(API_RESOURCE_DEVICE_STATUS.format(device_id=device_id))
+        """Get the status of a specific device."""
+        return self._get_request(
+            API_RESOURCE_DEVICE_STATUS.format(device_id=device_id))
 
     def _get_request(self, resource):
         headers = {"Authorization": "Bearer " + self._token}

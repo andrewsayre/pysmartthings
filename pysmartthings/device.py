@@ -2,20 +2,19 @@
 
 
 class Device:
-    """Represents a SmartThings device"""
+    """Represents a SmartThings device."""
 
     # pylint: disable=too-many-instance-attributes
 
     def __init__(self, api, entity):
         """
-        Initialize a new device
+        Initialize a new device.
 
         :param api: The API service
         :type api: API
 
         :param entity: The json representation of the device form the API
         """
-
         self._api = api
         self._device_id = entity["deviceId"]
         self._name = entity["name"]
@@ -38,7 +37,7 @@ class Device:
                 break
 
     def update(self):
-        """Updates the status of the device"""
+        """Update the status of the device."""
         data = self._api.get_device_status(self.device_id)
         if data is None:
             return False
@@ -55,50 +54,50 @@ class Device:
 
     @property
     def device_id(self):
-        """Gets the SmartThings device id"""
+        """Get the SmartThings device id."""
         return self._device_id
 
     @property
     def name(self):
-        """Gets the SmartThings device name"""
+        """Get the SmartThings device name."""
         return self._name
 
     @property
     def label(self):
-        """Gets the SmartThings user assigned label"""
+        """Get the SmartThings user assigned label."""
         return self._label
 
     @property
     def location_id(self):
-        """Gets the SmartThings location assigned to the device"""
+        """Get the SmartThings location assigned to the device."""
         return self._location_id
 
     @property
     def type(self):
-        """Gets the SmartThings device type"""
+        """Get the SmartThings device type."""
         return self._type
 
     @property
     def device_type_id(self):
-        """Gets the SmartThings device type handler id"""
+        """Get the SmartThings device type handler id."""
         return self._device_type_id
 
     @property
     def device_type_name(self):
-        """Gets the SmartThings device type handler name"""
+        """Get the SmartThings device type handler name."""
         return self._device_type_name
 
     @property
     def device_type_network(self):
-        """Gets the SmartThings device type handler network"""
+        """Get the SmartThings device type handler network."""
         return self._device_type_network
 
     @property
     def capabilities(self):
-        """Gets the SmartThings capabilities of the device"""
+        """Get the SmartThings capabilities of the device."""
         return self._capabilities
 
     @property
     def status(self):
-        """Gets the capability status"""
+        """Get the capability status."""
         return self._status

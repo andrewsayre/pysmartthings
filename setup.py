@@ -18,6 +18,7 @@ setup(name='pysmartthings',
       tests_require=['tox'],
       platforms=['any'],
       keywords="smartthings",
+      zip_safe=False,
       classifiers=[
           "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
