@@ -1,5 +1,7 @@
 """Defines a SmartThings device."""
 
+from types import MethodType
+
 
 class Device:
     """Represents a SmartThings device."""
@@ -33,7 +35,9 @@ class Device:
         for component in entity["components"]:
             if component["id"] == "main":
                 for capability in component["capabilities"]:
-                    self._capabilities.append(capability["id"])
+                    capability_id = capability["id"]
+                    self._capabilities.append(capability_id)
+                    Device._add_device_commands(capability_id, self)
                 break
 
     def update(self):
@@ -51,6 +55,11 @@ class Device:
             elif key == "motionSensor":
                 self._status["motionSensor"] = value["motion"]["value"]
         return True
+
+    def command(self, capability, command, args=None):
+        """Execute a command on the device."""
+        return self._api.post_command(self._device_id, capability,
+                                      command, args)
 
     @property
     def device_id(self):
@@ -101,3 +110,23 @@ class Device:
     def status(self):
         """Get the capability status."""
         return self._status
+
+    @staticmethod
+    def _add_device_commands(capability, target):
+        if capability == "switch":
+            def switch_on(self):
+                """Turn on the device."""
+                self.command("switch", "on")
+
+            def switch_off(self):
+                """Turn off the device."""
+                self.command("switch", "off")
+
+            target.switch_on = MethodType(switch_on, target)
+            target.switch_off = MethodType(switch_off, target)
+        elif capability == "switchLevel":
+            def set_level(self, level: int, duration: int):
+                """Set the switch level of the device."""
+                self.command("switchLevel", "setLevel", [level, duration])
+
+            target.set_level = MethodType(set_level, target)

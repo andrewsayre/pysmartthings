@@ -1,0 +1,237 @@
+{
+    "items": [
+        {
+            "deviceId": "743de49f-036f-4e9c-839a-2f89d57607db",
+            "name": "GE In-Wall Smart Dimmer",
+            "label": "Front Porch Lights",
+            "deviceManufacturerCode": "0063-4944-3038",
+            "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+            "deviceTypeId": "23a143cf-bad9-4dc1-a56b-fd93ff01e9f9",
+            "deviceTypeName": "GE Dimmer Switch 14294",
+            "deviceNetworkType": "ZWAVE",
+            "components": [
+                {
+                    "id": "main",
+                    "capabilities": [
+                        {
+                            "id": "switch",
+                            "version": 1
+                        },
+                        {
+                            "id": "switchLevel",
+                            "version": 1
+                        },
+                        {
+                            "id": "refresh",
+                            "version": 1
+                        },
+                        {
+                            "id": "indicator",
+                            "version": 1
+                        },
+                        {
+                            "id": "button",
+                            "version": 1
+                        },
+                        {
+                            "id": "sensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "actuator",
+                            "version": 1
+                        },
+                        {
+                            "id": "healthCheck",
+                            "version": 1
+                        },
+                        {
+                            "id": "light",
+                            "version": 1
+                        }
+                    ]
+                }
+            ],
+            "dth": {
+                "deviceTypeId": "23a143cf-bad9-4dc1-a56b-fd93ff01e9f9",
+                "deviceTypeName": "GE Dimmer Switch 14294",
+                "deviceNetworkType": "ZWAVE",
+                "completedSetup": false,
+                "networkSecurityLevel": "UNKNOWN"
+            },
+            "type": "DTH"
+        },
+        {
+            "deviceId": "0d38d5ca-705f-44f7-89bd-36a8cf73678d",
+            "name": "GE Plug-In Smart Dimmer",
+            "label": "Family Xmas Tree",
+            "deviceManufacturerCode": "0063-5044-3033",
+            "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+            "deviceTypeId": "8a9d4b1e3b9b1fe3013b9b206a7f000d",
+            "deviceTypeName": "Dimmer Switch",
+            "deviceNetworkType": "ZWAVE",
+            "components": [
+                {
+                    "id": "main",
+                    "capabilities": [
+                        {
+                            "id": "switch",
+                            "version": 1
+                        },
+                        {
+                            "id": "switchLevel",
+                            "version": 1
+                        },
+                        {
+                            "id": "refresh",
+                            "version": 1
+                        },
+                        {
+                            "id": "indicator",
+                            "version": 1
+                        },
+                        {
+                            "id": "sensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "actuator",
+                            "version": 1
+                        },
+                        {
+                            "id": "healthCheck",
+                            "version": 1
+                        },
+                        {
+                            "id": "light",
+                            "version": 1
+                        }
+                    ]
+                }
+            ],
+            "dth": {
+                "deviceTypeId": "8a9d4b1e3b9b1fe3013b9b206a7f000d",
+                "deviceTypeName": "Dimmer Switch",
+                "deviceNetworkType": "ZWAVE",
+                "completedSetup": false,
+                "networkSecurityLevel": "UNKNOWN"
+            },
+            "type": "DTH"
+        },
+        {
+            "deviceId": "64e7f664-5b99-4573-b76d-03be3021dc78",
+            "name": "GE Wall Switch",
+            "label": "Dining Cabinet Lights",
+            "deviceManufacturerCode": "0063-4952-3036",
+            "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+            "deviceTypeId": "26638034-3292-11e2-9c79-22000a1dc790",
+            "deviceTypeName": "Z-Wave Switch",
+            "deviceNetworkType": "ZWAVE",
+            "components": [
+                {
+                    "id": "main",
+                    "capabilities": [
+                        {
+                            "id": "switch",
+                            "version": 1
+                        },
+                        {
+                            "id": "refresh",
+                            "version": 1
+                        },
+                        {
+                            "id": "indicator",
+                            "version": 1
+                        },
+                        {
+                            "id": "sensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "actuator",
+                            "version": 1
+                        },
+                        {
+                            "id": "healthCheck",
+                            "version": 1
+                        },
+                        {
+                            "id": "light",
+                            "version": 1
+                        }
+                    ]
+                }
+            ],
+            "dth": {
+                "deviceTypeId": "26638034-3292-11e2-9c79-22000a1dc790",
+                "deviceTypeName": "Z-Wave Switch",
+                "deviceNetworkType": "ZWAVE",
+                "completedSetup": false,
+                "networkSecurityLevel": "UNKNOWN"
+            },
+            "type": "DTH"
+        },
+        {
+            "deviceId": "f315789f-bc75-4a54-8ee0-98e2d8f23f93",
+            "name": "Z-Wave Device Multichannel",
+            "label": "Master Bath Fan",
+            "deviceManufacturerCode": "0063-494D-3032",
+            "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+            "deviceTypeId": "bbb3646e-c624-4780-94b1-9511eda569f9",
+            "deviceTypeName": "GE Motion Switch 26931",
+            "deviceNetworkType": "ZWAVE",
+            "components": [
+                {
+                    "id": "main",
+                    "capabilities": [
+                        {
+                            "id": "switch",
+                            "version": 1
+                        },
+                        {
+                            "id": "motionSensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "polling",
+                            "version": 1
+                        },
+                        {
+                            "id": "refresh",
+                            "version": 1
+                        },
+                        {
+                            "id": "button",
+                            "version": 1
+                        },
+                        {
+                            "id": "sensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "actuator",
+                            "version": 1
+                        },
+                        {
+                            "id": "healthCheck",
+                            "version": 1
+                        },
+                        {
+                            "id": "light",
+                            "version": 1
+                        }
+                    ]
+                }
+            ],
+            "dth": {
+                "deviceTypeId": "bbb3646e-c624-4780-94b1-9511eda569f9",
+                "deviceTypeName": "GE Motion Switch 26931",
+                "deviceNetworkType": "ZWAVE",
+                "completedSetup": false,
+                "networkSecurityLevel": "UNKNOWN"
+            },
+            "type": "DTH"
+        }
+    ],
+    "_links": {}
+}

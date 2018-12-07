@@ -20,9 +20,9 @@ class SmartThings:
         """
         self._api = API(token)
         self._devices = []
-        self._create_devices()
+        self._get_devices()
 
-    def _create_devices(self):
+    def _get_devices(self):
         resp = self._api.get_devices()
         self._devices.clear()
         for entity in resp["items"]:
