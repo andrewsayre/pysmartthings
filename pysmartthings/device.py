@@ -58,8 +58,11 @@ class Device:
 
     def command(self, capability, command, args=None):
         """Execute a command on the device."""
-        return self._api.post_command(self._device_id, capability,
-                                      command, args)
+        response = self._api.post_command(
+            self._device_id, capability, command, args)
+        if response == {}:
+            return True
+        return False
 
     @property
     def device_id(self):
@@ -116,17 +119,18 @@ class Device:
         if capability == "switch":
             def switch_on(self):
                 """Turn on the device."""
-                self.command("switch", "on")
+                return self.command("switch", "on")
 
             def switch_off(self):
                 """Turn off the device."""
-                self.command("switch", "off")
+                return self.command("switch", "off")
 
             target.switch_on = MethodType(switch_on, target)
             target.switch_off = MethodType(switch_off, target)
         elif capability == "switchLevel":
             def set_level(self, level: int, duration: int):
                 """Set the switch level of the device."""
-                self.command("switchLevel", "setLevel", [level, duration])
+                return self.command(
+                    "switchLevel", "setLevel", [level, duration])
 
             target.set_level = MethodType(set_level, target)

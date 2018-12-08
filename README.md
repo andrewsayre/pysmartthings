@@ -7,14 +7,35 @@
 [![image](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 A python library for interacting with the SmartThings cloud API.  This is an early (beta / incomplete) version of the package.
+## Installation
+```commandline
+pip install pysmartthings
+```
+or
+```commandline
+pip install --use-wheel denonavr
+```
 ## Usage
-Create an instance of the SmartThings class and pass in your personal access token.  This will make an initial service call to populate the `devices` array.
+### Initialization
+Call the create function and pass in your [personal access token](https://account.smartthings.com/tokens).  This will initially populate `locations` and `devices`.
 ```
 >>> import pysmartthings
->>> st = pysmartthings.SmartThings("PERSONAL_ACCESS_TOKEN")
+>>> st = pysmartthings.create("PERSONAL_ACCESS_TOKEN")
+>>> len(st.locations)
+2
 >>> len(st.devices)
 19
 ```
+### Locations
+The `Location` class encapsulates information about a SmartThings location.
+```
+>>> location = st.locations[0]
+>>> location.name
+'Test Home'
+>>> location.location_id
+'5c03e518-118a-44cb-85ad-7877d0b302e4' 
+```
+### Devices
 Each array element is an instance of `Device` which encapsulates information about the device in SmartThings.
 ```
 >>> device = st.devices[0]
@@ -44,4 +65,24 @@ The current status of the device is populated when `Device.update()` or `SmartTh
 True
 >> device.status
 {'light': 'off', 'switchLevel': 100, 'switch': 'off'}
+```
+#### Device Commands
+You can execute a command on a device by calling the `Device.command(capability, command, args=None)` function.  The `capability` parameter corresponds to one of the capabilities detected and `command` is one of the define commands. `args` is an array of parameters to pass to the command (optional).  See the [SmartThings Capability Reference](https://smartthings.developer.samsung.com/develop/api-ref/capabilities.html) for more information.
+```
+>>> device.command("switch", "on")
+True
+>>> device.command("switchLevel", "setLevel", [75, 2])
+True
+```
+Devices with the `switch` capability have the following functions:
+```
+>>> device.switch_on()
+True
+>>> device.switch_off()
+True
+```
+Devices with the `switchLevel` capability have the following function that sets the target brightness level and transitions using a specific duration (seconds).
+```
+>>> device.set_level(75, 2)
+True
 ```
