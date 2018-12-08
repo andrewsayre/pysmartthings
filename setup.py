@@ -1,12 +1,12 @@
 """SmartThings Cloud API"""
 from setuptools import find_packages, setup
-from .pysmartthings.__init__ import __version__ as package_version
+import pysmartthings
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-setup(name='pysmartthings',
-      version=package_version,
+setup(name=pysmartthings.__title__,
+      version=pysmartthings.__version__,
       description='A python library for interacting with the SmartThings cloud API.',
       long_description=long_description,
       long_description_content_type='text/markdown',
