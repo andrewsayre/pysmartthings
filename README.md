@@ -13,7 +13,7 @@ pip install pysmartthings
 ```
 or
 ```commandline
-pip install --use-wheel denonavr
+pip install --use-wheel pysmartthings
 ```
 ## Usage
 ### Initialization
