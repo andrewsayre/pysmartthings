@@ -1,0 +1,13 @@
+{
+    "items": [
+        {
+            "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+            "name": "Home"
+        },
+        {
+            "locationId": "5c03e518-118a-44cb-85ad-7877d0b302e4",
+            "name": "Test Home"
+        }
+    ],
+    "_links": null
+}

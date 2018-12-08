@@ -4,6 +4,7 @@ import logging
 from threading import Thread
 from .api import API
 from .device import Device
+from .location import Location
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -19,10 +20,17 @@ class SmartThings:
         :type token: str
         """
         self._api = API(token)
+        self._locations = []
         self._devices = []
-        self._get_devices()
+        self._load()
 
-    def _get_devices(self):
+    def _load(self):
+        # Get locations
+        resp = self._api.get_locations()
+        self._locations.clear()
+        for entity in resp["items"]:
+            self._locations.append(Location(self._api, entity))
+        # Get devices
         resp = self._api.get_devices()
         self._devices.clear()
         for entity in resp["items"]:
@@ -38,6 +46,11 @@ class SmartThings:
         for thread in threads:
             thread.join()
         return True
+
+    @property
+    def locations(self):
+        """Get locations."""
+        return self._locations
 
     @property
     def devices(self):

@@ -3,7 +3,8 @@
 # pylint: disable=missing-docstring
 
 import json
-from pysmartthings.smartthings import Device
+from pysmartthings.smartthings import Device, API
+from . import api_mock
 
 
 class TestDevice:
@@ -32,11 +33,12 @@ class TestDevice:
             "sensor", "actuator", "healthCheck", "light"]
 
     @staticmethod
-    def test_update():
+    def test_update(requests_mock):
         """Tests updating the status of the device."""
         # arrange
-        api = TestDevice.MockAPI()
-        device = Device(api, TestDevice._get_device_entity())
+        api_mock.setup(requests_mock)
+        device = Device(API(api_mock.API_TOKEN),
+                        TestDevice._get_device_entity())
         # act
         device.update()
         # assert
@@ -47,11 +49,3 @@ class TestDevice:
     def _get_device_entity():
         with open("tests/json/device.json", "r") as json_file:
             return json.load(json_file)
-
-    class MockAPI:
-        # pylint: missing-docstring
-        @staticmethod
-        def get_device_status(device_id):
-            # pylint: disable=unused-argument
-            with open("tests/json/device_main_status.json", "r") as json_file:
-                return json.load(json_file)

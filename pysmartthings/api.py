@@ -4,6 +4,7 @@ import logging
 import requests
 
 API_BASE: str = 'https://api.smartthings.com/v1/'
+API_RESOURCE_LOCATIONS = "locations"
 API_RESOURCE_DEVICES: str = "devices"
 API_RESOURCE_DEVICE_STATUS: str = "devices/{device_id}/components/main/status"
 API_RESOURCE_DEVICE_COMMAND: str = "devices/{device_id}/commands"
@@ -21,6 +22,14 @@ class API:
     def __init__(self, token):
         """Initialize a new instance of the API class."""
         self._headers = {"Authorization": "Bearer " + token}
+
+    def get_locations(self):
+        """
+        Get locations.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listLocations
+        """
+        return self._get_request(API_RESOURCE_LOCATIONS)
 
     def get_devices(self):
         """
