@@ -21,24 +21,26 @@ Call the create function and pass in your [personal access token](https://accoun
 ```
 >>> import pysmartthings
 >>> st = pysmartthings.create("PERSONAL_ACCESS_TOKEN")
->>> len(st.locations)
-2
->>> len(st.devices)
-19
 ```
 ### Locations
-The `Location` class encapsulates information about a SmartThings location.
+A list of locations in SmartThings can be retrieved by invoking `SmartThings.locations()`.
 ```
->>> location = st.locations[0]
+>>> locations = st.locations()
+>>> len(locations)
+2
+>>> location = locations[0]
 >>> location.name
 'Test Home'
 >>> location.location_id
 '5c03e518-118a-44cb-85ad-7877d0b302e4' 
 ```
 ### Devices
-Each array element is an instance of `Device` which encapsulates information about the device in SmartThings.
+A list of devices across all locations in SmartThings can be retrieved by invoking `SmartThings.devices()`.
 ```
->>> device = st.devices[0]
+>>> devices = st.devices()
+>>> len(devices)
+19
+>>> device = devices[0]
 >>> device.device_id
 '0d38d5ca-705f-44f7-89bd-36a8cf73678d'
 >>> device.name
@@ -59,9 +61,9 @@ For Device Type Handlers (DTH) additional information is available about the han
 >>> device.device_type_id
 '23a143cf-bad9-4dc1-a56b-fd93ff01e9f9'
 ```
-The current status of the device is populated when `Device.update()` or `SmartThings.update()` is called.  The later will retreive the current status for all devices in parallel.  The status dictionary represents the current values of select capabilities.
+The current status of the device is populated when `Device.update()` is called.  The status dictionary represents the current values of select capabilities.
 ```
->>> st.update()
+>>> device.update()
 True
 >> device.status
 {'light': 'off', 'switchLevel': 100, 'switch': 'off'}

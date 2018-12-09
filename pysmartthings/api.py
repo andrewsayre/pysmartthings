@@ -1,6 +1,5 @@
 """Utility for invoking the SmartThings Cloud API."""
 
-from typing import Sequence
 import requests
 from . import errors
 
@@ -22,7 +21,7 @@ class API:
         """Initialize a new instance of the API class."""
         self._headers = {"Authorization": "Bearer " + token}
 
-    def get_locations(self) -> Sequence[dict]:
+    def get_locations(self) -> dict:
         """
         Get locations.
 
@@ -30,7 +29,7 @@ class API:
         """
         return self._make_request('get', API_RESOURCE_LOCATIONS)
 
-    def get_devices(self) -> Sequence[dict]:
+    def get_devices(self) -> dict:
         """
         Get the device definitions.
 
