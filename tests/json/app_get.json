@@ -1,0 +1,26 @@
+{
+    "appName": "pysmartthings-test",
+    "appId": "c6cde2b0-203e-44cf-a510-3b3ed4706996",
+    "appType": "WEBHOOK_SMART_APP",
+    "classifications": [
+        "AUTOMATION"
+    ],
+    "displayName": "Test",
+    "description": "A SmartApp that relays events to the pysmartthings library",
+    "singleInstance": true,
+    "installMetadata": {},
+    "owner": {
+        "ownerType": "USER",
+        "ownerId": "3c19270b-fca6-5cde-82bc-86a37e52cfa8"
+    },
+    "createdDate": "2018-12-15T17:07:41Z",
+    "lastUpdatedDate": "2018-12-15T17:07:42Z",
+    "webhookSmartApp": {
+        "targetUrl": "https://homeassistant.sayre.net:8321/",
+        "publicKey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1i5LnHAdMa17jvNCDntwTx/99RitsEmE\r\nBGzt98pOXbyab7aKgao9zu0gB+L0kaRE+Ezcz8f/CKKbJgDz0SeraeqgHxWakVvLekzGY1jpPYuA\r\n4hnB9qGE9ukCTMY1dlv1jb5JyqFHtaz6YryWyfhGAyfvI4LsD3s0V2Y2GflW/CgwcCoIjbuHku1L\r\nk3OOwTu6C4/5ATh48bsnZMFyB5Rm+5yt0zLBSth5pj4cpy98J+RQQq9gUd6cQnTmAFFc2XSG57C0\r\nKi5PHRceYKPvzkcc85L2rt05cu2NWuaZLCr6mGh9XHka9PEZvta0TwKVE1P7U5ES5MhN5rSPciXA\r\nPaezCwIDAQAB\n-----END PUBLIC KEY-----"
+    },
+    "ui": {
+        "dashboardCardsEnabled": false,
+        "preInstallDashboardCardsEnabled": false
+    }
+}

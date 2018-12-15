@@ -1,6 +1,7 @@
 """Define the SmartThings Cloud API."""
 
 from .api import API
+from .app import App
 from .device import Device
 from .location import Location
 
@@ -26,3 +27,8 @@ class SmartThings:
         """Retrieve SmartThings devices."""
         resp = self._api.get_devices()
         return [Device(self._api, entity) for entity in resp["items"]]
+
+    def apps(self):
+        """Retrieve list of apps."""
+        resp = self._api.get_apps()
+        return [App(self._api, entity) for entity in resp["items"]]

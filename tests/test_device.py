@@ -2,9 +2,10 @@
 
 # pylint: disable=missing-docstring
 
-import json
-from pysmartthings.smartthings import Device, API
+from pysmartthings.smartthings import API, Device
+
 from . import api_mock
+from .utilities import get_json
 
 
 class TestDevice:
@@ -16,7 +17,7 @@ class TestDevice:
     def test_initialize():
         """Tests whether the Device class initializes correctly."""
         # arrange
-        entity = TestDevice._get_device_entity()
+        entity = get_json('device.json')
         # act
         device = Device(None, entity)
         # assert
@@ -38,14 +39,9 @@ class TestDevice:
         # arrange
         api_mock.setup(requests_mock)
         device = Device(API(api_mock.API_TOKEN),
-                        TestDevice._get_device_entity())
+                        get_json('device.json'))
         # act
         device.update()
         # assert
         assert device.status == {"light": "off",
                                  "switchLevel": 46, "switch": "off"}
-
-    @staticmethod
-    def _get_device_entity():
-        with open("tests/json/device.json", "r") as json_file:
-            return json.load(json_file)

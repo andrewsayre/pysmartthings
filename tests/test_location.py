@@ -1,7 +1,8 @@
 """Tests for the Location file."""
 
-import json
 from pysmartthings.smartthings import Location
+
+from .utilities import get_json
 
 
 class TestLocation:
@@ -11,8 +12,7 @@ class TestLocation:
     def test_initialize():
         """Tests whether the Device class initializes correctly."""
         # arrange
-        with open("tests/json/location_test_home.json", "r") as json_file:
-            entity = json.load(json_file)
+        entity = get_json('location_test_home.json')
         # act
         location = Location(None, entity)
         # assert

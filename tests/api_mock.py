@@ -1,31 +1,32 @@
 """A Mock API for SmartThings."""
 
-import json
 from pysmartthings import api
+
+from .utilities import get_json
 
 API_TOKEN = "Test Token"
 
 
 def setup(requests_mock):
     """Configure request mocks the API calls."""
-    # locations
+    # location/
     requests_mock.get(
         api.API_BASE + api.API_RESOURCE_LOCATIONS,
         headers={"Authorization": "Bearer " + API_TOKEN},
-        json=__get_json("locations.json"))
-    # devices
+        json=get_json("locations.json"))
+    # devices/
     requests_mock.get(
         api.API_BASE + api.API_RESOURCE_DEVICES,
         headers={"Authorization": "Bearer " + API_TOKEN},
-        json=__get_json("devices.json"))
-
+        json=get_json("devices.json"))
+    # device/{guid}/
     requests_mock.get(
         api.API_BASE + api.API_RESOURCE_DEVICE_STATUS.format(
             device_id="743de49f-036f-4e9c-839a-2f89d57607db"),
         headers={"Authorization": "Bearer " + API_TOKEN},
-        json=__get_json("device_main_status.json"))
-
-
-def __get_json(file):
-    with open("tests/json/" + file, "r") as json_file:
-        return json.load(json_file)
+        json=get_json("device_main_status.json"))
+    # app/
+    requests_mock.get(
+        api.API_BASE + api.API_RESOURCE_APPS,
+        headers={"Authorization": "Bearer " + API_TOKEN},
+        json=get_json("apps.json"))

@@ -1,0 +1,18 @@
+{
+    "items": [
+        {
+            "appName": "pysmartthings-test",
+            "appId": "c6cde2b0-203e-44cf-a510-3b3ed4706996",
+            "appType": "WEBHOOK_SMART_APP",
+            "classifications": [
+                "AUTOMATION"
+            ],
+            "displayName": "Test",
+            "description": "A SmartApp that relays events to the pysmartthings library",
+            "iconImage": {},
+            "createdDate": "2018-12-15T17:07:41Z",
+            "lastUpdatedDate": "2018-12-15T17:07:42Z"
+        }
+    ],
+    "_links": {}
+}

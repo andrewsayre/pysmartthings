@@ -1,6 +1,7 @@
 """Utility for invoking the SmartThings Cloud API."""
 
 import requests
+
 from . import errors
 
 API_BASE: str = 'https://api.smartthings.com/v1/'
@@ -8,6 +9,7 @@ API_RESOURCE_LOCATIONS = "locations"
 API_RESOURCE_DEVICES: str = "devices"
 API_RESOURCE_DEVICE_STATUS: str = "devices/{device_id}/components/main/status"
 API_RESOURCE_DEVICE_COMMAND: str = "devices/{device_id}/commands"
+API_RESOURCE_APPS = "apps"
 
 
 class API:
@@ -66,6 +68,14 @@ class API:
             'post',
             API_RESOURCE_DEVICE_COMMAND.format(device_id=device_id),
             data)
+
+    def get_apps(self) -> dict:
+        """
+        Get list of apps.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listApps
+        """
+        return self._make_request('get', API_RESOURCE_APPS)
 
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(
