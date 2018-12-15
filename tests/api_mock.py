@@ -30,3 +30,9 @@ def setup(requests_mock):
         api.API_BASE + api.API_RESOURCE_APPS,
         headers={"Authorization": "Bearer " + API_TOKEN},
         json=get_json("apps.json"))
+    # app/{guid}
+    requests_mock.get(
+        api.API_BASE + api.API_RESOURCE_APP_DETAILS.format(
+            app_id="c6cde2b0-203e-44cf-a510-3b3ed4706996"),
+        headers={"Authorization": "Bearer " + API_TOKEN},
+        json=get_json("app_get.json"))

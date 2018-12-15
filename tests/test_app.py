@@ -2,8 +2,11 @@
 
 import pytest
 
+from pysmartthings.api import API
 from pysmartthings.app import (APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK,
                                CLASSIFICATION_AUTOMATION, App)
+
+from . import api_mock
 from .utilities import get_json
 
 
@@ -31,6 +34,43 @@ class TestApp:
         assert app.webhook_public_key
         assert app.created_date == "2018-12-15T17:07:41Z"
         assert app.last_updated_date == "2018-12-15T17:07:42Z"
+
+    @staticmethod
+    def test_refresh(requests_mock):
+        """Tests data is refreshed."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        data = get_json('apps.json')['items'][0]
+        app = App(api, data)
+        # Act
+        app.refresh()
+        # Assert
+        assert app.single_instance
+        assert app.webhook_target_url == \
+            "https://homeassistant.sayre.net:8321/"
+        assert app.webhook_public_key
+
+    @staticmethod
+    def test_refresh_no_api():
+        """Tests refresh when there's no API instance."""
+        # Arrange
+        data = get_json('apps.json')['items'][0]
+        app = App(None, data)
+        # Act/Assert
+        with pytest.raises(ValueError):
+            app.refresh()
+
+    @staticmethod
+    def test_refresh_no_device_id(requests_mock):
+        """Tests refresh when there's no API instance."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        app = App(api, None)
+        # Act/Assert
+        with pytest.raises(ValueError):
+            app.refresh()
 
     @staticmethod
     def test_app_name():

@@ -33,9 +33,14 @@ class App:
         if data:
             self.load(data)
 
-    def update(self) -> bool:
-        """Update the app information using the API."""
-        raise NotImplementedError
+    def refresh(self):
+        """Refresh the app information using the API."""
+        if not self._api:
+            raise ValueError("Cannot refresh without an API instance.")
+        if not self._app_id:
+            raise ValueError("Cannot refresh without an app_id")
+        data = self._api.get_app_details(self._app_id)
+        self.load(data)
 
     def load(self, data: dict):
         """Set the states of the app with the supplied data."""

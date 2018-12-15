@@ -10,6 +10,7 @@ API_RESOURCE_DEVICES: str = "devices"
 API_RESOURCE_DEVICE_STATUS: str = "devices/{device_id}/components/main/status"
 API_RESOURCE_DEVICE_COMMAND: str = "devices/{device_id}/commands"
 API_RESOURCE_APPS = "apps"
+API_RESOURCE_APP_DETAILS = "apps/{app_id}"
 
 
 class API:
@@ -76,6 +77,16 @@ class API:
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listApps
         """
         return self._make_request('get', API_RESOURCE_APPS)
+
+    def get_app_details(self, app_id: str) -> dict:
+        """
+        Get the details of the specific app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getApp
+        """
+        return self._make_request(
+            'get',
+            API_RESOURCE_APP_DETAILS.format(app_id=app_id))
 
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(
