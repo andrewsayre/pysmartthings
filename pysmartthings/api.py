@@ -88,6 +88,23 @@ class API:
             'get',
             API_RESOURCE_APP_DETAILS.format(app_id=app_id))
 
+    def app_create(self, data: dict) -> dict:
+        """
+        Create a new app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/createApp
+        """
+        return self._make_request('post', API_RESOURCE_APPS, data)
+
+    def app_update(self, app_id: str, data: dict) -> dict:
+        """
+        Update an existing app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateApp
+        """
+        return self._make_request(
+            'put', API_RESOURCE_APP_DETAILS.format(app_id=app_id), data)
+
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(
             method,

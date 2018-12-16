@@ -51,3 +51,14 @@ class TestSmartThings:
         locations = smartthings.apps()
         # assert
         assert len(locations) == 1
+
+    @staticmethod
+    def test_create_app():
+        """Tests the create app method."""
+        # Arrange
+        smartthings = SmartThings('')
+        # Act
+        app = smartthings.create_app()
+        # Assert
+        assert app
+        assert not app.app_id

@@ -1,0 +1,25 @@
+{
+  "app": {
+    "appName": "pysmartthings-test",
+    "appId": "c6cde2b0-203e-44cf-a510-3b3ed4706996",
+    "appType": "LAMBDA_SMART_APP",
+    "classifications": [
+        "AUTOMATION"
+    ],
+    "displayName": "Test",
+    "description": "A SmartApp that relays events to the pysmartthings library",
+    "singleInstance": true,
+    "installMetadata": {},
+    "owner": {
+        "ownerType": "USER",
+        "ownerId": "3c19270b-fca6-5cde-82bc-86a37e52cfa8"
+    },
+    "createdDate": "2018-12-15T17:07:41Z",
+    "lastUpdatedDate": "2018-12-16T00:31:04Z",
+    "lambdaSmartApp": {
+        "functions": ["arn:aws:lambda:eu-central-1:account-id:function:function-name:alias-name"]
+    }
+  },
+  "oauthClientId": "7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be",
+  "oauthClientSecret": "9b3fd445-42d6-441b-b386-99ea51e13cb0"
+}

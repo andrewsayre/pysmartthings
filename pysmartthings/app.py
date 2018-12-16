@@ -9,7 +9,7 @@ APP_TYPE_LAMBDA = "LAMBDA_SMART_APP"
 APP_TYPE_WEBHOOK = "WEBHOOK_SMART_APP"
 CLASSIFICATION_AUTOMATION = "AUTOMATION"
 
-_APP_NAME_PATTERN = re.compile('^[a-z0-9.-_]{1,250}$', re.IGNORECASE)
+_APP_NAME_PATTERN = re.compile('^[a-z0-9._-]{1,250}$', re.IGNORECASE)
 
 
 class App:
@@ -57,6 +57,38 @@ class App:
         if self.app_type == APP_TYPE_WEBHOOK and 'webhookSmartApp' in data:
             self._webhook_target_url = data['webhookSmartApp']['targetUrl']
             self._webhook_public_key = data['webhookSmartApp']['publicKey']
+        if self.app_type == APP_TYPE_LAMBDA and 'lambdaSmartApp' in data:
+            self._lambda_functions = data['lambdaSmartApp']['functions']
+
+    def save(self):
+        """Create the app if it's new, or saves the changes."""
+        data = {
+            'appName': self._app_name,
+            'displayName': self._display_name,
+            'description': self._description,
+            'singleInstance': self._single_instance,
+            'classifications': self._classifications,
+            'appType': self._app_type
+        }
+        if self._app_type == APP_TYPE_WEBHOOK:
+            data['webhookSmartApp'] = {
+                'targetUrl': self._webhook_target_url
+            }
+        if self._app_type == APP_TYPE_LAMBDA:
+            data['lambdaSmartApp'] = {
+                'functions': self._lambda_functions
+            }
+        # create new app if _app_id is none.
+        if not self._app_id:
+            response = self._api.app_create(data)
+            self.load(response['app'])
+            return {
+                'oauth_client_id': response['oauthClientId'],
+                'oauth_client_secret': response['oauthClientSecret']
+            }
+        # update existing app
+        response = self._api.app_update(self._app_id, data)
+        self.load(response)
 
     @property
     def app_id(self) -> str:
@@ -182,6 +214,11 @@ class App:
     def webhook_target_url(self) -> str:
         """Get the URL that should be invoked during execution."""
         return self._webhook_target_url
+
+    @webhook_target_url.setter
+    def webhook_target_url(self, value: str):
+        """Set the URL that should be invoked during execution."""
+        self._webhook_target_url = value
 
     @property
     def webhook_public_key(self) -> str:

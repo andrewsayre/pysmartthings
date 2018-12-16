@@ -73,6 +73,44 @@ class TestApp:
             app.refresh()
 
     @staticmethod
+    def test_save_update(requests_mock):
+        """Tests updating an entity."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        data = get_json('app_get.json')
+        app = App(api, data)
+        before = app.last_updated_date
+        # Act
+        app.save()
+        # Assert
+        assert app.last_updated_date > before
+
+    @staticmethod
+    def test_save_create(requests_mock):
+        """Tests creating an entity."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        app = App(api, None)
+        app.app_name = "pysmartthings-test"
+        app.description = "A SmartApp that relays events to the " \
+                          "pysmartthings library"
+        app.display_name = "Test"
+        app.classifications.append(CLASSIFICATION_AUTOMATION)
+        app.single_instance = True
+        app.app_type = APP_TYPE_LAMBDA
+        app.lambda_functions.append(
+            'arn:aws:lambda:eu-central-1:account-id:function:'
+            'function-name:alias-name')
+        # Act
+        oauth = app.save()
+        # Assert
+        assert app.app_id == 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        assert oauth['oauth_client_id'] == '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
+        assert oauth['oauth_client_secret'] == '9b3fd445-42d6-441b-b386-99ea51e13cb0'
+
+    @staticmethod
     def test_app_name():
         """Tests get/set of app_name."""
         # Arrange

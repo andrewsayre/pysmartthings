@@ -32,3 +32,7 @@ class SmartThings:
         """Retrieve list of apps."""
         resp = self._api.get_apps()
         return [App(self._api, entity) for entity in resp["items"]]
+
+    def create_app(self) -> App:
+        """Create a new app."""
+        return App(self._api, None)

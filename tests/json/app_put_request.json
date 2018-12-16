@@ -1,0 +1,13 @@
+{
+    "appName": "pysmartthings-test",
+    "appType": "WEBHOOK_SMART_APP",
+    "classifications": [
+        "AUTOMATION"
+    ],
+    "displayName": "Test",
+    "description": "A SmartApp that relays events to the pysmartthings library",
+    "singleInstance": true,
+    "webhookSmartApp": {
+        "targetUrl": "https://homeassistant.sayre.net:8321/"
+    }
+}

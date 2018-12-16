@@ -1,0 +1,13 @@
+{
+    "appName": "pysmartthings-test",
+    "appType": "LAMBDA_SMART_APP",
+    "classifications": [
+        "AUTOMATION"
+    ],
+    "displayName": "Test",
+    "description": "A SmartApp that relays events to the pysmartthings library",
+    "singleInstance": true,
+    "lambdaSmartApp": {
+        "functions": ["arn:aws:lambda:eu-central-1:account-id:function:function-name:alias-name"]
+    }
+}
