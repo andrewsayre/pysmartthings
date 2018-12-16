@@ -88,7 +88,7 @@ class API:
             'get',
             API_RESOURCE_APP_DETAILS.format(app_id=app_id))
 
-    def app_create(self, data: dict) -> dict:
+    def create_app(self, data: dict) -> dict:
         """
         Create a new app.
 
@@ -96,7 +96,7 @@ class API:
         """
         return self._make_request('post', API_RESOURCE_APPS, data)
 
-    def app_update(self, app_id: str, data: dict) -> dict:
+    def update_app(self, app_id: str, data: dict) -> dict:
         """
         Update an existing app.
 
@@ -104,6 +104,15 @@ class API:
         """
         return self._make_request(
             'put', API_RESOURCE_APP_DETAILS.format(app_id=app_id), data)
+
+    def delete_app(self, app_id: str):
+        """
+        Delete an app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteApp
+        """
+        return self._make_request(
+            'delete', API_RESOURCE_APP_DETAILS.format(app_id=app_id))
 
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(

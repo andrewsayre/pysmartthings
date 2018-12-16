@@ -62,3 +62,13 @@ class TestSmartThings:
         # Assert
         assert app
         assert not app.app_id
+
+    @staticmethod
+    def test_delete_app(requests_mock):
+        """Tests the delete app method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act/Assert
+        smartthings.delete_app('c6cde2b0-203e-44cf-a510-3b3ed4706996')
+        # Assert

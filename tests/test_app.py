@@ -107,8 +107,10 @@ class TestApp:
         oauth = app.save()
         # Assert
         assert app.app_id == 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
-        assert oauth['oauth_client_id'] == '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
-        assert oauth['oauth_client_secret'] == '9b3fd445-42d6-441b-b386-99ea51e13cb0'
+        assert oauth['oauth_client_id'] == \
+            '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
+        assert oauth['oauth_client_secret'] == \
+            '9b3fd445-42d6-441b-b386-99ea51e13cb0'
 
     @staticmethod
     def test_app_name():
@@ -245,3 +247,15 @@ class TestApp:
             "function:function-name:alias-name")
         # Assert
         assert app.lambda_functions
+
+    @staticmethod
+    def test_webhook_target_url():
+        """Tests get/set of webhook_target_url."""
+        # Arrange
+        app = App(None, None)
+        # Act
+        expected = "http://my.web.site/"
+        app.webhook_target_url = expected
+        actual = app.webhook_target_url
+        # Assert
+        assert expected == actual

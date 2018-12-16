@@ -56,6 +56,13 @@ def setup(requests_mock):
         json=get_json("app_put_response.json"),
         additional_matcher=__app_put_matcher)
 
+    # DELETE app/{guid}
+    requests_mock.delete(
+        api.API_BASE + api.API_RESOURCE_APP_DETAILS.format(
+            app_id="c6cde2b0-203e-44cf-a510-3b3ed4706996"),
+        headers={"Authorization": "Bearer " + API_TOKEN},
+        json={})
+
 
 def __app_put_matcher(request) -> bool:
     return get_json('app_put_request.json') == request.json()

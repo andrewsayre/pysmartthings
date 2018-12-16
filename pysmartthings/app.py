@@ -80,14 +80,14 @@ class App:
             }
         # create new app if _app_id is none.
         if not self._app_id:
-            response = self._api.app_create(data)
+            response = self._api.create_app(data)
             self.load(response['app'])
             return {
                 'oauth_client_id': response['oauthClientId'],
                 'oauth_client_secret': response['oauthClientSecret']
             }
         # update existing app
-        response = self._api.app_update(self._app_id, data)
+        response = self._api.update_app(self._app_id, data)
         self.load(response)
 
     @property

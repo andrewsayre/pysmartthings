@@ -36,3 +36,7 @@ class SmartThings:
     def create_app(self) -> App:
         """Create a new app."""
         return App(self._api, None)
+
+    def delete_app(self, app_id: str):
+        """Delete an app."""
+        return self._api.delete_app(app_id)
