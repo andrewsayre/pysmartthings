@@ -1,9 +1,11 @@
 """Tests for the OAuth module."""
 
-from pysmartthings.oauth import OAuth, OAuthEntity
-from pysmartthings.api import API
-from . import api_mock
 import pytest
+
+from pysmartthings.api import API
+from pysmartthings.oauth import OAuth, OAuthEntity
+
+from . import api_mock
 
 
 class TestOAuth:
