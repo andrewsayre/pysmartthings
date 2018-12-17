@@ -2,6 +2,7 @@
 
 from pysmartthings.smartthings import SmartThings
 from pysmartthings import create
+from pysmartthings.oauth import OAuth
 from . import api_mock
 
 
@@ -72,3 +73,34 @@ class TestSmartThings:
         # Act/Assert
         smartthings.delete_app('c6cde2b0-203e-44cf-a510-3b3ed4706996')
         # Assert
+
+    @staticmethod
+    def test_get_app_oauth(requests_mock):
+        """Tests retrieval of OAuth settings."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        app_id = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        # Act
+        oauth = smartthings.get_app_oauth(app_id)
+        # Assert
+        assert oauth.app_id == app_id
+        assert oauth.client_name == 'pysmartthings-test'
+        assert oauth.scope == ['r:devices']
+
+    @staticmethod
+    def test_update_app_oauth(requests_mock):
+        """Tests updating OAuth settings."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        app_id = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        oauth = OAuth(app_id)
+        oauth.client_name = 'pysmartthings-test'
+        oauth.scope.append('r:devices')
+        # Act
+        oauth_entity = smartthings.update_app_oauth(oauth)
+        # Assert
+        assert oauth_entity.app_id == oauth.app_id
+        assert oauth_entity.client_name == oauth.client_name
+        assert oauth_entity.scope == oauth.scope

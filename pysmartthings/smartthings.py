@@ -4,6 +4,7 @@ from .api import API
 from .app import App
 from .device import Device
 from .location import Location
+from .oauth import OAuth, OAuthEntity
 
 
 class SmartThings:
@@ -40,3 +41,12 @@ class SmartThings:
     def delete_app(self, app_id: str):
         """Delete an app."""
         return self._api.delete_app(app_id)
+
+    def get_app_oauth(self, app_id: str) -> OAuthEntity:
+        """Get an app's OAuth settings."""
+        return OAuthEntity(self._api, app_id, self._api.get_app_oauth(app_id))
+
+    def update_app_oauth(self, data: OAuth) -> OAuthEntity:
+        """Update an app's OAuth settings without having to retrieve it."""
+        entity = self._api.update_app_oauth(data.app_id, data.to_data())
+        return OAuthEntity(self._api, data.app_id, entity)

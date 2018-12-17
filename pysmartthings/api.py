@@ -11,6 +11,7 @@ API_RESOURCE_DEVICE_STATUS: str = "devices/{device_id}/components/main/status"
 API_RESOURCE_DEVICE_COMMAND: str = "devices/{device_id}/commands"
 API_RESOURCE_APPS = "apps"
 API_RESOURCE_APP_DETAILS = "apps/{app_id}"
+API_APP_OAUTH = "apps/{app_id}/oauth"
 
 
 class API:
@@ -113,6 +114,23 @@ class API:
         """
         return self._make_request(
             'delete', API_RESOURCE_APP_DETAILS.format(app_id=app_id))
+
+    def get_app_oauth(self, app_id: str) -> dict:
+        """
+        Get an app's oauth settings.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getAppOauth
+        """
+        return self._make_request('get', API_APP_OAUTH.format(app_id=app_id))
+
+    def update_app_oauth(self, app_id: str, data: dict) -> dict:
+        """
+        Update an app's oauth settings.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateAppOauth
+        """
+        return self._make_request(
+            'put', API_APP_OAUTH.format(app_id=app_id), data)
 
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(

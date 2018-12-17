@@ -4,6 +4,7 @@ import re
 from typing import List, Optional
 
 from .api import API
+from .oauth import OAuthEntity
 
 APP_TYPE_LAMBDA = "LAMBDA_SMART_APP"
 APP_TYPE_WEBHOOK = "WEBHOOK_SMART_APP"
@@ -89,6 +90,11 @@ class App:
         # update existing app
         response = self._api.update_app(self._app_id, data)
         self.load(response)
+
+    def oauth(self) -> OAuthEntity:
+        """Get the app's OAuth settings."""
+        return OAuthEntity(
+            self._api, self._app_id, self._api.get_app_oauth(self._app_id))
 
     @property
     def app_id(self) -> str:

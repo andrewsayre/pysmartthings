@@ -63,6 +63,21 @@ def setup(requests_mock):
         headers={"Authorization": "Bearer " + API_TOKEN},
         json={})
 
+    # GET app/{guid}/oauth
+    requests_mock.get(
+        api.API_BASE + api.API_APP_OAUTH.format(
+            app_id="c6cde2b0-203e-44cf-a510-3b3ed4706996"),
+        headers={"Authorization": "Bearer " + API_TOKEN},
+        json=get_json("app_oauth_get_response.json"))
+
+    # PUT app/{guid}/oauth
+    requests_mock.put(
+        api.API_BASE + api.API_APP_OAUTH.format(
+            app_id="c6cde2b0-203e-44cf-a510-3b3ed4706996"),
+        headers={"Authorization": "Bearer " + API_TOKEN},
+        json=get_json("app_oauth_put_response.json"),
+        additional_matcher=__app_oauth_put_matcher)
+
 
 def __app_put_matcher(request) -> bool:
     return get_json('app_put_request.json') == request.json()
@@ -70,3 +85,7 @@ def __app_put_matcher(request) -> bool:
 
 def __app_post_matcher(request) -> bool:
     return get_json('app_post_request.json') == request.json()
+
+
+def __app_oauth_put_matcher(request) -> bool:
+    return get_json('app_oauth_put_request.json') == request.json()
