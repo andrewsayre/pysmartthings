@@ -12,6 +12,7 @@ from .utilities import get_json
 API_TOKEN = "Test Token"
 APP_ID = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
 DEVICE_ID = '743de49f-036f-4e9c-839a-2f89d57607db'
+INSTALLED_APP_ID = '4514eb36-f5fd-4ab2-9520-0597acd1d212'
 
 UrlMock = namedtuple('UrlMock', 'method url request response')
 
@@ -26,11 +27,18 @@ URLS = [
             'app_post_request.json', 'app_post_response.json'),
     UrlMock('PUT', api.API_APP.format(app_id=APP_ID),
             'app_put_request.json', 'app_put_response.json'),
-    UrlMock('DELETE', api.API_APP.format(app_id=APP_ID), None, None),
+    UrlMock('DELETE', api.API_APP.format(app_id=APP_ID), None, {}),
     UrlMock('GET', api.API_APP_OAUTH.format(app_id=APP_ID),
             None, 'app_oauth_get_response.json'),
     UrlMock('PUT', api.API_APP_OAUTH.format(app_id=APP_ID),
-            'app_oauth_put_request.json', 'app_oauth_put_response.json')
+            'app_oauth_put_request.json', 'app_oauth_put_response.json'),
+    UrlMock('GET', api.API_INSTALLEDAPPS, None,
+            'installedapps_get_response.json'),
+    UrlMock('GET', api.API_INSTALLEDAPP.format(
+        installed_app_id=INSTALLED_APP_ID),
+            None, 'installedapp_get_response.json'),
+    UrlMock('DELETE', api.API_INSTALLEDAPP.format(
+        installed_app_id=INSTALLED_APP_ID), None, {"count": 1})
 ]
 
 
@@ -43,8 +51,7 @@ def __matcher(req: Request) -> Response:
     """Match against our registry."""
     match = next((obj for obj in URLS if __match_request(req, obj)), None)
     if match:
-        body = {} if not match.response else get_json(match.response)
-        return create_response(req, json=body)
+        return create_response(req, json=__get_body(match.response))
 
 
 def __match_request(req: Request, mock: UrlMock):
@@ -55,6 +62,14 @@ def __match_request(req: Request, mock: UrlMock):
         return False
     if not req.url == api.API_BASE + mock.url:
         return False
-    if mock.request and not req.json() == get_json(mock.request):
+    if mock.request and not req.json() == __get_body(mock.request):
         return False
     return True
+
+
+def __get_body(body):
+    if isinstance(body, (dict, list)):
+        return body
+    if isinstance(body, str):
+        return get_json(body)
+    return None

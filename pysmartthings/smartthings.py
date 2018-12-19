@@ -5,6 +5,7 @@ from typing import List
 from .api import API
 from .app import App, AppEntity
 from .device import Device
+from .installedapp import InstalledAppEntity
 from .location import Location
 from .oauth import OAuth, OAuthClient, OAuthEntity
 
@@ -43,7 +44,7 @@ class SmartThings:
 
     def delete_app(self, app_id: str):
         """Delete an app."""
-        return self._api.delete_app(app_id)
+        return self._api.delete_app(app_id) == {}
 
     def get_app_oauth(self, app_id: str) -> OAuthEntity:
         """Get an app's OAuth settings."""
@@ -53,3 +54,13 @@ class SmartThings:
         """Update an app's OAuth settings without having to retrieve it."""
         entity = self._api.update_app_oauth(data.app_id, data.to_data())
         return OAuthEntity(self._api, data.app_id, entity)
+
+    def installedapps(self) -> List[InstalledAppEntity]:
+        """Get a list of the installed applications."""
+        resp = self._api.get_installedapps()
+        return [InstalledAppEntity(self._api, entity)
+                for entity in resp["items"]]
+
+    def delete_installedapp(self, installed_app_id: str):
+        """Delete an installedapp."""
+        return self._api.delete_installedapp(installed_app_id) == {'count': 1}

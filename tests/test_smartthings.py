@@ -69,7 +69,7 @@ class TestSmartThings:
         # Act
         app, oauth = smartthings.create_app(app)
         # Assert
-        assert app.app_id == 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        assert app.app_id == api_mock.APP_ID
         assert oauth.client_id == '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
         assert oauth.client_secret == '9b3fd445-42d6-441b-b386-99ea51e13cb0'
 
@@ -80,8 +80,9 @@ class TestSmartThings:
         api_mock.setup(requests_mock)
         smartthings = SmartThings(api_mock.API_TOKEN)
         # Act/Assert
-        smartthings.delete_app('c6cde2b0-203e-44cf-a510-3b3ed4706996')
+        result = smartthings.delete_app(api_mock.APP_ID)
         # Assert
+        assert result
 
     @staticmethod
     def test_get_app_oauth(requests_mock):
@@ -89,7 +90,7 @@ class TestSmartThings:
         # Arrange
         api_mock.setup(requests_mock)
         smartthings = SmartThings(api_mock.API_TOKEN)
-        app_id = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        app_id = api_mock.APP_ID
         # Act
         oauth = smartthings.get_app_oauth(app_id)
         # Assert
@@ -103,7 +104,7 @@ class TestSmartThings:
         # Arrange
         api_mock.setup(requests_mock)
         smartthings = SmartThings(api_mock.API_TOKEN)
-        app_id = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        app_id = api_mock.APP_ID
         oauth = OAuth(app_id)
         oauth.client_name = 'pysmartthings-test'
         oauth.scope.append('r:devices')
@@ -113,3 +114,25 @@ class TestSmartThings:
         assert oauth_entity.app_id == oauth.app_id
         assert oauth_entity.client_name == oauth.client_name
         assert oauth_entity.scope == oauth.scope
+
+    @staticmethod
+    def test_installedapps(requests_mock):
+        """Tests the installedapps method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        apps = smartthings.installedapps()
+        # Assert
+        assert len(apps) == 1
+
+    @staticmethod
+    def test_delete_installedapp(requests_mock):
+        """Tests the delete app method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act/Assert
+        result = smartthings.delete_installedapp(api_mock.INSTALLED_APP_ID)
+        # Assert
+        assert result

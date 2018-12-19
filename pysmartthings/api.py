@@ -12,6 +12,8 @@ API_DEVICE_COMMAND: str = "devices/{device_id}/commands"
 API_APPS = "apps"
 API_APP = "apps/{app_id}"
 API_APP_OAUTH = "apps/{app_id}/oauth"
+API_INSTALLEDAPPS = "installedapps"
+API_INSTALLEDAPP = "installedapps/{installed_app_id}"
 
 
 class API:
@@ -131,6 +133,34 @@ class API:
         """
         return self._make_request(
             'put', API_APP_OAUTH.format(app_id=app_id), data)
+
+    def get_installedapps(self) -> dict:
+        """
+        Get list of installedapps.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listInstallations
+        """
+        return self._make_request('get', API_INSTALLEDAPPS)
+
+    def get_installedapp(self, installed_app_id: str) -> dict:
+        """
+        Get the details of the specific installedapp.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getInstallation
+        """
+        return self._make_request(
+            'get',
+            API_INSTALLEDAPP.format(installed_app_id=installed_app_id))
+
+    def delete_installedapp(self, installed_app_id: str):
+        """
+        Delete an app.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/deleteInstallation
+        """
+        return self._make_request(
+            'delete', API_INSTALLEDAPP.format(
+                installed_app_id=installed_app_id))
 
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(
