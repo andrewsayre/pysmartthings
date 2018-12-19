@@ -1,10 +1,12 @@
 """Define the app module."""
 
 import re
-from typing import List, Optional
+from typing import List
 
 from .api import API
 from .oauth import OAuthEntity
+from .entity import Entity
+
 
 APP_TYPE_LAMBDA = "LAMBDA_SMART_APP"
 APP_TYPE_WEBHOOK = "WEBHOOK_SMART_APP"
@@ -16,9 +18,21 @@ _APP_NAME_PATTERN = re.compile('^[a-z0-9._-]{1,250}$', re.IGNORECASE)
 class App:
     """Define the app class."""
 
-    def __init__(self, api: API, data: Optional[dict]):
+    _app_name: str
+    _display_name: str
+    _description: str
+    _single_instance: bool
+    _app_type: str
+    _classifications: List[str]
+    _lambda_functions: List[str]
+    _webhook_target_url: str
+    _webhook_public_key: str
+    _app_id: str
+    _created_date: str
+    _last_updated_date: str
+
+    def __init__(self):
         """Initialize a new instance of the App class."""
-        self._api = api
         self._app_name = None
         self._display_name = None
         self._description = None
@@ -31,19 +45,8 @@ class App:
         self._app_id = None
         self._created_date = None
         self._last_updated_date = None
-        if data:
-            self.load(data)
 
-    def refresh(self):
-        """Refresh the app information using the API."""
-        if not self._api:
-            raise ValueError("Cannot refresh without an API instance.")
-        if not self._app_id:
-            raise ValueError("Cannot refresh without an app_id")
-        data = self._api.get_app_details(self._app_id)
-        self.load(data)
-
-    def load(self, data: dict):
+    def apply_data(self, data: dict):
         """Set the states of the app with the supplied data."""
         self._app_name = data['appName']
         self._app_id = data['appId']
@@ -51,18 +54,20 @@ class App:
         self._classifications = data['classifications']
         self._display_name = data['displayName']
         self._description = data['description']
-        self._created_date = data['createdDate']
-        self._last_updated_date = data['lastUpdatedDate']
-        self._single_instance = data.get('singleInstance',
-                                         self._single_instance)
+        self._created_date = \
+            data.get('createdDate', self._created_date)
+        self._last_updated_date = \
+            data.get('lastUpdatedDate', self._last_updated_date)
+        self._single_instance = \
+            data.get('singleInstance', self._single_instance)
         if self.app_type == APP_TYPE_WEBHOOK and 'webhookSmartApp' in data:
             self._webhook_target_url = data['webhookSmartApp']['targetUrl']
             self._webhook_public_key = data['webhookSmartApp']['publicKey']
         if self.app_type == APP_TYPE_LAMBDA and 'lambdaSmartApp' in data:
             self._lambda_functions = data['lambdaSmartApp']['functions']
 
-    def save(self):
-        """Create the app if it's new, or saves the changes."""
+    def to_data(self) -> dict:
+        """Get a data structure representing this entity."""
         data = {
             'appName': self._app_name,
             'displayName': self._display_name,
@@ -79,22 +84,7 @@ class App:
             data['lambdaSmartApp'] = {
                 'functions': self._lambda_functions
             }
-        # create new app if _app_id is none.
-        if not self._app_id:
-            response = self._api.create_app(data)
-            self.load(response['app'])
-            return {
-                'oauth_client_id': response['oauthClientId'],
-                'oauth_client_secret': response['oauthClientSecret']
-            }
-        # update existing app
-        response = self._api.update_app(self._app_id, data)
-        self.load(response)
-
-    def oauth(self) -> OAuthEntity:
-        """Get the app's OAuth settings."""
-        return OAuthEntity(
-            self._api, self._app_id, self._api.get_app_oauth(self._app_id))
+        return data
 
     @property
     def app_id(self) -> str:
@@ -230,3 +220,31 @@ class App:
     def webhook_public_key(self) -> str:
         """Get the public half of an RSA key pair."""
         return self._webhook_public_key
+
+
+class AppEntity(Entity, App):
+    """Define a SmartThings App entity."""
+
+    def __init__(self, api: API, data=None):
+        """Create a new instance of the AppEntity class."""
+        Entity.__init__(self, api)
+        App.__init__(self)
+        if data:
+            self.apply_data(data)
+
+    def refresh(self):
+        """Refresh the app information using the API."""
+        if not self._app_id:
+            raise ValueError("Cannot refresh without an app_id")
+        data = self._api.get_app_details(self._app_id)
+        self.apply_data(data)
+
+    def save(self):
+        """Save the changes made to the app."""
+        response = self._api.update_app(self._app_id, self.to_data())
+        self.apply_data(response)
+
+    def oauth(self) -> OAuthEntity:
+        """Get the app's OAuth settings."""
+        return OAuthEntity(
+            self._api, self._app_id, self._api.get_app_oauth(self._app_id))

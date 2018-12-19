@@ -1,10 +1,12 @@
 """Define the SmartThings Cloud API."""
 
+from typing import List
+
 from .api import API
-from .app import App
+from .app import App, AppEntity
 from .device import Device
 from .location import Location
-from .oauth import OAuth, OAuthEntity
+from .oauth import OAuth, OAuthEntity, OAuthClient
 
 
 class SmartThings:
@@ -19,24 +21,25 @@ class SmartThings:
         """
         self._api = API(token)
 
-    def locations(self):
+    def locations(self) -> List:
         """Retrieve SmartThings locations."""
         resp = self._api.get_locations()
         return [Location(self._api, entity) for entity in resp["items"]]
 
-    def devices(self):
+    def devices(self) -> List:
         """Retrieve SmartThings devices."""
         resp = self._api.get_devices()
         return [Device(self._api, entity) for entity in resp["items"]]
 
-    def apps(self):
+    def apps(self) -> List[AppEntity]:
         """Retrieve list of apps."""
         resp = self._api.get_apps()
-        return [App(self._api, entity) for entity in resp["items"]]
+        return [AppEntity(self._api, entity) for entity in resp["items"]]
 
-    def create_app(self) -> App:
+    def create_app(self, app: App) -> (AppEntity, OAuthClient):
         """Create a new app."""
-        return App(self._api, None)
+        entity = self._api.create_app(app.to_data())
+        return AppEntity(self._api, entity['app']), OAuthClient(entity)
 
     def delete_app(self, app_id: str):
         """Delete an app."""

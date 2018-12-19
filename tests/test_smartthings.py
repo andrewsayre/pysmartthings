@@ -3,7 +3,9 @@
 from pysmartthings.smartthings import SmartThings
 from pysmartthings import create
 from pysmartthings.oauth import OAuth
+from pysmartthings.app import App
 from . import api_mock
+from .utilities import get_json
 
 
 class TestSmartThings:
@@ -49,20 +51,26 @@ class TestSmartThings:
         api_mock.setup(requests_mock)
         smartthings = SmartThings(api_mock.API_TOKEN)
         # act
-        locations = smartthings.apps()
+        apps = smartthings.apps()
         # assert
-        assert len(locations) == 1
+        assert len(apps) == 1
 
     @staticmethod
-    def test_create_app():
+    def test_create_app(requests_mock):
         """Tests the create app method."""
         # Arrange
-        smartthings = SmartThings('')
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        app = App()
+        data = get_json('app_post_request.json')
+        data['appId'] = api_mock.APP_ID
+        app.apply_data(data)
         # Act
-        app = smartthings.create_app()
+        app, oauth = smartthings.create_app(app)
         # Assert
-        assert app
-        assert not app.app_id
+        assert app.app_id == 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
+        assert oauth.client_id == '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
+        assert oauth.client_secret == '9b3fd445-42d6-441b-b386-99ea51e13cb0'
 
     @staticmethod
     def test_delete_app(requests_mock):

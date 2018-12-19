@@ -1,6 +1,6 @@
 """Define the oauth module."""
 
-from typing import List
+from typing import List, Optional
 
 from .api import API
 from .entity import Entity
@@ -75,3 +75,29 @@ class OAuthEntity(Entity, OAuth):
         response = self._api.update_app_oauth(self._app_id, self.to_data())
         if response:
             self.apply_data(response)
+
+
+class OAuthClient:
+    """Define an oauth client information."""
+
+    def __init__(self, data: Optional[dict]):
+        """Create a new instance of the OAuthClient."""
+        self._client_id = None
+        self._client_secret = None
+        if data:
+            self.apply_data(data)
+
+    def apply_data(self, data: dict):
+        """Apply the given data to the entity."""
+        self._client_id = data['oauthClientId']
+        self._client_secret = data['oauthClientSecret']
+
+    @property
+    def client_id(self):
+        """Get the client id."""
+        return self._client_id
+
+    @property
+    def client_secret(self):
+        """Get the client secret."""
+        return self._client_secret
