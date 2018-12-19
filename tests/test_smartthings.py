@@ -1,9 +1,10 @@
 """Tests for the SmartThings file."""
 
-from pysmartthings.smartthings import SmartThings
 from pysmartthings import create
-from pysmartthings.oauth import OAuth
 from pysmartthings.app import App
+from pysmartthings.oauth import OAuth
+from pysmartthings.smartthings import SmartThings
+
 from . import api_mock
 from .utilities import get_json
 

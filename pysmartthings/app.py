@@ -4,9 +4,8 @@ import re
 from typing import List
 
 from .api import API
-from .oauth import OAuthEntity
 from .entity import Entity
-
+from .oauth import OAuthEntity
 
 APP_TYPE_LAMBDA = "LAMBDA_SMART_APP"
 APP_TYPE_WEBHOOK = "WEBHOOK_SMART_APP"

@@ -3,8 +3,9 @@
 import pytest
 
 from pysmartthings.api import API
-from pysmartthings.app import (APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK,
-                               CLASSIFICATION_AUTOMATION, App, AppEntity)
+from pysmartthings.app import (
+    APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
+    AppEntity)
 
 from . import api_mock
 from .utilities import get_json

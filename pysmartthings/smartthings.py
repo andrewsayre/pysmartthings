@@ -6,7 +6,7 @@ from .api import API
 from .app import App, AppEntity
 from .device import Device
 from .location import Location
-from .oauth import OAuth, OAuthEntity, OAuthClient
+from .oauth import OAuth, OAuthClient, OAuthEntity
 
 
 class SmartThings:

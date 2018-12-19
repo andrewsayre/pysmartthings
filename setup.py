@@ -1,5 +1,7 @@
 """SmartThings Cloud API"""
+
 from setuptools import find_packages, setup
+
 import pysmartthings
 
 with open("README.md", "r") as fh:
