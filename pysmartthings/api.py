@@ -14,6 +14,8 @@ API_APP = "apps/{app_id}"
 API_APP_OAUTH = "apps/{app_id}/oauth"
 API_INSTALLEDAPPS = "installedapps"
 API_INSTALLEDAPP = "installedapps/{installed_app_id}"
+API_SUBSCRIPTIONS = API_INSTALLEDAPP + "/subscriptions"
+API_SUBSCRIPTION = API_SUBSCRIPTIONS + "/{subscription_id}"
 
 
 class API:
@@ -161,6 +163,62 @@ class API:
         return self._make_request(
             'delete', API_INSTALLEDAPP.format(
                 installed_app_id=installed_app_id))
+
+    def get_subscriptions(self, installed_app_id: str) -> dict:
+        """
+        Get installedapp's subscriptions.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listSubscriptions
+        """
+        return self._make_request(
+            'get',
+            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
+
+    def create_subscription(self, installed_app_id: str, data: dict) -> dict:
+        """
+        Create a subscription for an installedapp.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/saveSubscription
+        """
+        return self._make_request(
+            'post',
+            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id),
+            data)
+
+    def delete_all_subscriptions(self, installed_app_id: str) -> dict:
+        """
+        Delete all subscriptions for an installedapp.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteAllSubscriptions
+        """
+        return self._make_request(
+            'delete',
+            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
+
+    def get_subscription(self, installed_app_id: str, subscription_id: str) \
+            -> dict:
+        """
+        Get an individual subscription.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getSubscription
+        """
+        return self._make_request(
+            'get',
+            API_SUBSCRIPTIONS.format(
+                installed_app_id=installed_app_id,
+                subscription_id=subscription_id))
+
+    def delete_subscription(self, installed_app_id: str, subscription_id: str):
+        """
+        Delete an individual subscription.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteSubscription
+        """
+        return self._make_request(
+            'delete',
+            API_SUBSCRIPTIONS.format(
+                installed_app_id=installed_app_id,
+                subscription_id=subscription_id))
 
     def _make_request(self, method: str, resource: str, data: dict = None):
         response = requests.request(

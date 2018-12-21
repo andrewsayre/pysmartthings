@@ -1,0 +1,13 @@
+{
+    "id": "1e0a1706-2b52-403c-915b-df096470bf03",
+    "installedAppId": "cce8a165-6ec8-4c2b-b4c8-734d66c48615",
+    "sourceType": "CAPABILITY",
+    "capability": {
+        "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+        "capability": "switch",
+        "attribute": "*",
+        "value": "*",
+        "stateChangeOnly": true,
+        "modes": []
+    }
+}

@@ -8,6 +8,7 @@ from .device import Device
 from .installedapp import InstalledAppEntity
 from .location import Location
 from .oauth import OAuth, OAuthClient, OAuthEntity
+from .subscription import Subscription, SubscriptionEntity
 
 
 class SmartThings:
@@ -64,3 +65,27 @@ class SmartThings:
     def delete_installedapp(self, installed_app_id: str):
         """Delete an installedapp."""
         return self._api.delete_installedapp(installed_app_id) == {'count': 1}
+
+    def get_subscriptions(self, installed_app_id: str) \
+            -> List[SubscriptionEntity]:
+        """Get an installedapp's subscriptions."""
+        resp = self._api.get_subscriptions(installed_app_id)
+        return [SubscriptionEntity(self._api, entity)
+                for entity in resp["items"]]
+
+    def delete_subscriptions(self, installed_app_id: str) -> int:
+        """Delete an installedapp's subscriptions."""
+        resp = self._api.delete_all_subscriptions(installed_app_id)
+        return resp['count']
+
+    def delete_subscription(self, installed_app_id: str,
+                            subscription_id: str):
+        """Delete an individual subscription."""
+        self._api.delete_subscription(installed_app_id, subscription_id)
+
+    def create_subscription(self, subscription: Subscription) \
+            -> SubscriptionEntity:
+        """Create a new subscription for an installedapp."""
+        entity = self._api.create_subscription(
+            subscription.installed_app_id, subscription.to_data())
+        return SubscriptionEntity(self._api, entity)

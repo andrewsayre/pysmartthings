@@ -31,3 +31,9 @@ class APIUnknownError(Exception):
     def __init__(self):
         """Initialize instance of APIUnknownError."""
         Exception.__init__(self, UNKNOWN_ERROR)
+
+
+class APIInvalidGrant(Exception):
+    """Define an invalid grant error."""
+
+    pass

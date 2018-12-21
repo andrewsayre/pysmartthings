@@ -1,0 +1,7 @@
+{
+    "access_token": "ad0fbf27-48d4-4ee9-ba47-7f5fedd7be35",
+    "token_type": "bearer",
+    "refresh_token": "3d1a8d0a-a312-45c2-a9f5-95e59dc0e879",
+    "expires_in": 299,
+    "scope": "r:devices:*"
+}

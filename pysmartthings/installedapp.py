@@ -5,6 +5,7 @@ from typing import Sequence
 
 from .api import API
 from .entity import Entity
+from .subscription import SubscriptionEntity
 
 
 class InstalledAppType(Enum):
@@ -138,3 +139,9 @@ class InstalledAppEntity(Entity, InstalledApp):
     def save(self):
         """Save the changes made to the app."""
         raise NotImplementedError
+
+    def subscriptions(self) -> Sequence[SubscriptionEntity]:
+        """Get the subscriptions for the installedapp."""
+        data = self._api.get_subscriptions(self._installed_app_id)
+        return [SubscriptionEntity(self._api, entity)
+                for entity in data["items"]]
