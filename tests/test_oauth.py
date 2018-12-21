@@ -3,9 +3,11 @@
 import pytest
 
 from pysmartthings.api import API
-from pysmartthings.oauth import OAuth, OAuthEntity
+from pysmartthings.oauth import OAuth, OAuthEntity, OAuthToken
+from pysmartthings.oauthapi import OAuthAPI
 
 from . import api_mock
+from .utilities import get_json
 
 
 class TestOAuth:
@@ -73,3 +75,43 @@ class TestOAuthEntity:
         entity.scope.append('r:devices')
         # Act/Assert
         entity.save()
+
+
+class TestOAuthToken:
+    """Tests for the OAuthToken class."""
+
+    @staticmethod
+    def test_init():
+        """Tests the init method."""
+        # Arrange/Act
+        token = OAuthToken(None, None)
+        # Assert
+        assert token.expires_in == 0
+        assert token.scope == []
+
+    @staticmethod
+    def test_apply_data():
+        """Tests the apply data method."""
+        # Arrange
+        data = get_json('token_response.json')
+        # Act
+        token = OAuthToken(None, data)
+        # Assert
+        assert token.expires_in == 299
+        assert token.refresh_token == '3d1a8d0a-a312-45c2-a9f5-95e59dc0e879'
+        assert token.access_token == 'ad0fbf27-48d4-4ee9-ba47-7f5fedd7be35'
+        assert token.token_type == 'bearer'
+        assert token.scope == ['r:devices:*']
+
+    @staticmethod
+    def test_refresh(requests_mock):
+        """Tests the refresh method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = OAuthAPI(api_mock.CLIENT_ID, api_mock.CLIENT_SECRET)
+        token = OAuthToken(api, None)
+        token._refresh_token = api_mock.REFRESH_TOKEN
+        # Act
+        token.refresh()
+        # Assert
+        assert token.refresh_token == '3d1a8d0a-a312-45c2-a9f5-95e59dc0e879'

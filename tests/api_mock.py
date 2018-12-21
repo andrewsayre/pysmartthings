@@ -6,6 +6,7 @@ from requests import Request, Response
 from requests_mock.response import create_response
 
 from pysmartthings import api
+from pysmartthings import oauthapi
 
 from .utilities import get_json
 
@@ -15,6 +16,9 @@ DEVICE_ID = '743de49f-036f-4e9c-839a-2f89d57607db'
 INSTALLED_APP_ID = '4514eb36-f5fd-4ab2-9520-0597acd1d212'
 SUBSCRIPTION_ID = '7bdf5909-57c4-41f3-9089-e520513bd92a'
 LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
+CLIENT_ID = '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
+CLIENT_SECRET = '9b3fd445-42d6-441b-b386-99ea51e13cb0'
+REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
 
 UrlMock = namedtuple('UrlMock', 'method url request response')
 
@@ -69,6 +73,10 @@ URLS = [
 def setup(requests_mock):
     """Configure request mocks the API calls."""
     requests_mock.add_matcher(__matcher)
+
+    requests_mock.register_uri(
+        'POST', oauthapi.AUTH_API_TOKEN,
+        json=get_json('token_response.json'))
 
 
 def __matcher(req: Request) -> Response:
