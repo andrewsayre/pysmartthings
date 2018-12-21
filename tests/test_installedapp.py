@@ -69,3 +69,17 @@ class TestInstalledAppEntity:
         # Act/Assert
         with pytest.raises(NotImplementedError):
             app.save()
+
+    @staticmethod
+    def test_subscriptions(requests_mock):
+        """Tests the subscriptions method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        app = InstalledAppEntity(
+            api, installed_app_id=api_mock.INSTALLED_APP_ID)
+        app.refresh()
+        # Act
+        subscriptions = app.subscriptions()
+        # Assert
+        assert len(subscriptions) == 3

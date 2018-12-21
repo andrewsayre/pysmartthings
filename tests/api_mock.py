@@ -13,6 +13,8 @@ API_TOKEN = "Test Token"
 APP_ID = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
 DEVICE_ID = '743de49f-036f-4e9c-839a-2f89d57607db'
 INSTALLED_APP_ID = '4514eb36-f5fd-4ab2-9520-0597acd1d212'
+SUBSCRIPTION_ID = '7bdf5909-57c4-41f3-9089-e520513bd92a'
+LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
 
 UrlMock = namedtuple('UrlMock', 'method url request response')
 
@@ -38,7 +40,29 @@ URLS = [
         installed_app_id=INSTALLED_APP_ID),
             None, 'installedapp_get_response.json'),
     UrlMock('DELETE', api.API_INSTALLEDAPP.format(
-        installed_app_id=INSTALLED_APP_ID), None, {"count": 1})
+        installed_app_id=INSTALLED_APP_ID), None, {"count": 1}),
+    UrlMock('GET', api.API_SUBSCRIPTIONS.format(
+        installed_app_id=INSTALLED_APP_ID), None,
+            'subscriptions_get_response.json'),
+    UrlMock('DELETE', api.API_SUBSCRIPTIONS.format(
+        installed_app_id=INSTALLED_APP_ID), None,
+            {'count': 3}),
+    UrlMock('POST', api.API_SUBSCRIPTIONS.format(
+        installed_app_id=INSTALLED_APP_ID),
+            'subscription_post_request.json',
+            'subscription_post_response.json'),
+    UrlMock('GET', api.API_SUBSCRIPTION.format(
+        installed_app_id=INSTALLED_APP_ID,
+        subscription_id='7bdf5909-57c4-41f3-9089-e520513bd92a'), None,
+            'subscription_capability_get_response.json'),
+    UrlMock('GET', api.API_SUBSCRIPTION.format(
+        installed_app_id=INSTALLED_APP_ID,
+        subscription_id='498752fd-db87-4a5e-95f5-25a0e412838d'), None,
+            'subscription_device_get_response.json'),
+    UrlMock('DELETE', api.API_SUBSCRIPTION.format(
+        installed_app_id=INSTALLED_APP_ID,
+        subscription_id=SUBSCRIPTION_ID), None,
+            {'count': 1})
 ]
 
 

@@ -66,7 +66,7 @@ class SmartThings:
         """Delete an installedapp."""
         return self._api.delete_installedapp(installed_app_id) == {'count': 1}
 
-    def get_subscriptions(self, installed_app_id: str) \
+    def subscriptions(self, installed_app_id: str) \
             -> List[SubscriptionEntity]:
         """Get an installedapp's subscriptions."""
         resp = self._api.get_subscriptions(installed_app_id)
@@ -81,7 +81,7 @@ class SmartThings:
     def delete_subscription(self, installed_app_id: str,
                             subscription_id: str):
         """Delete an individual subscription."""
-        self._api.delete_subscription(installed_app_id, subscription_id)
+        return self._api.delete_subscription(installed_app_id, subscription_id) == {'count': 1}
 
     def create_subscription(self, subscription: Subscription) \
             -> SubscriptionEntity:

@@ -4,6 +4,7 @@ from pysmartthings import create
 from pysmartthings.app import App
 from pysmartthings.oauth import OAuth
 from pysmartthings.smartthings import SmartThings
+from pysmartthings.subscription import Subscription
 
 from . import api_mock
 from .utilities import get_json
@@ -136,3 +137,53 @@ class TestSmartThings:
         result = smartthings.delete_installedapp(api_mock.INSTALLED_APP_ID)
         # Assert
         assert result
+
+    @staticmethod
+    def test_subscriptions(requests_mock):
+        """Tests the get subscriptions method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        subscriptions = smartthings.subscriptions(api_mock.INSTALLED_APP_ID)
+        # Assert
+        assert len(subscriptions) == 3
+
+    @staticmethod
+    def test_delete_subscriptions(requests_mock):
+        """Tests the delete subscriptions method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        count = smartthings.delete_subscriptions(api_mock.INSTALLED_APP_ID)
+        # Assert
+        assert count == 3
+
+    @staticmethod
+    def test_delete_subscription(requests_mock):
+        """Tests the delete subscription method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        deleted = smartthings.delete_subscription(
+            api_mock.INSTALLED_APP_ID, api_mock.SUBSCRIPTION_ID)
+        # Assert
+        assert deleted
+
+    @staticmethod
+    def test_create_subscription(requests_mock):
+        """Tests the create subscription method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        sub = Subscription()
+        sub.source_type = 'CAPABILITY'
+        sub.location_id = api_mock.LOCATION_ID
+        sub.capability = 'switch'
+        sub.installed_app_id = api_mock.INSTALLED_APP_ID
+        # Act
+        entity = smartthings.create_subscription(sub)
+        # Assert
+        assert entity.subscription_id == api_mock.SUBSCRIPTION_ID

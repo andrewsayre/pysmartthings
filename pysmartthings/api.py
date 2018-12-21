@@ -204,7 +204,7 @@ class API:
         """
         return self._make_request(
             'get',
-            API_SUBSCRIPTIONS.format(
+            API_SUBSCRIPTION.format(
                 installed_app_id=installed_app_id,
                 subscription_id=subscription_id))
 
@@ -216,7 +216,7 @@ class API:
         """
         return self._make_request(
             'delete',
-            API_SUBSCRIPTIONS.format(
+            API_SUBSCRIPTION.format(
                 installed_app_id=installed_app_id,
                 subscription_id=subscription_id))
 

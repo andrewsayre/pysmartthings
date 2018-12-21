@@ -2,7 +2,7 @@
     "items": [
         {
             "id": "1e0a1706-2b52-403c-915b-df096470bf03",
-            "installedAppId": "cce8a165-6ec8-4c2b-b4c8-734d66c48615",
+            "installedAppId": "4514eb36-f5fd-4ab2-9520-0597acd1d212",
             "sourceType": "CAPABILITY",
             "capability": {
                 "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
@@ -10,6 +10,34 @@
                 "attribute": "*",
                 "value": "*",
                 "stateChangeOnly": true,
+                "modes": []
+            }
+        },
+        {
+            "id": "498752fd-db87-4a5e-95f5-25a0e412838d",
+            "installedAppId": "4514eb36-f5fd-4ab2-9520-0597acd1d212",
+            "sourceType": "DEVICE",
+            "device": {
+                "deviceId": "64e7f664-5b99-4573-b76d-03be3021dc78",
+                "componentId": "*",
+                "capability": "*",
+                "attribute": "*",
+                "value": "*",
+                "stateChangeOnly": true,
+                "modes": []
+            }
+        },
+        {
+            "id": "7bdf5909-57c4-41f3-9089-e520513bd92a",
+            "installedAppId": "4514eb36-f5fd-4ab2-9520-0597acd1d212",
+            "sourceType": "CAPABILITY",
+            "capability": {
+                "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+                "capability": "switchLevel",
+                "attribute": "*",
+                "value": "*",
+                "stateChangeOnly": true,
+                "subscriptionName": "switchLevel_sub",
                 "modes": []
             }
         }

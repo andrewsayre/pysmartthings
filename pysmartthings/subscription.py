@@ -51,7 +51,7 @@ class Subscription:
         self._subscription_id = data['id']
         self._installed_app_id = data['installedAppId']
         self._source_type = SourceType(data['sourceType'])
-        if self._source_type == SourceType.CAPABILITY:
+        if self._source_type is SourceType.CAPABILITY:
             capability = data['capability']
             self._location_id = capability['locationId']
             self._capability = capability['capability']
@@ -61,7 +61,7 @@ class Subscription:
                 'stateChangeOnly', True)
             self._subscription_name = capability.get(
                 'subscriptionName', None)
-        if self._source_type == SourceType.DEVICE:
+        if self._source_type is SourceType.DEVICE:
             device = data['device']
             self._device_id = device['deviceId']
             self._component_id = device.get('componentId', '*')
@@ -76,10 +76,10 @@ class Subscription:
         data = {
             'sourceType': self._source_type.value
         }
-        if self._source_type == SourceType.CAPABILITY:
+        if self._source_type is SourceType.CAPABILITY:
             capability = {
-                'locationId': self.location_id,
-                'capability': self.capability
+                'locationId': self._location_id,
+                'capability': self._capability
             }
             if self._attribute and self._attribute != '*':
                 capability['attribute'] = self._attribute
@@ -90,7 +90,7 @@ class Subscription:
             if self._subscription_name:
                 capability['subscriptionName'] = self._subscription_name
             data['capability'] = capability
-        if self._source_type == SourceType.DEVICE:
+        if self._source_type is SourceType.DEVICE:
             device = {
                 'deviceId': self._device_id,
                 'stateChangeOnly': self._state_change_only
@@ -131,7 +131,7 @@ class Subscription:
     @source_type.setter
     def source_type(self, value: Any):
         """Set the typ eof event that is being subscribed to."""
-        self._value = SourceType(value)
+        self._source_type = SourceType(value)
 
     @property
     def capability(self) -> str:

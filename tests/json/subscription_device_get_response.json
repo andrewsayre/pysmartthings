@@ -1,0 +1,14 @@
+{
+    "id": "498752fd-db87-4a5e-95f5-25a0e412838d",
+    "installedAppId": "4514eb36-f5fd-4ab2-9520-0597acd1d212",
+    "sourceType": "DEVICE",
+    "device": {
+        "deviceId": "64e7f664-5b99-4573-b76d-03be3021dc78",
+        "componentId": "*",
+        "capability": "*",
+        "attribute": "*",
+        "value": "*",
+        "stateChangeOnly": true,
+        "modes": []
+    }
+}
