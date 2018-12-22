@@ -109,8 +109,7 @@ class TestOAuthToken:
         # Arrange
         api_mock.setup(requests_mock)
         api = OAuthAPI(api_mock.CLIENT_ID, api_mock.CLIENT_SECRET)
-        token = OAuthToken(api, None)
-        token._refresh_token = api_mock.REFRESH_TOKEN
+        token = OAuthToken(api, refresh_token=api_mock.REFRESH_TOKEN)
         # Act
         token.refresh()
         # Assert

@@ -1,7 +1,7 @@
 """Define the subscription module."""
 
 from enum import Enum
-from typing import Any
+from typing import Any, Optional
 
 from .api import API
 from .entity import Entity
@@ -217,7 +217,7 @@ class Subscription:
 class SubscriptionEntity(Entity, Subscription):
     """Define a subscription entity."""
 
-    def __init__(self, api: API, data=None):
+    def __init__(self, api: API, data: Optional[dict] = None):
         """Create a new instance of the SubscriptionEntity class."""
         Entity.__init__(self, api)
         Subscription.__init__(self)

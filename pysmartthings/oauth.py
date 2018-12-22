@@ -114,11 +114,12 @@ class OAuthToken:
     _token_type: str
     _scope: List[str]
 
-    def __init__(self, api: OAuthAPI, data: Optional[dict]):
+    def __init__(self, api: OAuthAPI, data: Optional[dict] = None,
+                 refresh_token: Optional[str] = None):
         """Create a new instance of the OAuthToken class."""
         self._api = api
         self._access_token = None
-        self._refresh_token = None
+        self._refresh_token = refresh_token
         self._expires_in = 0
         self._token_type = None
         self._scope = []

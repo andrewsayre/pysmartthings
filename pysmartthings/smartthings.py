@@ -81,7 +81,8 @@ class SmartThings:
     def delete_subscription(self, installed_app_id: str,
                             subscription_id: str):
         """Delete an individual subscription."""
-        return self._api.delete_subscription(installed_app_id, subscription_id) == {'count': 1}
+        return self._api.delete_subscription(
+            installed_app_id, subscription_id) == {'count': 1}
 
     def create_subscription(self, subscription: Subscription) \
             -> SubscriptionEntity:

@@ -3,7 +3,8 @@
 import pytest
 
 from pysmartthings.api import API
-from pysmartthings.subscription import Subscription, SourceType, SubscriptionEntity
+from pysmartthings.subscription import (
+    SourceType, Subscription, SubscriptionEntity)
 
 from . import api_mock
 from .utilities import get_json
@@ -124,8 +125,11 @@ class TestSubscriptionEntity:
         api_mock.setup(requests_mock)
         api = API(api_mock.API_TOKEN)
         app = SubscriptionEntity(api)
-        app.installed_app_id = api_mock.INSTALLED_APP_ID
-        app._subscription_id = '7bdf5909-57c4-41f3-9089-e520513bd92a'
+        app.apply_data({
+            'id': '7bdf5909-57c4-41f3-9089-e520513bd92a',
+            'installedAppId': api_mock.INSTALLED_APP_ID,
+            'sourceType': 'UNKNOWN'
+        })
         # Act
         app.refresh()
         # Assert

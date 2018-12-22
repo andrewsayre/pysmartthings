@@ -5,8 +5,7 @@ from collections import namedtuple
 from requests import Request, Response
 from requests_mock.response import create_response
 
-from pysmartthings import api
-from pysmartthings import oauthapi
+from pysmartthings import api, oauthapi
 
 from .utilities import get_json
 
