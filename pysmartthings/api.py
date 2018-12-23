@@ -6,6 +6,7 @@ from . import errors
 
 API_BASE: str = 'https://api.smartthings.com/v1/'
 API_LOCATIONS = "locations"
+API_LOCATION = API_LOCATIONS + '/{location_id}'
 API_DEVICES: str = "devices"
 API_DEVICE: str = API_DEVICES + '/{device_id}'
 API_DEVICE_STATUS: str = "devices/{device_id}/status"
@@ -37,6 +38,15 @@ class API:
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listLocations
         """
         return self._make_request('get', API_LOCATIONS)
+
+    def get_location(self, location_id: str) -> dict:
+        """
+        Get a specific location.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getLocation
+        """
+        return self._make_request(
+            'get', API_LOCATION.format(location_id=location_id))
 
     def get_devices(self) -> dict:
         """

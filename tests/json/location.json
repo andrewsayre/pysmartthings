@@ -1,0 +1,12 @@
+{
+    "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+    "name": "Test Home",
+    "countryCode": "USA",
+    "latitude": 45.00708112,
+    "longitude": -93.11223629,
+    "regionRadius": 150,
+    "temperatureScale": "F",
+    "timeZoneId": null,
+    "locale": "en",
+    "backgroundImage": null
+}

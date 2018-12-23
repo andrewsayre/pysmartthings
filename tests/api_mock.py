@@ -23,6 +23,8 @@ UrlMock = namedtuple('UrlMock', 'method url request response')
 
 URLS = [
     UrlMock('GET', api.API_LOCATIONS, None, 'locations.json'),
+    UrlMock('GET', api.API_LOCATION.format(location_id=LOCATION_ID),
+            None, 'location.json'),
     UrlMock('GET', api.API_DEVICES, None, 'devices.json'),
     UrlMock('GET', api.API_DEVICE.format(device_id=DEVICE_ID),
             None, 'device.json'),

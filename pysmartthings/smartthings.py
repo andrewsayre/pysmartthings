@@ -6,7 +6,7 @@ from .api import API
 from .app import App, AppEntity
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity
-from .location import Location
+from .location import LocationEntity
 from .oauth import OAuth, OAuthClient, OAuthEntity
 from .subscription import Subscription, SubscriptionEntity
 
@@ -26,7 +26,7 @@ class SmartThings:
     def locations(self) -> List:
         """Retrieve SmartThings locations."""
         resp = self._api.get_locations()
-        return [Location(self._api, entity) for entity in resp["items"]]
+        return [LocationEntity(self._api, entity) for entity in resp["items"]]
 
     def devices(self) -> List:
         """Retrieve SmartThings devices."""
