@@ -1,0 +1,59 @@
+{
+    "components": {
+        "main": {
+            "button": {
+                "button": {
+                    "value": null
+                },
+                "numberOfButtons": {
+                    "value": null
+                },
+                "supportedButtonValues": {
+                    "value": null
+                }
+            },
+            "indicator": {
+                "indicatorStatus": {
+                    "value": "when off"
+                }
+            },
+            "actuator": {},
+            "light": {
+                "switch": {
+                    "value": "on"
+                }
+            },
+            "healthCheck": {
+                "checkInterval": {
+                    "value": 1920,
+                    "unit": "s",
+                    "data": {
+                        "protocol": "zwave",
+                        "hubHardwareId": "000F"
+                    }
+                },
+                "healthStatus": {
+                    "value": null,
+                    "data": {}
+                },
+                "DeviceWatch-DeviceStatus": {
+                    "value": null,
+                    "data": {}
+                }
+            },
+            "refresh": {},
+            "switchLevel": {
+                "level": {
+                    "value": 100,
+                    "unit": "%"
+                }
+            },
+            "sensor": {},
+            "switch": {
+                "switch": {
+                    "value": "on"
+                }
+            }
+        }
+    }
+}

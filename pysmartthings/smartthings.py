@@ -4,7 +4,7 @@ from typing import List
 
 from .api import API
 from .app import App, AppEntity
-from .device import Device
+from .device import DeviceEntity
 from .installedapp import InstalledAppEntity
 from .location import Location
 from .oauth import OAuth, OAuthClient, OAuthEntity
@@ -31,7 +31,7 @@ class SmartThings:
     def devices(self) -> List:
         """Retrieve SmartThings devices."""
         resp = self._api.get_devices()
-        return [Device(self._api, entity) for entity in resp["items"]]
+        return [DeviceEntity(self._api, entity) for entity in resp["items"]]
 
     def apps(self) -> List[AppEntity]:
         """Retrieve list of apps."""

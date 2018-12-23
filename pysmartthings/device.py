@@ -1,136 +1,220 @@
 """Defines a SmartThings device."""
 
-from types import MethodType
+from enum import Enum
+from typing import Dict, Optional, Sequence
+
+from .api import API
+from .entity import Entity
+
+
+class Capability:
+    """Define common capabilities."""
+
+    switch = 'switch'
+    switch_level = 'switchLevel'
+    light = 'light'
+    motion_sensor = 'motionSensor'
+
+
+class DeviceType(Enum):
+    """Define the device type."""
+
+    UNKNOWN = 'UNKNOWN'
+    DTH = 'DTH'
+    ENDPOINT_APP = 'ENDPOINT_APP'
 
 
 class Device:
     """Represents a SmartThings device."""
 
-    # pylint: disable=too-many-instance-attributes
+    def __init__(self):
+        """Initialize a new device."""
+        self._device_id = None
+        self._name = None
+        self._label = None
+        self._location_id = None
+        self._type = DeviceType.UNKNOWN
+        self._device_type_id = None
+        self._device_type_name = None
+        self._device_type_network = None
+        self._components = {}
+        self._capabilities = []
 
-    def __init__(self, api, entity):
-        """
-        Initialize a new device.
-
-        :param api: The API service
-        :type api: API
-
-        :param entity: The json representation of the device form the API
-        """
-        self._api = api
-        self._device_id = entity["deviceId"]
-        self._name = entity["name"]
-        self._label = entity["label"]
-        self._location_id = entity["locationId"]
-        self._type = entity["type"]
-        self._status = {}
-
-        if self._type == "DTH":
-            dth = entity["dth"]
+    def apply_data(self, data: dict):
+        """Apply the given data dictionary."""
+        self._device_id = data['deviceId']
+        self._name = data['name']
+        self._label = data['label']
+        self._location_id = data['locationId']
+        self._type = DeviceType(data['type'])
+        self._components.clear()
+        self._capabilities.clear()
+        for comp_data in data['components']:
+            capabilities = []
+            for capability_data in comp_data['capabilities']:
+                capability_id = capability_data['id']
+                capabilities.append(capability_id)
+                if id not in self._capabilities:
+                    self._capabilities.append(capability_id)
+            self._components[comp_data['id']] = capabilities
+        if self._type is DeviceType.DTH:
+            dth = data['dth']
             self._device_type_id = dth["deviceTypeId"]
             self._device_type_name = dth["deviceTypeName"]
             self._device_type_network = dth["deviceNetworkType"]
 
-        self._capabilities = []
-        for component in entity["components"]:
-            if component["id"] == "main":
-                for capability in component["capabilities"]:
-                    capability_id = capability["id"]
-                    self._capabilities.append(capability_id)
-                    Device._add_device_commands(capability_id, self)
-                break
+    @property
+    def device_id(self) -> str:
+        """Get the SmartThings device id."""
+        return self._device_id
 
-    def update(self):
-        """Update the status of the device."""
+    @property
+    def name(self) -> str:
+        """Get the SmartThings device name."""
+        return self._name
+
+    @property
+    def label(self) -> str:
+        """Get the SmartThings user assigned label."""
+        return self._label
+
+    @property
+    def location_id(self) -> str:
+        """Get the SmartThings location assigned to the device."""
+        return self._location_id
+
+    @property
+    def type(self) -> DeviceType:
+        """Get the SmartThings device type."""
+        return self._type
+
+    @property
+    def device_type_id(self) -> str:
+        """Get the SmartThings device type handler id."""
+        return self._device_type_id
+
+    @property
+    def device_type_name(self) -> str:
+        """Get the SmartThings device type handler name."""
+        return self._device_type_name
+
+    @property
+    def device_type_network(self) -> str:
+        """Get the SmartThings device type handler network."""
+        return self._device_type_network
+
+    @property
+    def components(self) -> Dict[str, Sequence[str]]:
+        """Get the components of the device."""
+        return self._components
+
+    @property
+    def capabilities(self) -> Sequence[str]:
+        """Get a unique list of all capabilities across components."""
+        return self._capabilities
+
+
+class DeviceStatus:
+    """Define the device status."""
+
+    def __init__(self, api: API, device_id: str, data=None):
+        """Create a new instance of the DeviceStatusEntity class."""
+        self._api = api
+        self._attributes = {}
+        self._device_id = device_id
+        if data:
+            self.apply_data(data)
+
+    @property
+    def device_id(self) -> str:
+        """Get the device id."""
+        return self._device_id
+
+    @device_id.setter
+    def device_id(self, value: str):
+        """Set the device id."""
+        self._device_id = value
+
+    def apply_data(self, data: dict):
+        """Apply the values from the given data structure."""
+        self._attributes.clear()
+        for capabilities in data['components'].values():
+            for attributes in capabilities.values():
+                for attribute, value in attributes.items():
+                    self._attributes[attribute] = value['value']
+
+    def refresh(self):
+        """Refresh the values of the entity."""
         data = self._api.get_device_status(self.device_id)
-        if data is None:
-            return False
-        for key, value in data.items():
-            if key == "switchLevel":
-                self._status["switchLevel"] = value["level"]["value"]
-            elif key == "switch":
-                self._status["switch"] = value["switch"]["value"]
-            elif key == "light":
-                self._status["light"] = value["switch"]["value"]
-            elif key == "motionSensor":
-                self._status["motionSensor"] = value["motion"]["value"]
-        return True
+        if data:
+            self.apply_data(data)
+
+    @property
+    def attributes(self):
+        """Get all of the attribute values."""
+        return self._attributes
+
+    @property
+    def switch(self) -> bool:
+        """Get the switch attribute."""
+        return self._attributes.get('switch', None) == 'on'
+
+    @property
+    def level(self) -> int:
+        """Get the level attribute."""
+        return int(self._attributes.get('level', 0))
+
+    @property
+    def motion(self) -> bool:
+        """Get the motion attribute."""
+        return self._attributes.get('motion', None) == 'on'
+
+
+class DeviceEntity(Entity, Device):
+    """Define a device entity."""
+
+    def __init__(self, api: API, data: Optional[dict] = None,
+                 device_id: Optional[str] = None):
+        """Create a new instance of the DeviceEntity class."""
+        Entity.__init__(self, api)
+        Device.__init__(self)
+        if data:
+            self.apply_data(data)
+        if device_id:
+            self._device_id = device_id
+        self._status = DeviceStatus(api, self._device_id)
+
+    def refresh(self):
+        """Refresh the device information using the API."""
+        data = self._api.get_device(self._device_id)
+        if data:
+            self.apply_data(data)
+        self._status.device_id = self._device_id
+
+    def save(self):
+        """Save the changes made to the device."""
+        raise NotImplementedError
 
     def command(self, capability, command, args=None):
         """Execute a command on the device."""
         response = self._api.post_command(
             self._device_id, capability, command, args)
-        if response == {}:
-            return True
-        return False
+        return response == {}
 
-    @property
-    def device_id(self):
-        """Get the SmartThings device id."""
-        return self._device_id
+    def switch_on(self) -> bool:
+        """Turn on the device."""
+        return self.command(Capability.switch, "on")
 
-    @property
-    def name(self):
-        """Get the SmartThings device name."""
-        return self._name
+    def switch_off(self) -> bool:
+        """Turn on the device."""
+        return self.command(Capability.switch, "off")
 
-    @property
-    def label(self):
-        """Get the SmartThings user assigned label."""
-        return self._label
-
-    @property
-    def location_id(self):
-        """Get the SmartThings location assigned to the device."""
-        return self._location_id
-
-    @property
-    def type(self):
-        """Get the SmartThings device type."""
-        return self._type
-
-    @property
-    def device_type_id(self):
-        """Get the SmartThings device type handler id."""
-        return self._device_type_id
-
-    @property
-    def device_type_name(self):
-        """Get the SmartThings device type handler name."""
-        return self._device_type_name
-
-    @property
-    def device_type_network(self):
-        """Get the SmartThings device type handler network."""
-        return self._device_type_network
-
-    @property
-    def capabilities(self):
-        """Get the SmartThings capabilities of the device."""
-        return self._capabilities
+    def set_level(self, level: int, duration: int) -> bool:
+        """Set the level of the device."""
+        return self.command(Capability.switch_level,
+                            'setLevel', [level, duration])
 
     @property
     def status(self):
-        """Get the capability status."""
+        """Get the status entity of the device."""
         return self._status
-
-    @staticmethod
-    def _add_device_commands(capability, target):
-        if capability == "switch":
-            def switch_on(self):
-                """Turn on the device."""
-                return self.command("switch", "on")
-
-            def switch_off(self):
-                """Turn off the device."""
-                return self.command("switch", "off")
-
-            target.switch_on = MethodType(switch_on, target)
-            target.switch_off = MethodType(switch_off, target)
-        elif capability == "switchLevel":
-            def set_level(self, level: int, duration: int):
-                """Set the switch level of the device."""
-                return self.command(
-                    "switchLevel", "setLevel", [level, duration])
-
-            target.set_level = MethodType(set_level, target)

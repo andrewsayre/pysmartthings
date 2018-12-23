@@ -1,0 +1,9 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "switch",
+      "command": "on"
+    }
+  ]
+}

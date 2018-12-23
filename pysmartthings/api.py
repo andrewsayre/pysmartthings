@@ -7,15 +7,16 @@ from . import errors
 API_BASE: str = 'https://api.smartthings.com/v1/'
 API_LOCATIONS = "locations"
 API_DEVICES: str = "devices"
-API_DEVICE_STATUS: str = "devices/{device_id}/components/main/status"
+API_DEVICE: str = API_DEVICES + '/{device_id}'
+API_DEVICE_STATUS: str = "devices/{device_id}/status"
 API_DEVICE_COMMAND: str = "devices/{device_id}/commands"
-API_APPS = "apps"
-API_APP = "apps/{app_id}"
-API_APP_OAUTH = "apps/{app_id}/oauth"
-API_INSTALLEDAPPS = "installedapps"
-API_INSTALLEDAPP = "installedapps/{installed_app_id}"
-API_SUBSCRIPTIONS = API_INSTALLEDAPP + "/subscriptions"
-API_SUBSCRIPTION = API_SUBSCRIPTIONS + "/{subscription_id}"
+API_APPS: str = "apps"
+API_APP: str = "apps/{app_id}"
+API_APP_OAUTH: str = "apps/{app_id}/oauth"
+API_INSTALLEDAPPS: str = "installedapps"
+API_INSTALLEDAPP: str = "installedapps/{installed_app_id}"
+API_SUBSCRIPTIONS: str = API_INSTALLEDAPP + "/subscriptions"
+API_SUBSCRIPTION: str = API_SUBSCRIPTIONS + "/{subscription_id}"
 
 
 class API:
@@ -45,6 +46,15 @@ class API:
         """
         return self._make_request('get', API_DEVICES)
 
+    def get_device(self, device_id: str) -> dict:
+        """
+        Get as specific device.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevice
+        """
+        return self._make_request(
+            'get', API_DEVICE.format(device_id=device_id))
+
     def get_device_status(self, device_id: str) -> dict:
         """Get the status of a specific device."""
         return self._make_request(
@@ -63,7 +73,7 @@ class API:
                 {
                     "component": component,
                     "capability": capability,
-                    "command": command,
+                    "command": command
                 }
             ]
         }

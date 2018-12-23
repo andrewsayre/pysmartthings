@@ -52,8 +52,8 @@ A list of devices across all locations in SmartThings can be retrieved by invoki
 ```
 For Device Type Handlers (DTH) additional information is available about the handler:
 ```
->>> device.type
-'DTH'
+>>> device.type.value
+DTH
 >>> device.device_type_name
 'GE Dimmer Switch 14294'
 >>> device.device_type_network
@@ -61,12 +61,16 @@ For Device Type Handlers (DTH) additional information is available about the han
 >>> device.device_type_id
 '23a143cf-bad9-4dc1-a56b-fd93ff01e9f9'
 ```
-The current status of the device is populated when `Device.update()` is called.  The status dictionary represents the current values of select capabilities.
+The current status of the device is populated when `Device.status.update()` is called.  The DeviceStatus class represents the current values of the capabilities and provides several normalized property accessors.
 ```
->>> device.update()
+>>> device.status.update()
+
+>>> device.status.attributes
+{'button': 'pressed', 'numberOfButtons': None, 'supportedButtonValues': None, 'indicatorStatus': 'when off', 'switch': 'on', 'checkInterval': 1920, 'healthStatus': None, 'DeviceWatch-DeviceStatus': None, 'level': 100}
+>>> device.status.switch
 True
->> device.status
-{'light': 'off', 'switchLevel': 100, 'switch': 'off'}
+>>> device.status.level
+100
 ```
 #### Device Commands
 You can execute a command on a device by calling the `Device.command(capability, command, args=None)` function.  The `capability` parameter corresponds to one of the capabilities detected and `command` is one of the define commands. `args` is an array of parameters to pass to the command (optional).  See the [SmartThings Capability Reference](https://smartthings.developer.samsung.com/develop/api-ref/capabilities.html) for more information.

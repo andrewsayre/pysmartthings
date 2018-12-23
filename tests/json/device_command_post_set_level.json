@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "switchLevel",
+      "command": "setLevel",
+      "arguments": [75, 2]
+    }
+  ]
+}
