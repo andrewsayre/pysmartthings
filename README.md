@@ -6,7 +6,14 @@
 [![image](https://img.shields.io/pypi/l/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
-A python library for interacting with the SmartThings cloud API.  This is an early (beta / incomplete) version of the package.
+A python library for interacting with the SmartThings cloud API.
+## Features
+The package is still in beta, but the following features are available:
+1. Locations: List, Get
+2. Devices: List, Get, Command, Status
+3. Apps: List, Get, Create, Update, Delete, OAuth Get, OAuth Update
+4. InstalledApps: List, Get, Delete
+5. Subscriptions: List, Get, Create, Delete, Delete All  
 ## Installation
 ```commandline
 pip install pysmartthings
@@ -17,7 +24,7 @@ pip install --use-wheel pysmartthings
 ```
 ## Usage
 ### Initialization
-Call the create function and pass in your [personal access token](https://account.smartthings.com/tokens).  This will initially populate `locations` and `devices`.
+Call `create` and pass in your [personal access token](https://account.smartthings.com/tokens).  Create will return an instance of the `SmartThings` class.
 ```
 >>> import pysmartthings
 >>> st = pysmartthings.create("PERSONAL_ACCESS_TOKEN")
@@ -35,7 +42,7 @@ A list of locations in SmartThings can be retrieved by invoking `SmartThings.loc
 '5c03e518-118a-44cb-85ad-7877d0b302e4' 
 ```
 ### Devices
-A list of devices across all locations in SmartThings can be retrieved by invoking `SmartThings.devices()`.
+A list of devices across all locations in SmartThings can be retrieved by invoking `SmartThings.devices(location_ids=None, capabilities=None, device_ids=None)`.  The optional parameters allow filtering the returned list.  
 ```
 >>> devices = st.devices()
 >>> len(devices)
@@ -61,9 +68,9 @@ DTH
 >>> device.device_type_id
 '23a143cf-bad9-4dc1-a56b-fd93ff01e9f9'
 ```
-The current status of the device is populated when `Device.status.update()` is called.  The DeviceStatus class represents the current values of the capabilities and provides several normalized property accessors.
+The current status of the device is populated when `Device.status.refresh()` is called.  The DeviceStatus class represents the current values of the capabilities and provides several normalized property accessors.
 ```
->>> device.status.update()
+>>> device.status.refresh()
 
 >>> device.status.attributes
 {'button': 'pressed', 'numberOfButtons': None, 'supportedButtonValues': None, 'indicatorStatus': 'when off', 'switch': 'on', 'checkInterval': 1920, 'healthStatus': None, 'DeviceWatch-DeviceStatus': None, 'level': 100}
