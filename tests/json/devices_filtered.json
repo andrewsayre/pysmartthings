@@ -1,0 +1,85 @@
+{
+    "items": [
+        {
+            "deviceId": "be1a61ce-c2a4-4b32-bf8c-31de6d3fa7dd",
+            "name": "Virtual Dimmer Switch",
+            "label": "Dimmer 1",
+            "locationId": "5c03e518-118a-44cb-85ad-7877d0b302e4",
+            "deviceTypeId": "d95742f6-2856-4342-a4f8-a23d8aacf05b",
+            "deviceTypeName": "Virtual Dimmer Switch",
+            "deviceNetworkType": "UNKNOWN",
+            "components": [
+                {
+                    "id": "main",
+                    "capabilities": [
+                        {
+                            "id": "switch",
+                            "version": 1
+                        },
+                        {
+                            "id": "switchLevel",
+                            "version": 1
+                        },
+                        {
+                            "id": "sensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "actuator",
+                            "version": 1
+                        }
+                    ]
+                }
+            ],
+            "dth": {
+                "deviceTypeId": "d95742f6-2856-4342-a4f8-a23d8aacf05b",
+                "deviceTypeName": "Virtual Dimmer Switch",
+                "deviceNetworkType": "UNKNOWN",
+                "completedSetup": true,
+                "networkSecurityLevel": "UNKNOWN"
+            },
+            "type": "DTH"
+        },
+        {
+            "deviceId": "edd26ac6-d156-4505-9647-3b20118ae4d1",
+            "name": "Virtual Dimmer Switch",
+            "label": "Dimmer 2",
+            "locationId": "5c03e518-118a-44cb-85ad-7877d0b302e4",
+            "deviceTypeId": "d95742f6-2856-4342-a4f8-a23d8aacf05b",
+            "deviceTypeName": "Virtual Dimmer Switch",
+            "deviceNetworkType": "UNKNOWN",
+            "components": [
+                {
+                    "id": "main",
+                    "capabilities": [
+                        {
+                            "id": "switch",
+                            "version": 1
+                        },
+                        {
+                            "id": "switchLevel",
+                            "version": 1
+                        },
+                        {
+                            "id": "sensor",
+                            "version": 1
+                        },
+                        {
+                            "id": "actuator",
+                            "version": 1
+                        }
+                    ]
+                }
+            ],
+            "dth": {
+                "deviceTypeId": "d95742f6-2856-4342-a4f8-a23d8aacf05b",
+                "deviceTypeName": "Virtual Dimmer Switch",
+                "deviceNetworkType": "UNKNOWN",
+                "completedSetup": true,
+                "networkSecurityLevel": "UNKNOWN"
+            },
+            "type": "DTH"
+        }
+    ],
+    "_links": {}
+}

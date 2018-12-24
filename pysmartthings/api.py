@@ -1,5 +1,7 @@
 """Utility for invoking the SmartThings Cloud API."""
 
+from typing import Optional
+
 import requests
 
 from . import errors
@@ -37,7 +39,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listLocations
         """
-        return self._make_request('get', API_LOCATIONS)
+        return self._request('get', API_LOCATIONS)
 
     def get_location(self, location_id: str) -> dict:
         """
@@ -45,16 +47,16 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getLocation
         """
-        return self._make_request(
+        return self._request(
             'get', API_LOCATION.format(location_id=location_id))
 
-    def get_devices(self) -> dict:
+    def get_devices(self, params: Optional[dict] = None) -> dict:
         """
         Get the device definitions.
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevices
         """
-        return self._make_request('get', API_DEVICES)
+        return self._request('get', API_DEVICES, params=params)
 
     def get_device(self, device_id: str) -> dict:
         """
@@ -62,12 +64,12 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevice
         """
-        return self._make_request(
+        return self._request(
             'get', API_DEVICE.format(device_id=device_id))
 
     def get_device_status(self, device_id: str) -> dict:
         """Get the status of a specific device."""
-        return self._make_request(
+        return self._request(
             'get',
             API_DEVICE_STATUS.format(device_id=device_id))
 
@@ -90,7 +92,7 @@ class API:
         if args:
             data["commands"][0]["arguments"] = args
 
-        return self._make_request(
+        return self._request(
             'post',
             API_DEVICE_COMMAND.format(device_id=device_id),
             data)
@@ -101,7 +103,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listApps
         """
-        return self._make_request('get', API_APPS)
+        return self._request('get', API_APPS)
 
     def get_app_details(self, app_id: str) -> dict:
         """
@@ -109,7 +111,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getApp
         """
-        return self._make_request(
+        return self._request(
             'get',
             API_APP.format(app_id=app_id))
 
@@ -119,7 +121,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/createApp
         """
-        return self._make_request('post', API_APPS, data)
+        return self._request('post', API_APPS, data)
 
     def update_app(self, app_id: str, data: dict) -> dict:
         """
@@ -127,7 +129,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateApp
         """
-        return self._make_request(
+        return self._request(
             'put', API_APP.format(app_id=app_id), data)
 
     def delete_app(self, app_id: str):
@@ -136,7 +138,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteApp
         """
-        return self._make_request(
+        return self._request(
             'delete', API_APP.format(app_id=app_id))
 
     def get_app_oauth(self, app_id: str) -> dict:
@@ -145,7 +147,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getAppOauth
         """
-        return self._make_request('get', API_APP_OAUTH.format(app_id=app_id))
+        return self._request('get', API_APP_OAUTH.format(app_id=app_id))
 
     def update_app_oauth(self, app_id: str, data: dict) -> dict:
         """
@@ -153,7 +155,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateAppOauth
         """
-        return self._make_request(
+        return self._request(
             'put', API_APP_OAUTH.format(app_id=app_id), data)
 
     def get_installedapps(self) -> dict:
@@ -162,7 +164,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listInstallations
         """
-        return self._make_request('get', API_INSTALLEDAPPS)
+        return self._request('get', API_INSTALLEDAPPS)
 
     def get_installedapp(self, installed_app_id: str) -> dict:
         """
@@ -170,7 +172,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getInstallation
         """
-        return self._make_request(
+        return self._request(
             'get',
             API_INSTALLEDAPP.format(installed_app_id=installed_app_id))
 
@@ -180,7 +182,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/deleteInstallation
         """
-        return self._make_request(
+        return self._request(
             'delete', API_INSTALLEDAPP.format(
                 installed_app_id=installed_app_id))
 
@@ -190,7 +192,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listSubscriptions
         """
-        return self._make_request(
+        return self._request(
             'get',
             API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
 
@@ -200,7 +202,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/saveSubscription
         """
-        return self._make_request(
+        return self._request(
             'post',
             API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id),
             data)
@@ -211,7 +213,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteAllSubscriptions
         """
-        return self._make_request(
+        return self._request(
             'delete',
             API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
 
@@ -222,7 +224,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getSubscription
         """
-        return self._make_request(
+        return self._request(
             'get',
             API_SUBSCRIPTION.format(
                 installed_app_id=installed_app_id,
@@ -234,16 +236,18 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteSubscription
         """
-        return self._make_request(
+        return self._request(
             'delete',
             API_SUBSCRIPTION.format(
                 installed_app_id=installed_app_id,
                 subscription_id=subscription_id))
 
-    def _make_request(self, method: str, resource: str, data: dict = None):
+    def _request(self, method: str, resource: str, data: dict = None,
+                 params: dict = None):
         response = requests.request(
             method,
             API_BASE + resource,
+            params=params,
             json=data,
             headers=self._headers)
 

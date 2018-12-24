@@ -26,8 +26,15 @@ URLS = [
     UrlMock('GET', api.API_LOCATION.format(location_id=LOCATION_ID),
             None, 'location.json'),
     UrlMock('GET', api.API_DEVICES, None, 'devices.json'),
+    UrlMock('GET', api.API_DEVICES +
+            "?locationId=397678e5-9995-4a39-9d9f-ae6ba310236b" +
+            "&capability=switch" +
+            "&deviceId=edd26ac6-d156-4505-9647-3b20118ae4d1" +
+            "&deviceId=be1a61ce-c2a4-4b32-bf8c-31de6d3fa7dd",
+            None, 'devices_filtered.json'),
     UrlMock('GET', api.API_DEVICE.format(device_id=DEVICE_ID),
             None, 'device.json'),
+
     UrlMock('GET', api.API_DEVICE_STATUS.format(device_id=DEVICE_ID),
             None, 'device_status.json'),
     UrlMock('POST', api.API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
@@ -37,7 +44,8 @@ URLS = [
     UrlMock('POST', api.API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
             'device_command_post_set_level.json', {}),
     UrlMock('GET', api.API_APPS, None, 'apps.json'),
-    UrlMock('GET', api.API_APP.format(app_id=APP_ID), None, 'app_get.json'),
+    UrlMock('GET', api.API_APP.format(app_id=APP_ID),
+            None, 'app_get.json'),
     UrlMock('POST', api.API_APPS,
             'app_post_request.json', 'app_post_response.json'),
     UrlMock('PUT', api.API_APP.format(app_id=APP_ID),
@@ -101,7 +109,8 @@ def __match_request(req: Request, mock: UrlMock):
         return False
     if not req.method == mock.method:
         return False
-    if not req.url == api.API_BASE + mock.url:
+    target_url = api.API_BASE + mock.url
+    if not req.url == target_url:
         return False
     if mock.request and not req.json() == __get_body(mock.request):
         return False

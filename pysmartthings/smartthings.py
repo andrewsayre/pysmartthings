@@ -1,6 +1,6 @@
 """Define the SmartThings Cloud API."""
 
-from typing import List
+from typing import List, Optional, Sequence
 
 from .api import API
 from .app import App, AppEntity
@@ -28,9 +28,18 @@ class SmartThings:
         resp = self._api.get_locations()
         return [LocationEntity(self._api, entity) for entity in resp["items"]]
 
-    def devices(self) -> List:
+    def devices(self, location_ids: Optional[Sequence[str]] = None,
+                capabilities: Optional[Sequence[str]] = None,
+                device_ids: Optional[Sequence[str]] = None) -> List:
         """Retrieve SmartThings devices."""
-        resp = self._api.get_devices()
+        params = {}
+        if location_ids:
+            params['locationId'] = location_ids
+        if capabilities:
+            params['capability'] = capabilities
+        if device_ids:
+            params['deviceId'] = device_ids
+        resp = self._api.get_devices(params)
         return [DeviceEntity(self._api, entity) for entity in resp["items"]]
 
     def apps(self) -> List[AppEntity]:
