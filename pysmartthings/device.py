@@ -1,19 +1,44 @@
 """Defines a SmartThings device."""
 
 from enum import Enum
-from typing import Dict, Optional, Sequence
+from typing import Any, Dict, Optional, Sequence
 
 from .api import API
 from .entity import Entity
 
 
+class Attribute:
+    """Define common attributes."""
+
+    acceleration = 'acceleration'
+    contact = 'contact'
+    filter_status = 'filterStatus'
+    level = 'level'
+    motion = 'motion'
+    mute = 'mute'
+    presence = 'presence'
+    sound = 'sound'
+    switch = 'switch'
+    tamper = 'tamper'
+    valve = 'valve'
+    water = 'water'
+
+
 class Capability:
     """Define common capabilities."""
 
-    switch = 'switch'
-    switch_level = 'switchLevel'
     light = 'light'
     motion_sensor = 'motionSensor'
+    switch = 'switch'
+    switch_level = 'switchLevel'
+
+
+class Command:
+    """Define common commands."""
+
+    off = 'off'
+    on = 'on'
+    set_level = 'setLevel'
 
 
 class DeviceType(Enum):
@@ -22,6 +47,21 @@ class DeviceType(Enum):
     UNKNOWN = 'UNKNOWN'
     DTH = 'DTH'
     ENDPOINT_APP = 'ENDPOINT_APP'
+
+
+ATTRIBUTE_ON_VALUES = {
+    Attribute.acceleration: 'active',
+    Attribute.contact: 'open',
+    Attribute.filter_status: 'replace',
+    Attribute.motion: 'active',
+    Attribute.mute: 'muted',
+    Attribute.presence: 'present',
+    Attribute.sound: 'detected',
+    Attribute.switch: 'on',
+    Attribute.tamper: 'detected',
+    Attribute.valve: 'open',
+    Attribute.water: 'wet'
+}
 
 
 class Device:
@@ -143,6 +183,19 @@ class DeviceStatus:
                 for attribute, value in attributes.items():
                     self._attributes[attribute] = value['value']
 
+    def apply_attribute_update(self, component_id: str, capability: str,
+                               attribute: str, value: Any):
+        """Apply an update to a specific attribute."""
+        # component_id and capability future usage.
+        self._attributes[attribute] = value
+
+    def is_on(self, attribute: str) -> bool:
+        """Determine if a specific attribute contains an on/True value."""
+        if attribute not in ATTRIBUTE_ON_VALUES:
+            return bool(self._attributes.get(attribute))
+        return self._attributes.get(attribute) == \
+            ATTRIBUTE_ON_VALUES[attribute]
+
     def refresh(self):
         """Refresh the values of the entity."""
         data = self._api.get_device_status(self.device_id)
@@ -157,17 +210,28 @@ class DeviceStatus:
     @property
     def switch(self) -> bool:
         """Get the switch attribute."""
-        return self._attributes.get('switch', None) == 'on'
+        return self.is_on(Attribute.switch)
+
+    @switch.setter
+    def switch(self, value: bool):
+        """Set the value of the switch attribute."""
+        self._attributes[Attribute.switch] = \
+            ATTRIBUTE_ON_VALUES[Attribute.switch] if value else 'off'
 
     @property
     def level(self) -> int:
         """Get the level attribute."""
-        return int(self._attributes.get('level', 0))
+        return int(self._attributes.get(Attribute.level, 0))
+
+    @level.setter
+    def level(self, value: int):
+        """Set the level of the attribute."""
+        self._attributes[Attribute.level] = value
 
     @property
     def motion(self) -> bool:
         """Get the motion attribute."""
-        return self._attributes.get('motion', None) == 'on'
+        return self.is_on(Attribute.motion)
 
 
 class DeviceEntity(Entity, Device):
@@ -201,18 +265,28 @@ class DeviceEntity(Entity, Device):
             self._device_id, capability, command, args)
         return response == {}
 
-    def switch_on(self) -> bool:
+    def switch_on(self, set_status: bool = False) -> bool:
         """Turn on the device."""
-        return self.command(Capability.switch, "on")
+        result = self.command(Capability.switch, Command.on)
+        if result and set_status:
+            self.status.switch = True
+        return result
 
-    def switch_off(self) -> bool:
+    def switch_off(self, set_status: bool = False) -> bool:
         """Turn on the device."""
-        return self.command(Capability.switch, "off")
+        result = self.command(Capability.switch, Command.off)
+        if result and set_status:
+            self.status.switch = False
+        return result
 
-    def set_level(self, level: int, duration: int) -> bool:
+    def set_level(self, level: int, duration: int,
+                  set_status: bool = False) -> bool:
         """Set the level of the device."""
-        return self.command(Capability.switch_level,
-                            'setLevel', [level, duration])
+        result = self.command(
+            Capability.switch_level, Command.set_level, [level, duration])
+        if result and set_status:
+            self.status.level = level
+        return result
 
     @property
     def status(self):
