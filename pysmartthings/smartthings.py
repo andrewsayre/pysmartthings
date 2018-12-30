@@ -28,6 +28,11 @@ class SmartThings:
         resp = self._api.get_locations()
         return [LocationEntity(self._api, entity) for entity in resp["items"]]
 
+    def location(self, location_id: str) -> LocationEntity:
+        """Retrieve a location with the specified ID."""
+        entity = self._api.get_location(location_id)
+        return LocationEntity(self._api, entity)
+
     def devices(self, location_ids: Optional[Sequence[str]] = None,
                 capabilities: Optional[Sequence[str]] = None,
                 device_ids: Optional[Sequence[str]] = None) -> List:
@@ -42,10 +47,20 @@ class SmartThings:
         resp = self._api.get_devices(params)
         return [DeviceEntity(self._api, entity) for entity in resp["items"]]
 
+    def device(self, device_id: str) -> DeviceEntity:
+        """Retrieve a device with the specified ID."""
+        entity = self._api.get_device(device_id)
+        return DeviceEntity(self._api, entity)
+
     def apps(self) -> List[AppEntity]:
         """Retrieve list of apps."""
         resp = self._api.get_apps()
         return [AppEntity(self._api, entity) for entity in resp["items"]]
+
+    def app(self, app_id: str) -> AppEntity:
+        """Retrieve an app with the specified ID."""
+        entity = self._api.get_app(app_id)
+        return AppEntity(self._api, entity)
 
     def create_app(self, app: App) -> (AppEntity, OAuthClient):
         """Create a new app."""
@@ -56,7 +71,7 @@ class SmartThings:
         """Delete an app."""
         return self._api.delete_app(app_id) == {}
 
-    def get_app_oauth(self, app_id: str) -> OAuthEntity:
+    def app_oauth(self, app_id: str) -> OAuthEntity:
         """Get an app's OAuth settings."""
         return OAuthEntity(self._api, app_id, self._api.get_app_oauth(app_id))
 
@@ -70,6 +85,11 @@ class SmartThings:
         resp = self._api.get_installedapps()
         return [InstalledAppEntity(self._api, entity)
                 for entity in resp["items"]]
+
+    def installedapp(self, installed_app_id: str) -> InstalledAppEntity:
+        """Get an installedapp with the specified ID."""
+        entity = self._api.get_installedapp(installed_app_id)
+        return InstalledAppEntity(self._api, entity)
 
     def delete_installedapp(self, installed_app_id: str):
         """Delete an installedapp."""

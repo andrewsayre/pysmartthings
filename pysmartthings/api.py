@@ -105,7 +105,7 @@ class API:
         """
         return self._request('get', API_APPS)
 
-    def get_app_details(self, app_id: str) -> dict:
+    def get_app(self, app_id: str) -> dict:
         """
         Get the details of the specific app.
 

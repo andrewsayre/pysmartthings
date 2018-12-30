@@ -235,7 +235,7 @@ class AppEntity(Entity, App):
         """Refresh the app information using the API."""
         if not self._app_id:
             raise ValueError("Cannot refresh without an app_id")
-        data = self._api.get_app_details(self._app_id)
+        data = self._api.get_app(self._app_id)
         self.apply_data(data)
 
     def save(self):

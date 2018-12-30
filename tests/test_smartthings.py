@@ -51,6 +51,17 @@ class TestSmartThings:
         assert len(devices) == 2
 
     @staticmethod
+    def test_device(requests_mock):
+        """Tests the device(id) method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        device = smartthings.device(api_mock.DEVICE_ID)
+        # Assert
+        assert device.device_id == api_mock.DEVICE_ID
+
+    @staticmethod
     def test_locations(requests_mock):
         """Tests locations are retrieved."""
         # arrange
@@ -62,6 +73,17 @@ class TestSmartThings:
         assert len(locations) == 2
 
     @staticmethod
+    def test_location(requests_mock):
+        """Tests the location(id) method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        location = smartthings.location(api_mock.LOCATION_ID)
+        # Assert
+        assert location.location_id == api_mock.LOCATION_ID
+
+    @staticmethod
     def test_apps(requests_mock):
         """Tests locations are retrieved."""
         # arrange
@@ -71,6 +93,17 @@ class TestSmartThings:
         apps = smartthings.apps()
         # assert
         assert len(apps) == 1
+
+    @staticmethod
+    def test_app(requests_mock):
+        """Tests the app(id) method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        app = smartthings.app(api_mock.APP_ID)
+        # Assert
+        assert app.app_id == api_mock.APP_ID
 
     @staticmethod
     def test_create_app(requests_mock):
@@ -101,14 +134,14 @@ class TestSmartThings:
         assert result
 
     @staticmethod
-    def test_get_app_oauth(requests_mock):
+    def test_app_oauth(requests_mock):
         """Tests retrieval of OAuth settings."""
         # Arrange
         api_mock.setup(requests_mock)
         smartthings = SmartThings(api_mock.API_TOKEN)
         app_id = api_mock.APP_ID
         # Act
-        oauth = smartthings.get_app_oauth(app_id)
+        oauth = smartthings.app_oauth(app_id)
         # Assert
         assert oauth.app_id == app_id
         assert oauth.client_name == 'pysmartthings-test'
@@ -141,6 +174,17 @@ class TestSmartThings:
         apps = smartthings.installedapps()
         # Assert
         assert len(apps) == 1
+
+    @staticmethod
+    def test_installedapp(requests_mock):
+        """Tests the installedapp(id) method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        # Act
+        app = smartthings.installedapp(api_mock.INSTALLED_APP_ID)
+        # Assert
+        assert app.installed_app_id == api_mock.INSTALLED_APP_ID
 
     @staticmethod
     def test_delete_installedapp(requests_mock):
