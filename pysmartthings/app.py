@@ -221,6 +221,65 @@ class App:
         return self._webhook_public_key
 
 
+class AppSettings:
+    """Define a SmartThings app settings."""
+
+    def __init__(self, app_id: str):
+        """Create a new instance of the AppSettings class."""
+        self._app_id = app_id
+        self._settings = {}
+
+    def apply_data(self, data: dict):
+        """Set the states of the app with the supplied data."""
+        self._settings = data.get('settings', {})
+
+    def to_data(self) -> dict:
+        """Get a data structure representing the entity."""
+        return {
+            'settings': self._settings
+        }
+
+    @property
+    def app_id(self):
+        """Get the associated app id."""
+        return self._app_id
+
+    @property
+    def settings(self) -> dict:
+        """Get the settings for the app."""
+        return self._settings
+
+    @settings.setter
+    def settings(self, value: dict):
+        """Set the settings for the app."""
+        self._settings = value
+
+
+class AppSettingsEntity(Entity, AppSettings):
+    """Define a SmartThings App settings entity."""
+
+    def __init__(self, api: API, app_id: str, data=None):
+        """Create a new instance of the AppSettingEntity class."""
+        Entity.__init__(self, api)
+        AppSettings.__init__(self, app_id)
+        if data:
+            self.apply_data(data)
+
+    def refresh(self):
+        """Refresh the value of the entity."""
+        if not self._app_id:
+            raise ValueError("Cannot refresh without an app_id")
+        data = self._api.get_app_settings(self._app_id)
+        self.apply_data(data)
+
+    def save(self):
+        """Save the value of the entity."""
+        if not self._app_id:
+            raise ValueError("Cannot save without an app_id")
+        data = self._api.update_app_settings(self._app_id, self.to_data())
+        self.apply_data(data)
+
+
 class AppEntity(Entity, App):
     """Define a SmartThings App entity."""
 
@@ -233,8 +292,6 @@ class AppEntity(Entity, App):
 
     def refresh(self):
         """Refresh the app information using the API."""
-        if not self._app_id:
-            raise ValueError("Cannot refresh without an app_id")
         data = self._api.get_app(self._app_id)
         self.apply_data(data)
 
@@ -247,3 +304,8 @@ class AppEntity(Entity, App):
         """Get the app's OAuth settings."""
         return OAuthEntity(
             self._api, self._app_id, self._api.get_app_oauth(self._app_id))
+
+    def settings(self) -> AppSettingsEntity:
+        """Get the app's settings."""
+        return AppSettingsEntity(
+            self._api, self._app_id, self._api.get_app_settings(self._app_id))

@@ -11,7 +11,7 @@ A python library for interacting with the SmartThings cloud API.
 The package is still in beta, but the following features are available:
 1. Locations: List, Get
 2. Devices: List, Get, Command, Status
-3. Apps: List, Get, Create, Update, Delete, OAuth Get, OAuth Update
+3. Apps: List, Get, Create, Update, Delete, Settings Get & Update, OAuth: Get & Update
 4. InstalledApps: List, Get, Delete
 5. Subscriptions: List, Get, Create, Delete, Delete All  
 ## Installation

@@ -5,7 +5,7 @@ import pytest
 from pysmartthings.api import API
 from pysmartthings.app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
-    AppEntity)
+    AppEntity, AppSettings, AppSettingsEntity)
 
 from . import api_mock
 from .utilities import get_json
@@ -195,6 +195,92 @@ class TestApp:
         assert expected == actual
 
 
+class TestAppSettings:
+    """Tests for the AppSettings class."""
+
+    @staticmethod
+    def test_init():
+        """Tests the init method."""
+        # Arrange/Act
+        settings = AppSettings(api_mock.APP_ID)
+        # Assert
+        assert settings.app_id == api_mock.APP_ID
+
+    @staticmethod
+    def test_apply_data():
+        """Tests the apply_data method."""
+        # Arrange
+        data = get_json('app_settings.json')
+        settings = AppSettings(api_mock.APP_ID)
+        # Act
+        settings.apply_data(data)
+        # Assert
+        assert settings.settings['test'] == 'test'
+
+    @staticmethod
+    def test_to_data():
+        """Tests the to_data method."""
+        # Arrange
+        settings = AppSettings(api_mock.APP_ID)
+        settings.settings = {'test': 'test'}
+        # Act
+        data = settings.to_data()
+        # Assert
+        assert data == {'settings': {'test': 'test'}}
+
+
+class TestAppSettingsEntity:
+    """Tests for the AppSettingsEntity class."""
+
+    @staticmethod
+    def test_refresh(requests_mock):
+        """Tests data is refreshed."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        data = {'settings': {'test2': 'test'}}
+        settings = AppSettingsEntity(api, api_mock.APP_ID, data)
+        # Act
+        settings.refresh()
+        # Assert
+        assert settings.settings == {'test': 'test'}
+
+    @staticmethod
+    def test_refresh_no_app_id(requests_mock):
+        """Tests refresh when there's no app id."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        settings = AppSettingsEntity(api, None)
+        # Act/Assert
+        with pytest.raises(ValueError):
+            settings.refresh()
+
+    @staticmethod
+    def test_save(requests_mock):
+        """Tests the save function."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        data = {'settings': {'test': 'test'}}
+        settings = AppSettingsEntity(api, api_mock.APP_ID, data)
+        # Act
+        settings.save()
+        # Assert
+        assert settings.settings == {'test': 'test'}
+
+    @staticmethod
+    def test_save_no_app_id(requests_mock):
+        """Tests save when there's no app id."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        settings = AppSettingsEntity(api, None)
+        # Act/Assert
+        with pytest.raises(ValueError):
+            settings.save()
+
+
 class TestAppEntity:
     """Tests for the AppEntity class."""
 
@@ -213,17 +299,6 @@ class TestAppEntity:
         assert app.webhook_target_url == \
             "https://homeassistant.sayre.net:8321/"
         assert app.webhook_public_key
-
-    @staticmethod
-    def test_refresh_no_app_id(requests_mock):
-        """Tests refresh when there's no app id."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
-        app = AppEntity(api, None)
-        # Act/Assert
-        with pytest.raises(ValueError):
-            app.refresh()
 
     @staticmethod
     def test_save(requests_mock):
@@ -253,3 +328,16 @@ class TestAppEntity:
         assert oauth.app_id == app.app_id
         assert oauth.client_name == 'pysmartthings-test'
         assert oauth.scope == ["r:devices"]
+
+    @staticmethod
+    def test_settings(requests_mock):
+        """Tests the settings method."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        api = API(api_mock.API_TOKEN)
+        data = get_json('app_get.json')
+        app = AppEntity(api, data)
+        # Act
+        settings = app.settings()
+        # Assert
+        assert settings.settings == {'test': 'test'}

@@ -3,7 +3,7 @@
 from typing import List, Optional, Sequence
 
 from .api import API
-from .app import App, AppEntity
+from .app import App, AppEntity, AppSettings, AppSettingsEntity
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity
 from .location import LocationEntity
@@ -70,6 +70,16 @@ class SmartThings:
     def delete_app(self, app_id: str):
         """Delete an app."""
         return self._api.delete_app(app_id) == {}
+
+    def app_settings(self, app_id: str) -> AppSettingsEntity:
+        """Get an app's settings."""
+        return AppSettingsEntity(
+            self._api, app_id, self._api.get_app_settings(app_id))
+
+    def update_app_settings(self, data: AppSettings) -> AppSettingsEntity:
+        """Update an app's settings."""
+        entity = self._api.update_app_settings(data.app_id, data.to_data())
+        return AppSettingsEntity(self._api, data.app_id, entity)
 
     def app_oauth(self, app_id: str) -> OAuthEntity:
         """Get an app's OAuth settings."""

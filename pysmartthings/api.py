@@ -6,16 +6,17 @@ import requests
 
 from . import errors
 
-API_BASE: str = 'https://api.smartthings.com/v1/'
+API_BASE: str = "https://api.smartthings.com/v1/"
 API_LOCATIONS = "locations"
-API_LOCATION = API_LOCATIONS + '/{location_id}'
+API_LOCATION = API_LOCATIONS + "/{location_id}"
 API_DEVICES: str = "devices"
-API_DEVICE: str = API_DEVICES + '/{device_id}'
+API_DEVICE: str = API_DEVICES + "/{device_id}"
 API_DEVICE_STATUS: str = "devices/{device_id}/status"
 API_DEVICE_COMMAND: str = "devices/{device_id}/commands"
 API_APPS: str = "apps"
 API_APP: str = "apps/{app_id}"
 API_APP_OAUTH: str = "apps/{app_id}/oauth"
+API_APP_SETTINGS: str = "apps/{app_id}/settings"
 API_INSTALLEDAPPS: str = "installedapps"
 API_INSTALLEDAPP: str = "installedapps/{installed_app_id}"
 API_SUBSCRIPTIONS: str = API_INSTALLEDAPP + "/subscriptions"
@@ -140,6 +141,23 @@ class API:
         """
         return self._request(
             'delete', API_APP.format(app_id=app_id))
+
+    def get_app_settings(self, app_id: str) -> dict:
+        """
+        Get an app's settings.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getAppSettings
+        """
+        return self._request('get', API_APP_SETTINGS.format(app_id=app_id))
+
+    def update_app_settings(self, app_id: str, data: dict) -> dict:
+        """
+        Update an app's settings.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/updateAppSettings
+        """
+        return self._request(
+            'put', API_APP_SETTINGS.format(app_id=app_id), data)
 
     def get_app_oauth(self, app_id: str) -> dict:
         """

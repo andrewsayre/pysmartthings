@@ -1,7 +1,7 @@
 """Tests for the SmartThings file."""
 
 from pysmartthings import create
-from pysmartthings.app import App
+from pysmartthings.app import App, AppSettings
 from pysmartthings.oauth import OAuth
 from pysmartthings.smartthings import SmartThings
 from pysmartthings.subscription import Subscription
@@ -132,6 +132,34 @@ class TestSmartThings:
         result = smartthings.delete_app(api_mock.APP_ID)
         # Assert
         assert result
+
+    @staticmethod
+    def test_app_settings(requests_mock):
+        """Tests retrieval of app settings."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        app_id = api_mock.APP_ID
+        # Act
+        settings = smartthings.app_settings(app_id)
+        # Assert
+        assert settings.app_id == app_id
+        assert settings.settings == {'test': 'test'}
+
+    @staticmethod
+    def test_update_app_settings(requests_mock):
+        """Tests updating app settings."""
+        # Arrange
+        api_mock.setup(requests_mock)
+        smartthings = SmartThings(api_mock.API_TOKEN)
+        app_id = api_mock.APP_ID
+        settings = AppSettings(app_id)
+        settings.settings['test'] = 'test'
+        # Act
+        entity = smartthings.update_app_settings(settings)
+        # Assert
+        assert entity.app_id == settings.app_id
+        assert entity.settings == {'test': 'test'}
 
     @staticmethod
     def test_app_oauth(requests_mock):

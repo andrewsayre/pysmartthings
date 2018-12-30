@@ -34,7 +34,6 @@ URLS = [
             None, 'devices_filtered.json'),
     UrlMock('GET', api.API_DEVICE.format(device_id=DEVICE_ID),
             None, 'device.json'),
-
     UrlMock('GET', api.API_DEVICE_STATUS.format(device_id=DEVICE_ID),
             None, 'device_status.json'),
     UrlMock('POST', api.API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
@@ -51,6 +50,10 @@ URLS = [
     UrlMock('PUT', api.API_APP.format(app_id=APP_ID),
             'app_put_request.json', 'app_put_response.json'),
     UrlMock('DELETE', api.API_APP.format(app_id=APP_ID), None, {}),
+    UrlMock('GET', api.API_APP_SETTINGS.format(app_id=APP_ID),
+            None, 'app_settings.json'),
+    UrlMock('PUT', api.API_APP_SETTINGS.format(app_id=APP_ID),
+            'app_settings.json', 'app_settings.json'),
     UrlMock('GET', api.API_APP_OAUTH.format(app_id=APP_ID),
             None, 'app_oauth_get_response.json'),
     UrlMock('PUT', api.API_APP_OAUTH.format(app_id=APP_ID),
