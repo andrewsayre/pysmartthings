@@ -1,20 +1,20 @@
 {
     "items": [
         {
-            "installedAppId": "4514eb36-f5fd-4ab2-9520-0597acd1d212",
+            "installedAppId": "bceb4d29-ac7d-401d-a111-2bfbd6bebae1",
             "installedAppType": "WEBHOOK_SMART_APP",
-            "installedAppStatus": "PENDING",
-            "displayName": "pysmartthings",
-            "appId": "c6cde2b0-203e-44cf-a510-3b3ed4706996",
+            "installedAppStatus": "AUTHORIZED",
+            "displayName": "HomeAssistant",
+            "appId": "507b23eb-5783-4dc5-94d9-c69fc2ff7387",
             "referenceId": null,
-            "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+            "locationId": "01571579-274b-4405-90ff-85e4ca635221",
             "owner": {
                 "ownerType": "USER",
                 "ownerId": "3c19270b-fca6-5cde-82bc-86a37e52cfa8"
             },
             "notices": [],
-            "createdDate": "2018-12-19T02:49:58Z",
-            "lastUpdatedDate": "2018-12-19T02:49:58Z",
+            "createdDate": "2018-12-31T21:51:51Z",
+            "lastUpdatedDate": "2018-12-31T21:51:57Z",
             "ui": {
                 "pluginId": null,
                 "dashboardCardsEnabled": false,
@@ -29,9 +29,7 @@
         }
     ],
     "_links": {
-        "next": {
-            "href": "https://api.smartthings.com/installedapps?currentLocationId=NWMwM2U1MTgtMTE4YS00NGNiLTg1YWQtNzg3N2QwYjMwMmU0&currentOffset=MA"
-        },
+        "next": null,
         "previous": null
     }
 }

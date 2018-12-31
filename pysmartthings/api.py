@@ -40,7 +40,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listLocations
         """
-        return self._request('get', API_LOCATIONS)
+        return self._request_paged_list('get', API_LOCATIONS)
 
     def get_location(self, location_id: str) -> dict:
         """
@@ -57,7 +57,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevices
         """
-        return self._request('get', API_DEVICES, params=params)
+        return self._request_paged_list('get', API_DEVICES, params=params)
 
     def get_device(self, device_id: str) -> dict:
         """
@@ -104,7 +104,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listApps
         """
-        return self._request('get', API_APPS)
+        return self._request_paged_list('get', API_APPS)
 
     def get_app(self, app_id: str) -> dict:
         """
@@ -182,7 +182,7 @@ class API:
 
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listInstallations
         """
-        return self._request('get', API_INSTALLEDAPPS)
+        return self._request_paged_list('get', API_INSTALLEDAPPS)
 
     def get_installedapp(self, installed_app_id: str) -> dict:
         """
@@ -210,7 +210,7 @@ class API:
 
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listSubscriptions
         """
-        return self._request(
+        return self._request_paged_list(
             'get',
             API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
 
@@ -259,6 +259,27 @@ class API:
             API_SUBSCRIPTION.format(
                 installed_app_id=installed_app_id,
                 subscription_id=subscription_id))
+
+    @staticmethod
+    def _get_next_link(data):
+        links = data.get('_links')
+        if not links:
+            return None
+        next_link = links.get('next')
+        if not next_link:
+            return None
+        return next_link.get('href')
+
+    def _request_paged_list(self, method: str, resource: str,
+                            data: dict = None, params: dict = None):
+        response = self._request(method, resource, data, params)
+        items = response['items']
+        next_link = API._get_next_link(response)
+        while next_link:
+            response = self._request(method, next_link, data, params)
+            items.extend(response['items'])
+            next_link = API._get_next_link(response)
+        return {'items': items}
 
     def _request(self, method: str, resource: str, data: dict = None,
                  params: dict = None):

@@ -201,7 +201,7 @@ class TestSmartThings:
         # Act
         apps = smartthings.installedapps()
         # Assert
-        assert len(apps) == 1
+        assert len(apps) == 2
 
     @staticmethod
     def test_installedapp(requests_mock):

@@ -58,8 +58,13 @@ URLS = [
             None, 'app_oauth_get_response.json'),
     UrlMock('PUT', api.API_APP_OAUTH.format(app_id=APP_ID),
             'app_oauth_put_request.json', 'app_oauth_put_response.json'),
+    # InstalledApps
     UrlMock('GET', api.API_INSTALLEDAPPS, None,
             'installedapps_get_response.json'),
+    UrlMock('GET', "https://api.smartthings.com/installedapps?"
+                   "currentLocationId=NWMwM2U1MTgtMTE4YS00NGNiLTg1YWQtNzg3N2Qw"
+                   "YjMwMmU0&currentOffset=MA", None,
+            'installedapps_get_response_2.json'),
     UrlMock('GET', api.API_INSTALLEDAPP.format(
         installed_app_id=INSTALLED_APP_ID),
             None, 'installedapp_get_response.json'),
