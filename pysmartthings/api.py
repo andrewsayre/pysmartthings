@@ -276,16 +276,16 @@ class API:
         items = response['items']
         next_link = API._get_next_link(response)
         while next_link:
-            response = self._request(method, next_link, data, params)
+            response = self._request(method, data=data, params=params, url=next_link)
             items.extend(response['items'])
             next_link = API._get_next_link(response)
         return {'items': items}
 
-    def _request(self, method: str, resource: str, data: dict = None,
-                 params: dict = None):
+    def _request(self, method: str, resource: str = None, data: dict = None,
+                 params: dict = None, *, url: str = None):
         response = requests.request(
             method,
-            API_BASE + resource,
+            url if url else API_BASE + resource,
             params=params,
             json=data,
             headers=self._headers)

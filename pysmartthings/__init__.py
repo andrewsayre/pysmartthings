@@ -3,7 +3,7 @@
 from .smartthings import SmartThings
 
 __title__ = "pysmartthings"
-__version__ = "0.3.3"
+__version__ = "0.3.4"
 
 
 def create(token):
