@@ -117,7 +117,8 @@ def __match_request(req: Request, mock: UrlMock):
         return False
     if not req.method == mock.method:
         return False
-    target_url = mock.url if mock.url.startswith('http') else api.API_BASE + mock.url
+    target_url = mock.url if mock.url.startswith('http') \
+        else api.API_BASE + mock.url
     if not req.url == target_url:
         return False
     if mock.request and not req.json() == __get_body(mock.request):

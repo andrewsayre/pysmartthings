@@ -276,7 +276,8 @@ class API:
         items = response['items']
         next_link = API._get_next_link(response)
         while next_link:
-            response = self._request(method, data=data, params=params, url=next_link)
+            response = self._request(method, data=data, params=params,
+                                     url=next_link)
             items.extend(response['items'])
             next_link = API._get_next_link(response)
         return {'items': items}
