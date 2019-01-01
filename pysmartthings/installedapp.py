@@ -30,17 +30,6 @@ class InstalledAppStatus(Enum):
 class InstalledApp:
     """Define the InstalledApp class."""
 
-    _installed_app_id: str
-    _installed_app_type: InstalledAppType
-    _installed_app_status: InstalledAppStatus
-    _display_name: str
-    _app_id: str
-    _reference_id: str
-    _location_id: str
-    _createdDate: str
-    _lastUpdatedDate: str
-    _classifications: Sequence[str]
-
     def __init__(self):
         """Create a new instance of the InstalledApp class."""
         self._installed_app_id = None

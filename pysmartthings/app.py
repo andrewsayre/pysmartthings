@@ -17,19 +17,6 @@ _APP_NAME_PATTERN = re.compile('^[a-z0-9._-]{1,250}$', re.IGNORECASE)
 class App:
     """Define the app class."""
 
-    _app_name: str
-    _display_name: str
-    _description: str
-    _single_instance: bool
-    _app_type: str
-    _classifications: List[str]
-    _lambda_functions: List[str]
-    _webhook_target_url: str
-    _webhook_public_key: str
-    _app_id: str
-    _created_date: str
-    _last_updated_date: str
-
     def __init__(self):
         """Initialize a new instance of the App class."""
         self._app_name = None

@@ -1,5 +1,6 @@
 """Define the SmartThings Cloud API."""
 
+from collections import OrderedDict
 from typing import List, Optional, Sequence
 
 from .api import API
@@ -37,7 +38,7 @@ class SmartThings:
                 capabilities: Optional[Sequence[str]] = None,
                 device_ids: Optional[Sequence[str]] = None) -> List:
         """Retrieve SmartThings devices."""
-        params = {}
+        params = OrderedDict()
         if location_ids:
             params['locationId'] = location_ids
         if capabilities:

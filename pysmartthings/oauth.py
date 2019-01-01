@@ -10,10 +10,6 @@ from .oauthapi import OAuthAPI
 class OAuth:
     """Define the app OAuth settings."""
 
-    _app_id: str
-    _client_name: str
-    _scope: List[str]
-
     def __init__(self, app_id: str):
         """Initialize a new instance of the OAuth class."""
         self._app_id = app_id
@@ -106,13 +102,6 @@ class OAuthClient:
 
 class OAuthToken:
     """Define oauth token information."""
-
-    _api: OAuthAPI
-    _access_token: str
-    _refresh_token: str
-    _expires_in: int
-    _token_type: str
-    _scope: List[str]
 
     def __init__(self, api: OAuthAPI, data: Optional[dict] = None,
                  refresh_token: Optional[str] = None):

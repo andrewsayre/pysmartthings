@@ -18,18 +18,6 @@ class SourceType(Enum):
 class Subscription:
     """Define the subscription class."""
 
-    _subscription_id: str
-    _installed_app_id: str
-    _source_type: SourceType
-    _capability: str
-    _attribute: str
-    _value: str
-    _state_change_only: bool
-    _subscription_name: str
-    _location_id: str
-    _device_id: str
-    _component_id: str
-
     def __init__(self):
         """Initialize a new instance of the subscription class."""
         self._subscription_id = None
