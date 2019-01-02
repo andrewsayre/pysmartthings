@@ -2,7 +2,7 @@
 
 import pytest
 
-from pysmartthings.api import API
+from pysmartthings.api import api_old
 from pysmartthings.app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
     AppEntity, AppSettings, AppSettingsEntity)
@@ -237,7 +237,7 @@ class TestAppSettingsEntity:
         """Tests data is refreshed."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         data = {'settings': {'test2': 'test'}}
         settings = AppSettingsEntity(api, api_mock.APP_ID, data)
         # Act
@@ -250,7 +250,7 @@ class TestAppSettingsEntity:
         """Tests refresh when there's no app id."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         settings = AppSettingsEntity(api, None)
         # Act/Assert
         with pytest.raises(ValueError):
@@ -261,7 +261,7 @@ class TestAppSettingsEntity:
         """Tests the save function."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         data = {'settings': {'test': 'test'}}
         settings = AppSettingsEntity(api, api_mock.APP_ID, data)
         # Act
@@ -274,7 +274,7 @@ class TestAppSettingsEntity:
         """Tests save when there's no app id."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         settings = AppSettingsEntity(api, None)
         # Act/Assert
         with pytest.raises(ValueError):
@@ -289,7 +289,7 @@ class TestAppEntity:
         """Tests data is refreshed."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         data = get_json('apps.json')['items'][0]
         app = AppEntity(api, data)
         # Act
@@ -305,7 +305,7 @@ class TestAppEntity:
         """Tests updating an entity."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         data = get_json('app_get.json')
         app = AppEntity(api, data)
         before = app.last_updated_date
@@ -319,7 +319,7 @@ class TestAppEntity:
         """Tests the oauth method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         data = get_json('app_get.json')
         app = AppEntity(api, data)
         # Act
@@ -334,7 +334,7 @@ class TestAppEntity:
         """Tests the settings method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         data = get_json('app_get.json')
         app = AppEntity(api, data)
         # Act

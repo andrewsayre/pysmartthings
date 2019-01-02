@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from .api import API
+from .api import api_old
 from .entity import Entity
 from .oauthapi import OAuthAPI
 
@@ -54,7 +54,7 @@ class OAuth:
 class OAuthEntity(Entity, OAuth):
     """Define oauth client settings."""
 
-    def __init__(self, api: API, app_id: str, data=None):
+    def __init__(self, api: api_old, app_id: str, data=None):
         """Create a new instance of the OAuth class."""
         Entity.__init__(self, api)
         OAuth.__init__(self, app_id)

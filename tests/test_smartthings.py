@@ -1,5 +1,7 @@
 """Tests for the SmartThings file."""
 
+import pytest
+
 from pysmartthings import create
 from pysmartthings.app import App, AppSettings
 from pysmartthings.oauth import OAuth
@@ -62,24 +64,20 @@ class TestSmartThings:
         assert device.device_id == api_mock.DEVICE_ID
 
     @staticmethod
-    def test_locations(requests_mock):
+    @pytest.mark.asyncio
+    async def test_locations(smartthings):
         """Tests locations are retrieved."""
-        # arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
-        # act
-        locations = smartthings.locations()
-        # assert
+        # Act
+        locations = await smartthings.locations()
+        # Assert
         assert len(locations) == 2
 
     @staticmethod
-    def test_location(requests_mock):
+    @pytest.mark.asyncio
+    async def test_location(smartthings):
         """Tests the location(id) method."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         # Act
-        location = smartthings.location(api_mock.LOCATION_ID)
+        location = await smartthings.location(api_mock.LOCATION_ID)
         # Assert
         assert location.location_id == api_mock.LOCATION_ID
 

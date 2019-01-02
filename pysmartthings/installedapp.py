@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Sequence
 
-from .api import API
+from .api import api_old
 from .entity import Entity
 from .subscription import SubscriptionEntity
 
@@ -111,7 +111,7 @@ class InstalledApp:
 class InstalledAppEntity(Entity, InstalledApp):
     """Define the InstalledAppEntity class."""
 
-    def __init__(self, api: API, data=None, installed_app_id=None):
+    def __init__(self, api: api_old, data=None, installed_app_id=None):
         """Create a new instance of the InstalledAppEntity class."""
         Entity.__init__(self, api)
         InstalledApp.__init__(self)

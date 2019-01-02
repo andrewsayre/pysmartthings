@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from .api import API
+from .api import Api
 from .entity import Entity
 
 
@@ -82,7 +82,7 @@ class Location:
 class LocationEntity(Entity, Location):
     """Define a location entity."""
 
-    def __init__(self, api: API, data: Optional[dict] = None,
+    def __init__(self, api: Api, data: Optional[dict] = None,
                  location_id: Optional[str] = None):
         """Create a new instance of the LocationEntity."""
         Entity.__init__(self, api)
@@ -92,13 +92,13 @@ class LocationEntity(Entity, Location):
         if location_id:
             self._location_id = location_id
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the location information."""
-        data = self._api.get_location(self._location_id)
+        data = await self._api.get_location(self._location_id)
         if data:
             self.apply_data(data)
 
-    def save(self):
+    async def save(self):
         """Location does not support updating at this time."""
         raise NotImplementedError(
             'Location does not support updating at this time.')

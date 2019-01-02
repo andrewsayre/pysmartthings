@@ -2,7 +2,7 @@
 
 import pytest
 
-from pysmartthings.api import API
+from pysmartthings.api import api_old
 from pysmartthings.oauth import OAuth, OAuthEntity, OAuthToken
 from pysmartthings.oauthapi import OAuthAPI
 
@@ -54,7 +54,7 @@ class TestOAuthEntity:
         """Tests the refresh method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         entity = OAuthEntity(
             api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
         # Act
@@ -68,7 +68,7 @@ class TestOAuthEntity:
         """Tests the refresh method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         entity = OAuthEntity(
             api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
         entity.client_name = 'pysmartthings-test'

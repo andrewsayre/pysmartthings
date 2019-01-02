@@ -2,9 +2,11 @@
 
 from typing import Optional
 
+from aiohttp import ClientSession
 import requests
 
 from . import errors
+from .errors import APIResponseError
 
 API_BASE = "https://api.smartthings.com/v1/"
 API_LOCATIONS = "locations"
@@ -23,7 +25,106 @@ API_SUBSCRIPTIONS = API_INSTALLEDAPP + "/subscriptions"
 API_SUBSCRIPTION = API_SUBSCRIPTIONS + "/{subscription_id}"
 
 
-class API:
+class Api:
+    """
+    Wrapper around the SmartThings Cloud API operations.
+
+    https://smartthings.developer.samsung.com/docs/api-ref/st-api.html
+    """
+
+    def __init__(self, session: ClientSession, token: str, *,
+                 api_base: str = API_BASE):
+        """Create a new API with the given session and token."""
+        self._session = session
+        self._token = token
+        self._api_base = api_base
+
+    async def get_locations(self) -> dict:
+        """
+        Get locations.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listLocations
+        """
+        return await self.get_items(API_LOCATIONS)
+
+    async def get_location(self, location_id: str) -> dict:
+        """
+        Get a specific location.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getLocation
+        """
+        return await self.get(API_LOCATION.format(location_id=location_id))
+
+    @property
+    def session(self) -> ClientSession:
+        """Get the instance of the session."""
+        return self._session
+
+    @session.setter
+    def session(self, value: ClientSession):
+        """Set the instance of the session."""
+        self._session = value
+
+    @property
+    def token(self):
+        """Get the token used when making requests."""
+        return self._token
+
+    @token.setter
+    def token(self, value):
+        """Set the token to use when making requests."""
+        self._token = value
+
+    async def request(self, method: str, url: str, params: dict = None,
+                      data: dict = None):
+        """Perform a request against the specified parameters."""
+        async with self._session.request(
+                method, url, params=params, json=data,
+                headers={"Authorization": "Bearer " + self._token}) as resp:
+            if resp.status == 200:
+                return await resp.json()
+            if resp.status in (400, 422, 429, 500):
+                data = None
+                try:
+                    data = await resp.json()
+                except Exception:  # pylint: disable=broad-except
+                    pass
+                raise APIResponseError(
+                    resp.request_info,
+                    resp.history,
+                    status=resp.status,
+                    message=resp.reason,
+                    headers=resp.headers,
+                    data=data)
+            resp.raise_for_status()
+
+    async def get(self, resource: str, *, params: dict = None):
+        """Get a resource."""
+        return await self.request('get', self._api_base + resource, params)
+
+    async def get_items(self, resource: str, *, params: dict = None):
+        """Perform requests for a list of items that may have pages."""
+        resp = await self.request('get', self._api_base + resource, params, None)
+        items = resp.get('items', [])
+        next_link = Api._get_next_link(resp)
+        while next_link:
+            resp = await self.request('get', next_link, params, None)
+            items.extend(resp.get('items', []))
+            next_link = Api._get_next_link(resp)
+        return items
+
+    @staticmethod
+    def _get_next_link(data):
+        links = data.get('_links')
+        if not links:
+            return None
+        next_link = links.get('next')
+        if not next_link:
+            return None
+        return next_link.get('href')
+
+
+class api_old:  # pylint: disable=invalid-name
     """
     Utility for invoking the SmartThings Cloud API.
 
@@ -33,23 +134,6 @@ class API:
     def __init__(self, token: str):
         """Initialize a new instance of the API class."""
         self._headers = {"Authorization": "Bearer " + token}
-
-    def get_locations(self) -> dict:
-        """
-        Get locations.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listLocations
-        """
-        return self._request_paged_list('get', API_LOCATIONS)
-
-    def get_location(self, location_id: str) -> dict:
-        """
-        Get a specific location.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getLocation
-        """
-        return self._request(
-            'get', API_LOCATION.format(location_id=location_id))
 
     def get_devices(self, params: Optional[dict] = None) -> dict:
         """
@@ -274,12 +358,12 @@ class API:
                             data: dict = None, params: dict = None):
         response = self._request(method, resource, data, params)
         items = response['items']
-        next_link = API._get_next_link(response)
+        next_link = api_old._get_next_link(response)
         while next_link:
             response = self._request(method, data=data, params=params,
                                      url=next_link)
             items.extend(response['items'])
-            next_link = API._get_next_link(response)
+            next_link = api_old._get_next_link(response)
         return {'items': items}
 
     def _request(self, method: str, resource: str = None, data: dict = None,

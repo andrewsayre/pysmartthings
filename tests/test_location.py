@@ -2,7 +2,7 @@
 
 import pytest
 
-from pysmartthings.api import API
+from pysmartthings.api import api_old
 from pysmartthings.location import Location, LocationEntity
 
 from . import api_mock
@@ -36,23 +36,22 @@ class TestLocationEntity:
     """Tests the LocationEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
         location = LocationEntity(api, location_id=api_mock.LOCATION_ID)
         # Act
-        location.refresh()
+        await location.refresh()
         # Assert
         assert location.name == 'Test Home'
 
     @staticmethod
-    def test_save():
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests the save method."""
         # Arrange
-        api = API(api_mock.API_TOKEN)
         location = LocationEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
-            location.save()
+            await location.save()

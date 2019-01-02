@@ -2,7 +2,7 @@
 
 import pytest
 
-from pysmartthings.api import API
+from pysmartthings.api import api_old
 from pysmartthings.installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
 
@@ -52,7 +52,7 @@ class TestInstalledAppEntity:
         """Tests the refresh method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         app = InstalledAppEntity(
             api, installed_app_id=api_mock.INSTALLED_APP_ID)
         # Act
@@ -64,7 +64,7 @@ class TestInstalledAppEntity:
     def test_save():
         """Tests the refresh method."""
         # Arrange
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         app = InstalledAppEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
@@ -75,7 +75,7 @@ class TestInstalledAppEntity:
         """Tests the subscriptions method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         app = InstalledAppEntity(
             api, installed_app_id=api_mock.INSTALLED_APP_ID)
         app.refresh()

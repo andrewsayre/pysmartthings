@@ -3,7 +3,9 @@
 from collections import OrderedDict
 from typing import List, Optional, Sequence
 
-from .api import API
+from aiohttp import ClientSession
+
+from .api import Api, api_old
 from .app import App, AppEntity, AppSettings, AppSettingsEntity
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity
@@ -15,24 +17,26 @@ from .subscription import Subscription, SubscriptionEntity
 class SmartThings:
     """Define a class for interacting with the SmartThings Cloud API."""
 
-    def __init__(self, token):
+    def __init__(self, token, session: ClientSession = None):
         """
         Initialize the API.
 
         :param token: The personal access token used to authenticate to the API
         :type token: str
         """
-        self._api = API(token)
+        if session:
+            self._service = Api(session, token)
+        self._api = api_old(token)
 
-    def locations(self) -> List:
+    async def locations(self) -> List[LocationEntity]:
         """Retrieve SmartThings locations."""
-        resp = self._api.get_locations()
-        return [LocationEntity(self._api, entity) for entity in resp["items"]]
+        resp = await self._service.get_locations()
+        return [LocationEntity(self._service, entity) for entity in resp]
 
-    def location(self, location_id: str) -> LocationEntity:
+    async def location(self, location_id: str) -> LocationEntity:
         """Retrieve a location with the specified ID."""
-        entity = self._api.get_location(location_id)
-        return LocationEntity(self._api, entity)
+        entity = await self._service.get_location(location_id)
+        return LocationEntity(self._service, entity)
 
     def devices(self, location_ids: Optional[Sequence[str]] = None,
                 capabilities: Optional[Sequence[str]] = None,

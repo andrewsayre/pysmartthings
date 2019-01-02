@@ -3,7 +3,7 @@
 import re
 from typing import List
 
-from .api import API
+from .api import api_old
 from .entity import Entity
 from .oauth import OAuthEntity
 
@@ -245,7 +245,7 @@ class AppSettings:
 class AppSettingsEntity(Entity, AppSettings):
     """Define a SmartThings App settings entity."""
 
-    def __init__(self, api: API, app_id: str, data=None):
+    def __init__(self, api: api_old, app_id: str, data=None):
         """Create a new instance of the AppSettingEntity class."""
         Entity.__init__(self, api)
         AppSettings.__init__(self, app_id)
@@ -270,7 +270,7 @@ class AppSettingsEntity(Entity, AppSettings):
 class AppEntity(Entity, App):
     """Define a SmartThings App entity."""
 
-    def __init__(self, api: API, data=None):
+    def __init__(self, api: api_old, data=None):
         """Create a new instance of the AppEntity class."""
         Entity.__init__(self, api)
         App.__init__(self)

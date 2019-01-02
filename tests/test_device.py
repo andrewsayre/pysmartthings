@@ -2,7 +2,7 @@
 
 import pytest
 
-from pysmartthings.api import API
+from pysmartthings.api import api_old
 from pysmartthings.device import (
     Attribute, Device, DeviceEntity, DeviceStatus, DeviceType)
 
@@ -58,7 +58,7 @@ class TestDeviceEntity:
         """Tests the refresh method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         # Act
         device.refresh()
@@ -69,7 +69,7 @@ class TestDeviceEntity:
     def test_save():
         """Tests the save method."""
         # Arrange
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
@@ -80,7 +80,7 @@ class TestDeviceEntity:
         """Tests the switch_on method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         # Act
         result = device.switch_on()
@@ -93,7 +93,7 @@ class TestDeviceEntity:
         """Tests the switch_on method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         # Act
         result = device.switch_on(True)
@@ -106,7 +106,7 @@ class TestDeviceEntity:
         """Tests the switch_on method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         device.status.switch = True
         # Act
@@ -120,7 +120,7 @@ class TestDeviceEntity:
         """Tests the switch_on method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         device.status.switch = True
         # Act
@@ -134,7 +134,7 @@ class TestDeviceEntity:
         """Tests the set_level method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         # Act
         result = device.set_level(75, 2)
@@ -147,7 +147,7 @@ class TestDeviceEntity:
         """Tests the set_level method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
         # Act
         result = device.set_level(75, 2, True)
@@ -209,7 +209,7 @@ class TestDeviceStatus:
         """Tests the refresh method."""
         # Arrange
         api_mock.setup(requests_mock)
-        api = API(api_mock.API_TOKEN)
+        api = api_old(api_mock.API_TOKEN)
         status = DeviceStatus(api, device_id=api_mock.DEVICE_ID)
         # Act
         status.refresh()
