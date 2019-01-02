@@ -1,6 +1,5 @@
 """Define the SmartThings Cloud API."""
 
-from collections import OrderedDict
 from typing import List, Optional, Sequence
 
 from aiohttp import ClientSession
@@ -38,24 +37,24 @@ class SmartThings:
         entity = await self._service.get_location(location_id)
         return LocationEntity(self._service, entity)
 
-    def devices(self, location_ids: Optional[Sequence[str]] = None,
-                capabilities: Optional[Sequence[str]] = None,
-                device_ids: Optional[Sequence[str]] = None) -> List:
+    async def devices(self, *, location_ids: Optional[Sequence[str]] = None,
+                      capabilities: Optional[Sequence[str]] = None,
+                      device_ids: Optional[Sequence[str]] = None) -> List:
         """Retrieve SmartThings devices."""
-        params = OrderedDict()
+        params = []
         if location_ids:
-            params['locationId'] = location_ids
+            params.extend([('locationId', lid) for lid in location_ids])
         if capabilities:
-            params['capability'] = capabilities
+            params.extend([('capability', cap) for cap in capabilities])
         if device_ids:
-            params['deviceId'] = device_ids
-        resp = self._api.get_devices(params)
-        return [DeviceEntity(self._api, entity) for entity in resp["items"]]
+            params.extend([('deviceId', did) for did in device_ids])
+        resp = await self._service.get_devices(params)
+        return [DeviceEntity(self._service, entity) for entity in resp]
 
-    def device(self, device_id: str) -> DeviceEntity:
+    async def device(self, device_id: str) -> DeviceEntity:
         """Retrieve a device with the specified ID."""
-        entity = self._api.get_device(device_id)
-        return DeviceEntity(self._api, entity)
+        entity = await self._service.get_device(device_id)
+        return DeviceEntity(self._service, entity)
 
     def apps(self) -> List[AppEntity]:
         """Retrieve list of apps."""

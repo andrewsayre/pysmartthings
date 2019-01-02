@@ -22,26 +22,6 @@ REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
 UrlMock = namedtuple('UrlMock', 'method url request response')
 
 URLS = [
-    UrlMock('GET', api.API_LOCATIONS, None, 'locations.json'),
-    UrlMock('GET', api.API_LOCATION.format(location_id=LOCATION_ID),
-            None, 'location.json'),
-    UrlMock('GET', api.API_DEVICES, None, 'devices.json'),
-    UrlMock('GET', api.API_DEVICES +
-            "?locationId=397678e5-9995-4a39-9d9f-ae6ba310236b" +
-            "&capability=switch" +
-            "&deviceId=edd26ac6-d156-4505-9647-3b20118ae4d1" +
-            "&deviceId=be1a61ce-c2a4-4b32-bf8c-31de6d3fa7dd",
-            None, 'devices_filtered.json'),
-    UrlMock('GET', api.API_DEVICE.format(device_id=DEVICE_ID),
-            None, 'device.json'),
-    UrlMock('GET', api.API_DEVICE_STATUS.format(device_id=DEVICE_ID),
-            None, 'device_status.json'),
-    UrlMock('POST', api.API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-            'device_command_post_switch_on.json', {}),
-    UrlMock('POST', api.API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-            'device_command_post_switch_off.json', {}),
-    UrlMock('POST', api.API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-            'device_command_post_set_level.json', {}),
     UrlMock('GET', api.API_APPS, None, 'apps.json'),
     UrlMock('GET', api.API_APP.format(app_id=APP_ID),
             None, 'app_get.json'),

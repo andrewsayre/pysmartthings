@@ -22,44 +22,37 @@ class TestSmartThings:
         api_mock.setup(requests_mock)
         # Act
         smartthings = create(api_mock.API_TOKEN)
-        devices = smartthings.devices()
         # assert
-        assert len(devices) == 4
+        assert smartthings
 
     @staticmethod
-    def test_devices(requests_mock):
+    @pytest.mark.asyncio
+    async def test_devices(smartthings):
         """Tests devices are retrieved."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         # Act
-        devices = smartthings.devices()
+        devices = await smartthings.devices()
         # Assert
         assert len(devices) == 4
 
     @staticmethod
-    def test_devices_with_filter(requests_mock):
+    @pytest.mark.asyncio
+    async def test_devices_with_filter(smartthings):
         """Tests retrieving a filtered view of devices."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         # Act
-        devices = smartthings.devices(
-            location_ids=api_mock.LOCATION_ID,
-            capabilities='switch',
+        devices = await smartthings.devices(
+            location_ids=[api_mock.LOCATION_ID],
+            capabilities=['switch'],
             device_ids=['edd26ac6-d156-4505-9647-3b20118ae4d1',
                         'be1a61ce-c2a4-4b32-bf8c-31de6d3fa7dd'])
         # Assert
         assert len(devices) == 2
 
     @staticmethod
-    def test_device(requests_mock):
+    @pytest.mark.asyncio
+    async def test_device(smartthings):
         """Tests the device(id) method."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         # Act
-        device = smartthings.device(api_mock.DEVICE_ID)
+        device = await smartthings.device(api_mock.DEVICE_ID)
         # Assert
         assert device.device_id == api_mock.DEVICE_ID
 

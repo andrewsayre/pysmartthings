@@ -7,7 +7,6 @@ from aiohttp import ClientSession
 from aiohttp.client_exceptions import ClientResponseError
 from yarl import URL
 
-
 BodyFixtureType = Optional[Union[str, list, dict]]
 BodyType = Optional[Union[list, dict]]
 
@@ -39,6 +38,12 @@ class ClientMocker:
         """Register a mock get request."""
         self.request('get', self.base_url + resource, params=params,
                      headers=self.default_headers, response=response)
+
+    def post(self, resource: str, *, params=None, request=None, response=None):
+        """Register a mock post request."""
+        self.request('post', self.base_url + resource, params=params,
+                     headers=self.default_headers, request=request,
+                     response=response)
 
     def request(self, method: str, url: str, *,
                 params=None, status=200, headers=None,
@@ -102,12 +107,9 @@ class MockResponse:
         # Query string
         request_qs = parse_qs(url.query_string)
         matcher_qs = parse_qs(self._url.query_string)
-        for key, vals in matcher_qs.items():
-            for val in vals:
-                try:
-                    request_qs.get(key, []).remove(val)
-                except ValueError:
-                    return False
+        if request_qs != matcher_qs:
+            return False
+
         # Request body
         if self._request and not json == _get_json_fixture(self._request):
             return False

@@ -2,10 +2,9 @@
 
 import pytest
 
-from pysmartthings.api import api_old
 from pysmartthings.location import Location, LocationEntity
 
-from . import api_mock
+from .conftest import LOCATION_ID
 from .utilities import get_json
 
 
@@ -21,7 +20,7 @@ class TestLocation:
         # Act
         location.apply_data(data)
         # Assert
-        assert location.location_id == api_mock.LOCATION_ID
+        assert location.location_id == LOCATION_ID
         assert location.name == "Test Home"
         assert location.country_code == 'USA'
         assert location.latitude == 45.00708112
@@ -40,7 +39,7 @@ class TestLocationEntity:
     async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        location = LocationEntity(api, location_id=api_mock.LOCATION_ID)
+        location = LocationEntity(api, location_id=LOCATION_ID)
         # Act
         await location.refresh()
         # Assert

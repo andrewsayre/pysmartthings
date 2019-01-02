@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Any, Dict, Optional, Sequence
 
-from .api import api_old
+from .api import Api
 from .entity import Entity
 
 
@@ -157,7 +157,7 @@ class Device:
 class DeviceStatus:
     """Define the device status."""
 
-    def __init__(self, api: api_old, device_id: str, data=None):
+    def __init__(self, api: Api, device_id: str, data=None):
         """Create a new instance of the DeviceStatusEntity class."""
         self._api = api
         self._attributes = {}
@@ -196,9 +196,9 @@ class DeviceStatus:
         return self._attributes.get(attribute) == \
             ATTRIBUTE_ON_VALUES[attribute]
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the values of the entity."""
-        data = self._api.get_device_status(self.device_id)
+        data = await self._api.get_device_status(self.device_id)
         if data:
             self.apply_data(data)
 
@@ -237,7 +237,7 @@ class DeviceStatus:
 class DeviceEntity(Entity, Device):
     """Define a device entity."""
 
-    def __init__(self, api: api_old, data: Optional[dict] = None,
+    def __init__(self, api: Api, data: Optional[dict] = None,
                  device_id: Optional[str] = None):
         """Create a new instance of the DeviceEntity class."""
         Entity.__init__(self, api)
@@ -248,41 +248,41 @@ class DeviceEntity(Entity, Device):
             self._device_id = device_id
         self._status = DeviceStatus(api, self._device_id)
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the device information using the API."""
-        data = self._api.get_device(self._device_id)
+        data = await self._api.get_device(self._device_id)
         if data:
             self.apply_data(data)
         self._status.device_id = self._device_id
 
-    def save(self):
+    async def save(self):
         """Save the changes made to the device."""
         raise NotImplementedError
 
-    def command(self, capability, command, args=None):
+    async def command(self, capability, command, args=None):
         """Execute a command on the device."""
-        response = self._api.post_command(
+        response = await self._api.post_device_command(
             self._device_id, capability, command, args)
         return response == {}
 
-    def switch_on(self, set_status: bool = False) -> bool:
+    async def switch_on(self, set_status: bool = False) -> bool:
         """Turn on the device."""
-        result = self.command(Capability.switch, Command.on)
+        result = await self.command(Capability.switch, Command.on)
         if result and set_status:
             self.status.switch = True
         return result
 
-    def switch_off(self, set_status: bool = False) -> bool:
+    async def switch_off(self, set_status: bool = False) -> bool:
         """Turn on the device."""
-        result = self.command(Capability.switch, Command.off)
+        result = await self.command(Capability.switch, Command.off)
         if result and set_status:
             self.status.switch = False
         return result
 
-    def set_level(self, level: int, duration: int,
-                  set_status: bool = False) -> bool:
+    async def set_level(self, level: int, duration: int,
+                        set_status: bool = False) -> bool:
         """Set the level of the device."""
-        result = self.command(
+        result = await self.command(
             Capability.switch_level, Command.set_level, [level, duration])
         if result and set_status:
             self.status.level = level

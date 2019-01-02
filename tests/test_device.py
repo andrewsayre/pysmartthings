@@ -2,11 +2,10 @@
 
 import pytest
 
-from pysmartthings.api import api_old
 from pysmartthings.device import (
     Attribute, Device, DeviceEntity, DeviceStatus, DeviceType)
 
-from . import api_mock
+from .conftest import DEVICE_ID, LOCATION_ID
 from .utilities import get_json
 
 
@@ -32,10 +31,10 @@ class TestDevice:
         # Act
         device.apply_data(data)
         # Assert
-        assert device.device_id == api_mock.DEVICE_ID
+        assert device.device_id == DEVICE_ID
         assert device.name == 'GE In-Wall Smart Dimmer'
         assert device.label == 'Front Porch Lights'
-        assert device.location_id == api_mock.LOCATION_ID
+        assert device.location_id == LOCATION_ID
         assert device.type is DeviceType.DTH
         assert device.device_type_id == '8a9d4b1e3b9b1fe3013b9b206a7f000d'
         assert device.device_type_name == 'Dimmer Switch'
@@ -54,116 +53,109 @@ class TestDeviceEntity:
     """Tests for the DeviceEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        device.refresh()
+        await device.refresh()
         # Assert
         assert device.label == 'Front Porch Lights'
 
     @staticmethod
-    def test_save():
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests the save method."""
         # Arrange
-        api = api_old(api_mock.API_TOKEN)
         device = DeviceEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
-            device.save()
+            await device.save()
 
     @staticmethod
-    def test_switch_on(requests_mock):
+    @pytest.mark.asyncio
+    async def test_switch_on(api):
         """Tests the switch_on method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        result = device.switch_on()
+        result = await device.switch_on()
         # Assert
         assert result
         assert not device.status.switch
 
     @staticmethod
-    def test_switch_on_update(requests_mock):
+    @pytest.mark.asyncio
+    async def test_switch_on_update(api):
         """Tests the switch_on method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        result = device.switch_on(True)
+        result = await device.switch_on(True)
         # Assert
         assert result
         assert device.status.switch
 
     @staticmethod
-    def test_switch_off(requests_mock):
+    @pytest.mark.asyncio
+    async def test_switch_off(api):
         """Tests the switch_on method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         device.status.switch = True
         # Act
-        result = device.switch_off()
+        result = await device.switch_off()
         # Assert
         assert result
         assert device.status.switch
 
     @staticmethod
-    def test_switch_off_update(requests_mock):
+    @pytest.mark.asyncio
+    async def test_switch_off_update(api):
         """Tests the switch_on method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         device.status.switch = True
         # Act
-        result = device.switch_off(True)
+        result = await device.switch_off(True)
         # Assert
         assert result
         assert not device.status.switch
 
     @staticmethod
-    def test_set_level(requests_mock):
+    @pytest.mark.asyncio
+    async def test_set_level(api):
         """Tests the set_level method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        result = device.set_level(75, 2)
+        result = await device.set_level(75, 2)
         # Assert
         assert result
         assert device.status.level == 0
 
     @staticmethod
-    def test_set_level_update(requests_mock):
+    @pytest.mark.asyncio
+    async def test_set_level_update(api):
         """Tests the set_level method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        device = DeviceEntity(api, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        result = device.set_level(75, 2, True)
+        result = await device.set_level(75, 2, True)
         # Assert
         assert result
         assert device.status.level == 75
 
     @staticmethod
-    def test_status():
+    async def test_status():
         """Tests the set_level method."""
         # Arrange
-        device = DeviceEntity(None, device_id=api_mock.DEVICE_ID)
+        device = DeviceEntity(None, device_id=DEVICE_ID)
         # Act
         status = device.status
         # Assert
-        assert status.device_id == api_mock.DEVICE_ID
+        assert status.device_id == DEVICE_ID
 
 
 class TestDeviceStatus:
@@ -173,9 +165,9 @@ class TestDeviceStatus:
     def test_init():
         """Tests the init method."""
         # Arrange/Act
-        status = DeviceStatus(None, device_id=api_mock.DEVICE_ID)
+        status = DeviceStatus(None, device_id=DEVICE_ID)
         # Assert
-        assert status.device_id == api_mock.DEVICE_ID
+        assert status.device_id == DEVICE_ID
         assert status.attributes == {}
         assert not status.switch
         assert not status.motion
@@ -187,7 +179,7 @@ class TestDeviceStatus:
         # Arrange
         data = get_json('device_status.json')
         # Act
-        status = DeviceStatus(None, api_mock.DEVICE_ID, data)
+        status = DeviceStatus(None, DEVICE_ID, data)
         # Assert
         assert len(status.attributes) == 9
         assert status.switch
@@ -198,21 +190,20 @@ class TestDeviceStatus:
         """Tests the apply_attribute_update method."""
         # Arrange
         data = get_json('device_status.json')
-        status = DeviceStatus(None, api_mock.DEVICE_ID, data)
+        status = DeviceStatus(None, DEVICE_ID, data)
         # Act
         status.apply_attribute_update('main', 'switchLevel', 'level', 50)
         # Assert
         assert status.level == 50
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
-        status = DeviceStatus(api, device_id=api_mock.DEVICE_ID)
+        status = DeviceStatus(api, device_id=DEVICE_ID)
         # Act
-        status.refresh()
+        await status.refresh()
         # Assert
         assert len(status.attributes) == 9
 
@@ -220,7 +211,7 @@ class TestDeviceStatus:
     def test_switch():
         """Tests the init method."""
         # Arrange
-        status = DeviceStatus(None, device_id=api_mock.DEVICE_ID)
+        status = DeviceStatus(None, device_id=DEVICE_ID)
         # Act
         status.switch = True
         # Assert
@@ -230,7 +221,7 @@ class TestDeviceStatus:
     def test_level():
         """Tests the init method."""
         # Arrange
-        status = DeviceStatus(None, device_id=api_mock.DEVICE_ID)
+        status = DeviceStatus(None, device_id=DEVICE_ID)
         # Act
         status.level = 50
         # Assert
@@ -240,7 +231,7 @@ class TestDeviceStatus:
     def test_is_on():
         """Tests the is_on method."""
         # Arrange
-        status = DeviceStatus(None, device_id=api_mock.DEVICE_ID)
+        status = DeviceStatus(None, device_id=DEVICE_ID)
         status.attributes[Attribute.acceleration] = 'active'
         status.attributes[Attribute.level] = 100
         # Act/Assert

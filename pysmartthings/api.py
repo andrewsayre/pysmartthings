@@ -1,6 +1,6 @@
 """Utility for invoking the SmartThings Cloud API."""
 
-from typing import Optional
+from typing import Optional, Sequence
 
 from aiohttp import ClientSession
 import requests
@@ -55,6 +55,48 @@ class Api:
         """
         return await self.get(API_LOCATION.format(location_id=location_id))
 
+    async def get_devices(self, params: Optional = None) -> dict:
+        """
+        Get the device definitions.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevices
+        """
+        return await self.get_items(API_DEVICES, params=params)
+
+    async def get_device(self, device_id: str) -> dict:
+        """
+        Get as specific device.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevice
+        """
+        return await self.get(API_DEVICE.format(device_id=device_id))
+
+    async def get_device_status(self, device_id: str) -> dict:
+        """Get the status of a specific device."""
+        return await self.get(API_DEVICE_STATUS.format(device_id=device_id))
+
+    async def post_device_command(self, device_id, capability, command, args,
+                                  component="main") -> object:
+        """
+        Execute commands on a device.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/executeDeviceCommands
+        """
+        data = {
+            "commands": [
+                {
+                    "component": component,
+                    "capability": capability,
+                    "command": command
+                }
+            ]
+        }
+        if args:
+            data["commands"][0]["arguments"] = args
+
+        return await self.post(
+            API_DEVICE_COMMAND.format(device_id=device_id), data)
+
     @property
     def session(self) -> ClientSession:
         """Get the instance of the session."""
@@ -104,7 +146,8 @@ class Api:
 
     async def get_items(self, resource: str, *, params: dict = None):
         """Perform requests for a list of items that may have pages."""
-        resp = await self.request('get', self._api_base + resource, params, None)
+        resp = await self.request(
+            'get', self._api_base + resource, params, None)
         items = resp.get('items', [])
         next_link = Api._get_next_link(resp)
         while next_link:
@@ -112,6 +155,11 @@ class Api:
             items.extend(resp.get('items', []))
             next_link = Api._get_next_link(resp)
         return items
+
+    async def post(self, resource: str, data: Optional[Sequence]):
+        """Perform a post request."""
+        return await self.request('post', self._api_base + resource,
+                                  data=data)
 
     @staticmethod
     def _get_next_link(data):
@@ -134,53 +182,6 @@ class api_old:  # pylint: disable=invalid-name
     def __init__(self, token: str):
         """Initialize a new instance of the API class."""
         self._headers = {"Authorization": "Bearer " + token}
-
-    def get_devices(self, params: Optional[dict] = None) -> dict:
-        """
-        Get the device definitions.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevices
-        """
-        return self._request_paged_list('get', API_DEVICES, params=params)
-
-    def get_device(self, device_id: str) -> dict:
-        """
-        Get as specific device.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getDevice
-        """
-        return self._request(
-            'get', API_DEVICE.format(device_id=device_id))
-
-    def get_device_status(self, device_id: str) -> dict:
-        """Get the status of a specific device."""
-        return self._request(
-            'get',
-            API_DEVICE_STATUS.format(device_id=device_id))
-
-    def post_command(self, device_id, capability, command, args,
-                     component="main") -> object:
-        """
-        Execute commands on a device.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/executeDeviceCommands
-        """
-        data = {
-            "commands": [
-                {
-                    "component": component,
-                    "capability": capability,
-                    "command": command
-                }
-            ]
-        }
-        if args:
-            data["commands"][0]["arguments"] = args
-
-        return self._request(
-            'post',
-            API_DEVICE_COMMAND.format(device_id=device_id),
-            data)
 
     def get_apps(self) -> dict:
         """
