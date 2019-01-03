@@ -50,31 +50,29 @@ class TestOAuthEntity:
     """Tests for the OAuthEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         entity = OAuthEntity(
             api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
         # Act
-        entity.refresh()
+        await entity.refresh()
         # Assert
         assert entity.client_name == 'pysmartthings-test'
         assert 'r:devices' in entity.scope
 
     @staticmethod
-    def test_save(requests_mock):
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         entity = OAuthEntity(
             api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
         entity.client_name = 'pysmartthings-test'
         entity.scope.append('r:devices')
         # Act/Assert
-        entity.save()
+        await entity.save()
 
 
 class TestOAuthToken:

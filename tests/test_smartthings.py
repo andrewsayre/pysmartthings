@@ -75,109 +75,98 @@ class TestSmartThings:
         assert location.location_id == api_mock.LOCATION_ID
 
     @staticmethod
-    def test_apps(requests_mock):
+    @pytest.mark.asyncio
+    async def test_apps(smartthings):
         """Tests locations are retrieved."""
-        # arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
-        # act
-        apps = smartthings.apps()
+        # Act
+        apps = await smartthings.apps()
         # assert
         assert len(apps) == 1
 
     @staticmethod
-    def test_app(requests_mock):
+    @pytest.mark.asyncio
+    async def test_app(smartthings):
         """Tests the app(id) method."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         # Act
-        app = smartthings.app(api_mock.APP_ID)
+        app = await smartthings.app(api_mock.APP_ID)
         # Assert
         assert app.app_id == api_mock.APP_ID
 
     @staticmethod
-    def test_create_app(requests_mock):
+    @pytest.mark.asyncio
+    async def test_create_app(smartthings):
         """Tests the create app method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         app = App()
         data = get_json('app_post_request.json')
         data['appId'] = api_mock.APP_ID
         app.apply_data(data)
         # Act
-        app, oauth = smartthings.create_app(app)
+        app, oauth = await smartthings.create_app(app)
         # Assert
         assert app.app_id == api_mock.APP_ID
         assert oauth.client_id == '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
         assert oauth.client_secret == '9b3fd445-42d6-441b-b386-99ea51e13cb0'
 
     @staticmethod
-    def test_delete_app(requests_mock):
+    @pytest.mark.asyncio
+    async def test_delete_app(smartthings):
         """Tests the delete app method."""
-        # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         # Act/Assert
-        result = smartthings.delete_app(api_mock.APP_ID)
+        result = await smartthings.delete_app(api_mock.APP_ID)
         # Assert
         assert result
 
     @staticmethod
-    def test_app_settings(requests_mock):
+    @pytest.mark.asyncio
+    async def test_app_settings(smartthings):
         """Tests retrieval of app settings."""
         # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         app_id = api_mock.APP_ID
         # Act
-        settings = smartthings.app_settings(app_id)
+        settings = await smartthings.app_settings(app_id)
         # Assert
         assert settings.app_id == app_id
         assert settings.settings == {'test': 'test'}
 
     @staticmethod
-    def test_update_app_settings(requests_mock):
+    @pytest.mark.asyncio
+    async def test_update_app_settings(smartthings):
         """Tests updating app settings."""
         # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         app_id = api_mock.APP_ID
         settings = AppSettings(app_id)
         settings.settings['test'] = 'test'
         # Act
-        entity = smartthings.update_app_settings(settings)
+        entity = await smartthings.update_app_settings(settings)
         # Assert
         assert entity.app_id == settings.app_id
         assert entity.settings == {'test': 'test'}
 
     @staticmethod
-    def test_app_oauth(requests_mock):
+    @pytest.mark.asyncio
+    async def test_app_oauth(smartthings):
         """Tests retrieval of OAuth settings."""
         # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         app_id = api_mock.APP_ID
         # Act
-        oauth = smartthings.app_oauth(app_id)
+        oauth = await smartthings.app_oauth(app_id)
         # Assert
         assert oauth.app_id == app_id
         assert oauth.client_name == 'pysmartthings-test'
         assert oauth.scope == ['r:devices']
 
     @staticmethod
-    def test_update_app_oauth(requests_mock):
+    @pytest.mark.asyncio
+    async def test_update_app_oauth(smartthings):
         """Tests updating OAuth settings."""
         # Arrange
-        api_mock.setup(requests_mock)
-        smartthings = SmartThings(api_mock.API_TOKEN)
         app_id = api_mock.APP_ID
         oauth = OAuth(app_id)
         oauth.client_name = 'pysmartthings-test'
         oauth.scope.append('r:devices')
         # Act
-        oauth_entity = smartthings.update_app_oauth(oauth)
+        oauth_entity = await smartthings.update_app_oauth(oauth)
         # Assert
         assert oauth_entity.app_id == oauth.app_id
         assert oauth_entity.client_name == oauth.client_name

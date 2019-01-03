@@ -2,7 +2,6 @@
 
 import pytest
 
-from pysmartthings.api import api_old
 from pysmartthings.app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
     AppEntity, AppSettings, AppSettingsEntity)
@@ -233,67 +232,62 @@ class TestAppSettingsEntity:
     """Tests for the AppSettingsEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests data is refreshed."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         data = {'settings': {'test2': 'test'}}
         settings = AppSettingsEntity(api, api_mock.APP_ID, data)
         # Act
-        settings.refresh()
+        await settings.refresh()
         # Assert
         assert settings.settings == {'test': 'test'}
 
     @staticmethod
-    def test_refresh_no_app_id(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh_no_app_id(api):
         """Tests refresh when there's no app id."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         settings = AppSettingsEntity(api, None)
         # Act/Assert
         with pytest.raises(ValueError):
-            settings.refresh()
+            await settings.refresh()
 
     @staticmethod
-    def test_save(requests_mock):
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests the save function."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         data = {'settings': {'test': 'test'}}
         settings = AppSettingsEntity(api, api_mock.APP_ID, data)
         # Act
-        settings.save()
+        await settings.save()
         # Assert
         assert settings.settings == {'test': 'test'}
 
     @staticmethod
-    def test_save_no_app_id(requests_mock):
+    @pytest.mark.asyncio
+    async def test_save_no_app_id(api):
         """Tests save when there's no app id."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         settings = AppSettingsEntity(api, None)
         # Act/Assert
         with pytest.raises(ValueError):
-            settings.save()
+            await settings.save()
 
 
 class TestAppEntity:
     """Tests for the AppEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests data is refreshed."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         data = get_json('apps.json')['items'][0]
         app = AppEntity(api, data)
         # Act
-        app.refresh()
+        await app.refresh()
         # Assert
         assert app.single_instance
         assert app.webhook_target_url == \
@@ -301,43 +295,40 @@ class TestAppEntity:
         assert app.webhook_public_key
 
     @staticmethod
-    def test_save(requests_mock):
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests updating an entity."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         data = get_json('app_get.json')
         app = AppEntity(api, data)
         before = app.last_updated_date
         # Act
-        app.save()
+        await app.save()
         # Assert
         assert app.last_updated_date > before
 
     @staticmethod
-    def test_oauth(requests_mock):
+    @pytest.mark.asyncio
+    async def test_oauth(api):
         """Tests the oauth method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         data = get_json('app_get.json')
         app = AppEntity(api, data)
         # Act
-        oauth = app.oauth()
+        oauth = await app.oauth()
         # Assert
         assert oauth.app_id == app.app_id
         assert oauth.client_name == 'pysmartthings-test'
         assert oauth.scope == ["r:devices"]
 
     @staticmethod
-    def test_settings(requests_mock):
+    @pytest.mark.asyncio
+    async def test_settings(api):
         """Tests the settings method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         data = get_json('app_get.json')
         app = AppEntity(api, data)
         # Act
-        settings = app.settings()
+        settings = await app.settings()
         # Assert
         assert settings.settings == {'test': 'test'}

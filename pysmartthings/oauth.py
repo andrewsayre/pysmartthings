@@ -2,7 +2,7 @@
 
 from typing import List, Optional
 
-from .api import api_old
+from .api import Api
 from .entity import Entity
 from .oauthapi import OAuthAPI
 
@@ -54,22 +54,23 @@ class OAuth:
 class OAuthEntity(Entity, OAuth):
     """Define oauth client settings."""
 
-    def __init__(self, api: api_old, app_id: str, data=None):
+    def __init__(self, api: Api, app_id: str, data=None):
         """Create a new instance of the OAuth class."""
         Entity.__init__(self, api)
         OAuth.__init__(self, app_id)
         if data:
             self.apply_data(data)
 
-    def refresh(self):
+    async def refresh(self):
         """Retrieve the latest values from the API."""
-        data = self._api.get_app_oauth(self._app_id)
+        data = await self._api.get_app_oauth(self._app_id)
         if data:
             self.apply_data(data)
 
-    def save(self):
+    async def save(self):
         """Save changes to the app OAuth Client settings."""
-        response = self._api.update_app_oauth(self._app_id, self.to_data())
+        response = await self._api.update_app_oauth(
+            self._app_id, self.to_data())
         if response:
             self.apply_data(response)
 

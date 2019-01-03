@@ -97,6 +97,78 @@ class Api:
         return await self.post(
             API_DEVICE_COMMAND.format(device_id=device_id), data)
 
+    async def get_apps(self, params: Optional = None) -> dict:
+        """
+        Get list of apps.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listApps
+        """
+        return await self.get_items(API_APPS, params=params)
+
+    async def get_app(self, app_id: str) -> dict:
+        """
+        Get the details of the specific app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getApp
+        """
+        return await self.get(API_APP.format(app_id=app_id))
+
+    async def create_app(self, data: dict) -> dict:
+        """
+        Create a new app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/createApp
+        """
+        return await self.post(API_APPS, data)
+
+    async def update_app(self, app_id: str, data: dict) -> dict:
+        """
+        Update an existing app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateApp
+        """
+        return await self.put(API_APP.format(app_id=app_id), data)
+
+    async def delete_app(self, app_id: str):
+        """
+        Delete an app.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteApp
+        """
+        return await self.delete(API_APP.format(app_id=app_id))
+
+    async def get_app_settings(self, app_id: str) -> dict:
+        """
+        Get an app's settings.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getAppSettings
+        """
+        return await self.get(API_APP_SETTINGS.format(app_id=app_id))
+
+    async def update_app_settings(self, app_id: str, data: dict) -> dict:
+        """
+        Update an app's settings.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/updateAppSettings
+        """
+        return await self.put(API_APP_SETTINGS.format(app_id=app_id), data)
+
+    async def get_app_oauth(self, app_id: str) -> dict:
+        """
+        Get an app's oauth settings.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getAppOauth
+        """
+        return await self.get(API_APP_OAUTH.format(app_id=app_id))
+
+    async def update_app_oauth(self, app_id: str, data: dict) -> dict:
+        """
+        Update an app's oauth settings.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateAppOauth
+        """
+        return await self.put(API_APP_OAUTH.format(app_id=app_id), data)
+
     @property
     def session(self) -> ClientSession:
         """Get the instance of the session."""
@@ -161,6 +233,15 @@ class Api:
         return await self.request('post', self._api_base + resource,
                                   data=data)
 
+    async def put(self, resource: str, data: Optional[Sequence]):
+        """Perform a put request."""
+        return await self.request('put', self._api_base + resource,
+                                  data=data)
+
+    async def delete(self, resource: str, *, params: dict = None):
+        """Delete a resource."""
+        return await self.request('delete', self._api_base + resource, params)
+
     @staticmethod
     def _get_next_link(data):
         links = data.get('_links')
@@ -182,84 +263,6 @@ class api_old:  # pylint: disable=invalid-name
     def __init__(self, token: str):
         """Initialize a new instance of the API class."""
         self._headers = {"Authorization": "Bearer " + token}
-
-    def get_apps(self) -> dict:
-        """
-        Get list of apps.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listApps
-        """
-        return self._request_paged_list('get', API_APPS)
-
-    def get_app(self, app_id: str) -> dict:
-        """
-        Get the details of the specific app.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getApp
-        """
-        return self._request(
-            'get',
-            API_APP.format(app_id=app_id))
-
-    def create_app(self, data: dict) -> dict:
-        """
-        Create a new app.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/createApp
-        """
-        return self._request('post', API_APPS, data)
-
-    def update_app(self, app_id: str, data: dict) -> dict:
-        """
-        Update an existing app.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateApp
-        """
-        return self._request(
-            'put', API_APP.format(app_id=app_id), data)
-
-    def delete_app(self, app_id: str):
-        """
-        Delete an app.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteApp
-        """
-        return self._request(
-            'delete', API_APP.format(app_id=app_id))
-
-    def get_app_settings(self, app_id: str) -> dict:
-        """
-        Get an app's settings.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getAppSettings
-        """
-        return self._request('get', API_APP_SETTINGS.format(app_id=app_id))
-
-    def update_app_settings(self, app_id: str, data: dict) -> dict:
-        """
-        Update an app's settings.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/updateAppSettings
-        """
-        return self._request(
-            'put', API_APP_SETTINGS.format(app_id=app_id), data)
-
-    def get_app_oauth(self, app_id: str) -> dict:
-        """
-        Get an app's oauth settings.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getAppOauth
-        """
-        return self._request('get', API_APP_OAUTH.format(app_id=app_id))
-
-    def update_app_oauth(self, app_id: str, data: dict) -> dict:
-        """
-        Update an app's oauth settings.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateAppOauth
-        """
-        return self._request(
-            'put', API_APP_OAUTH.format(app_id=app_id), data)
 
     def get_installedapps(self) -> dict:
         """

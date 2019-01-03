@@ -45,6 +45,17 @@ class ClientMocker:
                      headers=self.default_headers, request=request,
                      response=response)
 
+    def put(self, resource: str, *, params=None, request=None, response=None):
+        """Register a mock post request."""
+        self.request('put', self.base_url + resource, params=params,
+                     headers=self.default_headers, request=request,
+                     response=response)
+
+    def delete(self, resource: str, *, params=None, response=None):
+        """Register a mock get request."""
+        self.request('delete', self.base_url + resource, params=params,
+                     headers=self.default_headers, response=response)
+
     def request(self, method: str, url: str, *,
                 params=None, status=200, headers=None,
                 request=None, response=None):

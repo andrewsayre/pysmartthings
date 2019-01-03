@@ -148,7 +148,7 @@ class TestDeviceEntity:
         assert device.status.level == 75
 
     @staticmethod
-    async def test_status():
+    def test_status():
         """Tests the set_level method."""
         # Arrange
         device = DeviceEntity(None, device_id=DEVICE_ID)

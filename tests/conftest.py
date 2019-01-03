@@ -2,15 +2,17 @@
 import pytest
 
 from pysmartthings.api import (
-    API_BASE, API_DEVICE, API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES,
-    API_LOCATION, API_LOCATIONS, Api)
+    API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
+    API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_LOCATION,
+    API_LOCATIONS, Api)
 from pysmartthings.smartthings import SmartThings
 
 from .utilities import ClientMocker
 
+APP_ID = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
 AUTH_TOKEN = '9b3fd445-42d6-441b-b386-99ea51e13cb0'
-LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
 DEVICE_ID = '743de49f-036f-4e9c-839a-2f89d57607db'
+LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
 
 
 def register_url_mocks(mocker):
@@ -39,6 +41,24 @@ def register_url_mocks(mocker):
                 request='device_command_post_switch_off', response={})
     mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
                 request='device_command_post_set_level', response={})
+
+    # Apps
+    mocker.get(API_APPS, response='apps')
+    mocker.get(API_APP.format(app_id=APP_ID), response='app_get')
+    mocker.post(API_APPS, request='app_post_request',
+                response='app_post_response')
+    mocker.put(API_APP.format(app_id=APP_ID), request='app_put_request',
+               response='app_put_response')
+    mocker.delete(API_APP.format(app_id=APP_ID), response={})
+    mocker.get(API_APP_SETTINGS.format(app_id=APP_ID),
+               response='app_settings')
+    mocker.put(API_APP_SETTINGS.format(app_id=APP_ID), request='app_settings',
+               response='app_settings')
+    mocker.get(API_APP_OAUTH.format(app_id=APP_ID),
+               response='app_oauth_get_response')
+    mocker.put(API_APP_OAUTH.format(app_id=APP_ID),
+               request='app_oauth_put_request',
+               response='app_oauth_put_response')
 
 
 @pytest.fixture

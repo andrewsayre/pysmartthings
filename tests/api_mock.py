@@ -22,22 +22,6 @@ REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
 UrlMock = namedtuple('UrlMock', 'method url request response')
 
 URLS = [
-    UrlMock('GET', api.API_APPS, None, 'apps.json'),
-    UrlMock('GET', api.API_APP.format(app_id=APP_ID),
-            None, 'app_get.json'),
-    UrlMock('POST', api.API_APPS,
-            'app_post_request.json', 'app_post_response.json'),
-    UrlMock('PUT', api.API_APP.format(app_id=APP_ID),
-            'app_put_request.json', 'app_put_response.json'),
-    UrlMock('DELETE', api.API_APP.format(app_id=APP_ID), None, {}),
-    UrlMock('GET', api.API_APP_SETTINGS.format(app_id=APP_ID),
-            None, 'app_settings.json'),
-    UrlMock('PUT', api.API_APP_SETTINGS.format(app_id=APP_ID),
-            'app_settings.json', 'app_settings.json'),
-    UrlMock('GET', api.API_APP_OAUTH.format(app_id=APP_ID),
-            None, 'app_oauth_get_response.json'),
-    UrlMock('PUT', api.API_APP_OAUTH.format(app_id=APP_ID),
-            'app_oauth_put_request.json', 'app_oauth_put_response.json'),
     # InstalledApps
     UrlMock('GET', api.API_INSTALLEDAPPS, None,
             'installedapps_get_response.json'),

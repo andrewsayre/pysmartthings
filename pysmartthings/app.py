@@ -3,7 +3,7 @@
 import re
 from typing import List
 
-from .api import api_old
+from .api import Api
 from .entity import Entity
 from .oauth import OAuthEntity
 
@@ -245,54 +245,55 @@ class AppSettings:
 class AppSettingsEntity(Entity, AppSettings):
     """Define a SmartThings App settings entity."""
 
-    def __init__(self, api: api_old, app_id: str, data=None):
+    def __init__(self, api: Api, app_id: str, data=None):
         """Create a new instance of the AppSettingEntity class."""
         Entity.__init__(self, api)
         AppSettings.__init__(self, app_id)
         if data:
             self.apply_data(data)
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the value of the entity."""
         if not self._app_id:
             raise ValueError("Cannot refresh without an app_id")
-        data = self._api.get_app_settings(self._app_id)
+        data = await self._api.get_app_settings(self._app_id)
         self.apply_data(data)
 
-    def save(self):
+    async def save(self):
         """Save the value of the entity."""
         if not self._app_id:
             raise ValueError("Cannot save without an app_id")
-        data = self._api.update_app_settings(self._app_id, self.to_data())
+        data = await self._api.update_app_settings(
+            self._app_id, self.to_data())
         self.apply_data(data)
 
 
 class AppEntity(Entity, App):
     """Define a SmartThings App entity."""
 
-    def __init__(self, api: api_old, data=None):
+    def __init__(self, api: Api, data=None):
         """Create a new instance of the AppEntity class."""
         Entity.__init__(self, api)
         App.__init__(self)
         if data:
             self.apply_data(data)
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the app information using the API."""
-        data = self._api.get_app(self._app_id)
+        data = await self._api.get_app(self._app_id)
         self.apply_data(data)
 
-    def save(self):
+    async def save(self):
         """Save the changes made to the app."""
-        response = self._api.update_app(self._app_id, self.to_data())
+        response = await self._api.update_app(self._app_id, self.to_data())
         self.apply_data(response)
 
-    def oauth(self) -> OAuthEntity:
+    async def oauth(self) -> OAuthEntity:
         """Get the app's OAuth settings."""
-        return OAuthEntity(
-            self._api, self._app_id, self._api.get_app_oauth(self._app_id))
+        entity = await self._api.get_app_oauth(self._app_id)
+        return OAuthEntity(self._api, self._app_id, entity)
 
-    def settings(self) -> AppSettingsEntity:
+    async def settings(self) -> AppSettingsEntity:
         """Get the app's settings."""
-        return AppSettingsEntity(
-            self._api, self._app_id, self._api.get_app_settings(self._app_id))
+        entity = await self._api.get_app_settings(self._app_id)
+        return AppSettingsEntity(self._api, self._app_id, entity)

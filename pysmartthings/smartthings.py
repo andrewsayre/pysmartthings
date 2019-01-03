@@ -17,12 +17,7 @@ class SmartThings:
     """Define a class for interacting with the SmartThings Cloud API."""
 
     def __init__(self, token, session: ClientSession = None):
-        """
-        Initialize the API.
-
-        :param token: The personal access token used to authenticate to the API
-        :type token: str
-        """
+        """Initialize the SmartThingsApi."""
         if session:
             self._service = Api(session, token)
         self._api = api_old(token)
@@ -56,43 +51,50 @@ class SmartThings:
         entity = await self._service.get_device(device_id)
         return DeviceEntity(self._service, entity)
 
-    def apps(self) -> List[AppEntity]:
+    async def apps(self, *, app_type: Optional[str] = None) -> List[AppEntity]:
         """Retrieve list of apps."""
-        resp = self._api.get_apps()
-        return [AppEntity(self._api, entity) for entity in resp["items"]]
+        params = []
+        if app_type:
+            params.append(('appType', app_type))
+        resp = await self._service.get_apps(params)
+        return [AppEntity(self._service, entity) for entity in resp]
 
-    def app(self, app_id: str) -> AppEntity:
+    async def app(self, app_id: str) -> AppEntity:
         """Retrieve an app with the specified ID."""
-        entity = self._api.get_app(app_id)
-        return AppEntity(self._api, entity)
+        entity = await self._service.get_app(app_id)
+        return AppEntity(self._service, entity)
 
-    def create_app(self, app: App) -> (AppEntity, OAuthClient):
+    async def create_app(self, app: App) -> (AppEntity, OAuthClient):
         """Create a new app."""
-        entity = self._api.create_app(app.to_data())
-        return AppEntity(self._api, entity['app']), OAuthClient(entity)
+        entity = await self._service.create_app(app.to_data())
+        return AppEntity(self._service, entity['app']), OAuthClient(entity)
 
-    def delete_app(self, app_id: str):
+    async def delete_app(self, app_id: str):
         """Delete an app."""
-        return self._api.delete_app(app_id) == {}
+        return await self._service.delete_app(app_id) == {}
 
-    def app_settings(self, app_id: str) -> AppSettingsEntity:
+    async def app_settings(self, app_id: str) -> AppSettingsEntity:
         """Get an app's settings."""
-        return AppSettingsEntity(
-            self._api, app_id, self._api.get_app_settings(app_id))
+        settings = await self._service.get_app_settings(app_id)
+        return AppSettingsEntity(self._service, app_id, settings)
 
-    def update_app_settings(self, data: AppSettings) -> AppSettingsEntity:
+    async def update_app_settings(self, data: AppSettings) -> \
+            AppSettingsEntity:
         """Update an app's settings."""
-        entity = self._api.update_app_settings(data.app_id, data.to_data())
-        return AppSettingsEntity(self._api, data.app_id, entity)
+        entity = await self._service.update_app_settings(
+            data.app_id, data.to_data())
+        return AppSettingsEntity(self._service, data.app_id, entity)
 
-    def app_oauth(self, app_id: str) -> OAuthEntity:
+    async def app_oauth(self, app_id: str) -> OAuthEntity:
         """Get an app's OAuth settings."""
-        return OAuthEntity(self._api, app_id, self._api.get_app_oauth(app_id))
+        oauth = await self._service.get_app_oauth(app_id)
+        return OAuthEntity(self._service, app_id, oauth)
 
-    def update_app_oauth(self, data: OAuth) -> OAuthEntity:
+    async def update_app_oauth(self, data: OAuth) -> OAuthEntity:
         """Update an app's OAuth settings without having to retrieve it."""
-        entity = self._api.update_app_oauth(data.app_id, data.to_data())
-        return OAuthEntity(self._api, data.app_id, entity)
+        entity = await self._service.update_app_oauth(
+            data.app_id, data.to_data())
+        return OAuthEntity(self._service, data.app_id, entity)
 
     def installedapps(self) -> List[InstalledAppEntity]:
         """Get a list of the installed applications."""
