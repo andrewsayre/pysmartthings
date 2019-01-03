@@ -3,16 +3,22 @@ import pytest
 
 from pysmartthings.api import (
     API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
-    API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_LOCATION,
-    API_LOCATIONS, Api)
+    API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_INSTALLEDAPP,
+    API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS, API_OAUTH_TOKEN,
+    API_SUBSCRIPTION, API_SUBSCRIPTIONS, Api)
 from pysmartthings.smartthings import SmartThings
 
 from .utilities import ClientMocker
 
 APP_ID = 'c6cde2b0-203e-44cf-a510-3b3ed4706996'
 AUTH_TOKEN = '9b3fd445-42d6-441b-b386-99ea51e13cb0'
+CLIENT_ID = '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
+CLIENT_SECRET = '9b3fd445-42d6-441b-b386-99ea51e13cb0'
 DEVICE_ID = '743de49f-036f-4e9c-839a-2f89d57607db'
+INSTALLED_APP_ID = '4514eb36-f5fd-4ab2-9520-0597acd1d212'
 LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
+REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
+SUBSCRIPTION_ID = '7bdf5909-57c4-41f3-9089-e520513bd92a'
 
 
 def register_url_mocks(mocker):
@@ -59,6 +65,45 @@ def register_url_mocks(mocker):
     mocker.put(API_APP_OAUTH.format(app_id=APP_ID),
                request='app_oauth_put_request',
                response='app_oauth_put_response')
+
+    # InstalledApps
+    mocker.get(API_INSTALLEDAPPS, response='installedapps_get_response')
+    mocker.request('get', "https://api.smartthings.com/installedapps?"
+                   "currentLocationId=NWMwM2U1MTgtMTE4YS00NGNiLTg1YWQtNzg3N2Qw"
+                   "YjMwMmU0&currentOffset=MA", headers=mocker.default_headers,
+                   response='installedapps_get_response_2')
+    mocker.get(API_INSTALLEDAPP.format(installed_app_id=INSTALLED_APP_ID),
+               response='installedapp_get_response')
+    mocker.delete(
+        API_INSTALLEDAPP.format(installed_app_id=INSTALLED_APP_ID),
+        response={'count': 1})
+
+    # InstallApp Subscriptions
+    mocker.get(API_SUBSCRIPTIONS.format(installed_app_id=INSTALLED_APP_ID),
+               response='subscriptions_get_response')
+    mocker.delete(API_SUBSCRIPTIONS.format(installed_app_id=INSTALLED_APP_ID),
+                  response={'count': 3})
+    mocker.post(API_SUBSCRIPTIONS.format(installed_app_id=INSTALLED_APP_ID),
+                request='subscription_post_request',
+                response='subscription_post_response')
+    mocker.get(
+        API_SUBSCRIPTION.format(
+            installed_app_id=INSTALLED_APP_ID,
+            subscription_id=SUBSCRIPTION_ID),
+        response='subscription_capability_get_response')
+    mocker.get(
+        API_SUBSCRIPTION.format(
+            installed_app_id=INSTALLED_APP_ID,
+            subscription_id='498752fd-db87-4a5e-95f5-25a0e412838d'),
+        response='subscription_device_get_response')
+    mocker.delete(
+        API_SUBSCRIPTION.format(
+            installed_app_id=INSTALLED_APP_ID,
+            subscription_id=SUBSCRIPTION_ID),
+        response={'count': 1})
+
+    # OAuth Token
+    mocker.request('post', API_OAUTH_TOKEN, response='token_response')
 
 
 @pytest.fixture

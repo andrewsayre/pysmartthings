@@ -2,11 +2,10 @@
 
 import pytest
 
-from pysmartthings.api import api_old
 from pysmartthings.subscription import (
     SourceType, Subscription, SubscriptionEntity)
 
-from . import api_mock
+from .conftest import INSTALLED_APP_ID
 from .utilities import get_json
 
 
@@ -35,7 +34,7 @@ class TestSubscription:
         sub.apply_data(data)
         # Assert
         assert sub.subscription_id == '7bdf5909-57c4-41f3-9089-e520513bd92a'
-        assert sub.installed_app_id == api_mock.INSTALLED_APP_ID
+        assert sub.installed_app_id == INSTALLED_APP_ID
         assert sub.source_type == SourceType.CAPABILITY
         assert sub.location_id == '397678e5-9995-4a39-9d9f-ae6ba310236b'
         assert sub.capability == 'switchLevel'
@@ -54,7 +53,7 @@ class TestSubscription:
         sub.apply_data(data)
         # Assert
         assert sub.subscription_id == '498752fd-db87-4a5e-95f5-25a0e412838d'
-        assert sub.installed_app_id == api_mock.INSTALLED_APP_ID
+        assert sub.installed_app_id == INSTALLED_APP_ID
         assert sub.source_type == SourceType.DEVICE
         assert sub.device_id == '64e7f664-5b99-4573-b76d-03be3021dc78'
         assert sub.component_id == '*'
@@ -119,28 +118,27 @@ class TestSubscriptionEntity:
     """Tests for the SubscriptionEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         app = SubscriptionEntity(api)
         app.apply_data({
             'id': '7bdf5909-57c4-41f3-9089-e520513bd92a',
-            'installedAppId': api_mock.INSTALLED_APP_ID,
+            'installedAppId': INSTALLED_APP_ID,
             'sourceType': 'UNKNOWN'
         })
         # Act
-        app.refresh()
+        await app.refresh()
         # Assert
         assert app.subscription_name == 'switchLevel_sub'
 
     @staticmethod
-    def test_save():
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests the refresh method."""
         # Arrange
-        api = api_old(api_mock.API_TOKEN)
         app = SubscriptionEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
-            app.save()
+            await app.save()

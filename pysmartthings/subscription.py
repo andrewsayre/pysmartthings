@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Any, Optional
 
-from .api import api_old
+from .api import Api
 from .entity import Entity
 
 
@@ -205,19 +205,19 @@ class Subscription:
 class SubscriptionEntity(Entity, Subscription):
     """Define a subscription entity."""
 
-    def __init__(self, api: api_old, data: Optional[dict] = None):
+    def __init__(self, api: Api, data: Optional[dict] = None):
         """Create a new instance of the SubscriptionEntity class."""
         Entity.__init__(self, api)
         Subscription.__init__(self)
         if data:
             self.apply_data(data)
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the subscription information using the API."""
-        data = self._api.get_subscription(
+        data = await self._api.get_subscription(
             self._installed_app_id, self._subscription_id)
         self.apply_data(data)
 
-    def save(self):
+    async def save(self):
         """Subscriptions cannot be updated."""
         raise NotImplementedError

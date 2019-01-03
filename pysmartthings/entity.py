@@ -1,12 +1,12 @@
 """Defines the entity module."""
 
-from .api import api_old
+from .api import Api
 
 
 class Entity:
     """Define an entity from the SmartThings API."""
 
-    def __init__(self, api: api_old):
+    def __init__(self, api: Api):
         """Initialize a new instance of the entity."""
         self._api = api
 

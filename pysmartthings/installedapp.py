@@ -3,7 +3,7 @@
 from enum import Enum
 from typing import Sequence
 
-from .api import api_old
+from .api import Api
 from .entity import Entity
 from .subscription import SubscriptionEntity
 
@@ -111,7 +111,7 @@ class InstalledApp:
 class InstalledAppEntity(Entity, InstalledApp):
     """Define the InstalledAppEntity class."""
 
-    def __init__(self, api: api_old, data=None, installed_app_id=None):
+    def __init__(self, api: Api, data=None, installed_app_id=None):
         """Create a new instance of the InstalledAppEntity class."""
         Entity.__init__(self, api)
         InstalledApp.__init__(self)
@@ -120,17 +120,16 @@ class InstalledAppEntity(Entity, InstalledApp):
         if installed_app_id:
             self._installed_app_id = installed_app_id
 
-    def refresh(self):
+    async def refresh(self):
         """Refresh the installedapp information using the API."""
-        data = self._api.get_installedapp(self._installed_app_id)
+        data = await self._api.get_installed_app(self._installed_app_id)
         self.apply_data(data)
 
-    def save(self):
+    async def save(self):
         """Save the changes made to the app."""
         raise NotImplementedError
 
-    def subscriptions(self) -> Sequence[SubscriptionEntity]:
+    async def subscriptions(self) -> Sequence[SubscriptionEntity]:
         """Get the subscriptions for the installedapp."""
-        data = self._api.get_subscriptions(self._installed_app_id)
-        return [SubscriptionEntity(self._api, entity)
-                for entity in data["items"]]
+        data = await self._api.get_subscriptions(self._installed_app_id)
+        return [SubscriptionEntity(self._api, entity) for entity in data]

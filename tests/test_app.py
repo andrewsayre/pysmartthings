@@ -4,9 +4,9 @@ import pytest
 
 from pysmartthings.app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
-    AppEntity, AppSettings, AppSettingsEntity)
+    AppEntity, AppOAuth, AppOAuthEntity, AppSettings, AppSettingsEntity)
 
-from . import api_mock
+from .conftest import APP_ID
 from .utilities import get_json
 
 
@@ -201,16 +201,16 @@ class TestAppSettings:
     def test_init():
         """Tests the init method."""
         # Arrange/Act
-        settings = AppSettings(api_mock.APP_ID)
+        settings = AppSettings(APP_ID)
         # Assert
-        assert settings.app_id == api_mock.APP_ID
+        assert settings.app_id == APP_ID
 
     @staticmethod
     def test_apply_data():
         """Tests the apply_data method."""
         # Arrange
         data = get_json('app_settings.json')
-        settings = AppSettings(api_mock.APP_ID)
+        settings = AppSettings(APP_ID)
         # Act
         settings.apply_data(data)
         # Assert
@@ -220,7 +220,7 @@ class TestAppSettings:
     def test_to_data():
         """Tests the to_data method."""
         # Arrange
-        settings = AppSettings(api_mock.APP_ID)
+        settings = AppSettings(APP_ID)
         settings.settings = {'test': 'test'}
         # Act
         data = settings.to_data()
@@ -237,7 +237,7 @@ class TestAppSettingsEntity:
         """Tests data is refreshed."""
         # Arrange
         data = {'settings': {'test2': 'test'}}
-        settings = AppSettingsEntity(api, api_mock.APP_ID, data)
+        settings = AppSettingsEntity(api, APP_ID, data)
         # Act
         await settings.refresh()
         # Assert
@@ -259,7 +259,7 @@ class TestAppSettingsEntity:
         """Tests the save function."""
         # Arrange
         data = {'settings': {'test': 'test'}}
-        settings = AppSettingsEntity(api, api_mock.APP_ID, data)
+        settings = AppSettingsEntity(api, APP_ID, data)
         # Act
         await settings.save()
         # Assert
@@ -332,3 +332,68 @@ class TestAppEntity:
         settings = await app.settings()
         # Assert
         assert settings.settings == {'test': 'test'}
+
+
+class TestOAuth:
+    """Tests for the OAuth class."""
+
+    @staticmethod
+    def test_init():
+        """Tests the initialization."""
+        # Arrange
+        app_id = '5c03e518-118a-44cb-85ad-7877d0b302e4'
+        # Act
+        oauth = AppOAuth(app_id)
+        # Assert
+        assert app_id == oauth.app_id
+        assert oauth.scope is not None
+
+    @staticmethod
+    def test_client_name():
+        """Tests get/set of client name."""
+        # Arrange
+        oauth = AppOAuth('5c03e518-118a-44cb-85ad-7877d0b302e4')
+        # Act
+        expected = "my_app"
+        oauth.client_name = expected
+        actual = oauth.client_name
+        # Assert
+        assert actual == expected
+
+    @staticmethod
+    def test_client_name_invalid():
+        """Tests setting an invalid client name."""
+        # Arrange
+        oauth = AppOAuth('5c03e518-118a-44cb-85ad-7877d0b302e4')
+        # Act/Assert
+        with pytest.raises(ValueError):
+            oauth.client_name = ''
+
+
+class TestOAuthEntity:
+    """Tests for the OAuthEntity class."""
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_refresh(api):
+        """Tests the refresh method."""
+        # Arrange
+        entity = AppOAuthEntity(
+            api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
+        # Act
+        await entity.refresh()
+        # Assert
+        assert entity.client_name == 'pysmartthings-test'
+        assert 'r:devices' in entity.scope
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_save(api):
+        """Tests the refresh method."""
+        # Arrange
+        entity = AppOAuthEntity(
+            api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
+        entity.client_name = 'pysmartthings-test'
+        entity.scope.append('r:devices')
+        # Act/Assert
+        await entity.save()

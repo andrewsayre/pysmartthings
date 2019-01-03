@@ -4,12 +4,13 @@ from typing import List, Optional, Sequence
 
 from aiohttp import ClientSession
 
-from .api import Api, api_old
-from .app import App, AppEntity, AppSettings, AppSettingsEntity
+from .api import Api
+from .app import (
+    App, AppEntity, AppOAuth, AppOAuthClient, AppOAuthEntity, AppSettings,
+    AppSettingsEntity)
 from .device import DeviceEntity
-from .installedapp import InstalledAppEntity
+from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
-from .oauth import OAuth, OAuthClient, OAuthEntity
 from .subscription import Subscription, SubscriptionEntity
 
 
@@ -18,9 +19,7 @@ class SmartThings:
 
     def __init__(self, token, session: ClientSession = None):
         """Initialize the SmartThingsApi."""
-        if session:
-            self._service = Api(session, token)
-        self._api = api_old(token)
+        self._service = Api(session, token)
 
     async def locations(self) -> List[LocationEntity]:
         """Retrieve SmartThings locations."""
@@ -64,10 +63,10 @@ class SmartThings:
         entity = await self._service.get_app(app_id)
         return AppEntity(self._service, entity)
 
-    async def create_app(self, app: App) -> (AppEntity, OAuthClient):
+    async def create_app(self, app: App) -> (AppEntity, AppOAuthClient):
         """Create a new app."""
         entity = await self._service.create_app(app.to_data())
-        return AppEntity(self._service, entity['app']), OAuthClient(entity)
+        return AppEntity(self._service, entity['app']), AppOAuthClient(entity)
 
     async def delete_app(self, app_id: str):
         """Delete an app."""
@@ -85,53 +84,61 @@ class SmartThings:
             data.app_id, data.to_data())
         return AppSettingsEntity(self._service, data.app_id, entity)
 
-    async def app_oauth(self, app_id: str) -> OAuthEntity:
+    async def app_oauth(self, app_id: str) -> AppOAuthEntity:
         """Get an app's OAuth settings."""
         oauth = await self._service.get_app_oauth(app_id)
-        return OAuthEntity(self._service, app_id, oauth)
+        return AppOAuthEntity(self._service, app_id, oauth)
 
-    async def update_app_oauth(self, data: OAuth) -> OAuthEntity:
+    async def update_app_oauth(self, data: AppOAuth) -> AppOAuthEntity:
         """Update an app's OAuth settings without having to retrieve it."""
         entity = await self._service.update_app_oauth(
             data.app_id, data.to_data())
-        return OAuthEntity(self._service, data.app_id, entity)
+        return AppOAuthEntity(self._service, data.app_id, entity)
 
-    def installedapps(self) -> List[InstalledAppEntity]:
+    async def installed_apps(
+            self, *, location_id: Optional[str] = None,
+            installed_app_status: Optional[InstalledAppStatus] = None) -> \
+            List[InstalledAppEntity]:
         """Get a list of the installed applications."""
-        resp = self._api.get_installedapps()
-        return [InstalledAppEntity(self._api, entity)
-                for entity in resp["items"]]
+        params = []
+        if location_id:
+            params.append(('locationId', location_id))
+        if installed_app_status:
+            params.append(('installedAppStatus', installed_app_status.value))
+        resp = await self._service.get_installed_apps(params)
+        return [InstalledAppEntity(self._service, entity) for entity in resp]
 
-    def installedapp(self, installed_app_id: str) -> InstalledAppEntity:
+    async def installed_app(self, installed_app_id: str) -> InstalledAppEntity:
         """Get an installedapp with the specified ID."""
-        entity = self._api.get_installedapp(installed_app_id)
-        return InstalledAppEntity(self._api, entity)
+        entity = await self._service.get_installed_app(installed_app_id)
+        return InstalledAppEntity(self._service, entity)
 
-    def delete_installedapp(self, installed_app_id: str):
+    async def delete_installed_app(self, installed_app_id: str):
         """Delete an installedapp."""
-        return self._api.delete_installedapp(installed_app_id) == {'count': 1}
+        result = await self._service.delete_installed_app(installed_app_id)
+        return result == {'count': 1}
 
-    def subscriptions(self, installed_app_id: str) \
+    async def subscriptions(self, installed_app_id: str) \
             -> List[SubscriptionEntity]:
         """Get an installedapp's subscriptions."""
-        resp = self._api.get_subscriptions(installed_app_id)
-        return [SubscriptionEntity(self._api, entity)
-                for entity in resp["items"]]
+        resp = await self._service.get_subscriptions(installed_app_id)
+        return [SubscriptionEntity(self._service, entity)
+                for entity in resp]
 
-    def delete_subscriptions(self, installed_app_id: str) -> int:
+    async def delete_subscriptions(self, installed_app_id: str) -> int:
         """Delete an installedapp's subscriptions."""
-        resp = self._api.delete_all_subscriptions(installed_app_id)
+        resp = await self._service.delete_all_subscriptions(installed_app_id)
         return resp['count']
 
-    def delete_subscription(self, installed_app_id: str,
-                            subscription_id: str):
+    async def delete_subscription(self, installed_app_id: str,
+                                  subscription_id: str):
         """Delete an individual subscription."""
-        return self._api.delete_subscription(
+        return await self._service.delete_subscription(
             installed_app_id, subscription_id) == {'count': 1}
 
-    def create_subscription(self, subscription: Subscription) \
+    async def create_subscription(self, subscription: Subscription) \
             -> SubscriptionEntity:
         """Create a new subscription for an installedapp."""
-        entity = self._api.create_subscription(
+        entity = await self._service.create_subscription(
             subscription.installed_app_id, subscription.to_data())
-        return SubscriptionEntity(self._api, entity)
+        return SubscriptionEntity(self._service, entity)

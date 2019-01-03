@@ -79,7 +79,7 @@ class ClientMocker:
             url = url.with_query(params)
 
         for response in self._mocks:
-            if response.match_request(method, url, headers, json):
+            if response.match_request(method, url, headers or [], json):
                 return response
 
         assert False, "No mock registered for {} {} {}".format(method.upper(),

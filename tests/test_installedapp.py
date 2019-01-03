@@ -2,11 +2,10 @@
 
 import pytest
 
-from pysmartthings.api import api_old
 from pysmartthings.installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
 
-from . import api_mock
+from .conftest import APP_ID, INSTALLED_APP_ID
 from .utilities import get_json
 
 
@@ -32,11 +31,11 @@ class TestInstalledApp:
         # Act
         app.apply_data(data)
         # Assert
-        assert app.installed_app_id == api_mock.INSTALLED_APP_ID
+        assert app.installed_app_id == INSTALLED_APP_ID
         assert app.installed_app_type == InstalledAppType.WEBHOOK_SMART_APP
         assert app.installed_app_status == InstalledAppStatus.PENDING
         assert app.display_name == 'pysmartthings'
-        assert app.app_id == api_mock.APP_ID
+        assert app.app_id == APP_ID
         assert app.reference_id is None
         assert app.location_id == '397678e5-9995-4a39-9d9f-ae6ba310236b'
         assert app.created_date == '2018-12-19T02:49:58Z'
@@ -48,38 +47,36 @@ class TestInstalledAppEntity:
     """Tests for the InstalledAppEntity class."""
 
     @staticmethod
-    def test_refresh(requests_mock):
+    @pytest.mark.asyncio
+    async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         app = InstalledAppEntity(
-            api, installed_app_id=api_mock.INSTALLED_APP_ID)
+            api, installed_app_id=INSTALLED_APP_ID)
         # Act
-        app.refresh()
+        await app.refresh()
         # Assert
-        assert app.app_id == api_mock.APP_ID
+        assert app.app_id == APP_ID
 
     @staticmethod
-    def test_save():
+    @pytest.mark.asyncio
+    async def test_save(api):
         """Tests the refresh method."""
         # Arrange
-        api = api_old(api_mock.API_TOKEN)
         app = InstalledAppEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
-            app.save()
+            await app.save()
 
     @staticmethod
-    def test_subscriptions(requests_mock):
+    @pytest.mark.asyncio
+    async def test_subscriptions(api):
         """Tests the subscriptions method."""
         # Arrange
-        api_mock.setup(requests_mock)
-        api = api_old(api_mock.API_TOKEN)
         app = InstalledAppEntity(
-            api, installed_app_id=api_mock.INSTALLED_APP_ID)
-        app.refresh()
+            api, installed_app_id=INSTALLED_APP_ID)
+        await app.refresh()
         # Act
-        subscriptions = app.subscriptions()
+        subscriptions = await app.subscriptions()
         # Assert
         assert len(subscriptions) == 3

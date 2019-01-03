@@ -2,12 +2,11 @@
 
 from typing import Optional, Sequence
 
-from aiohttp import ClientSession
-import requests
+from aiohttp import BasicAuth, ClientSession
 
-from . import errors
-from .errors import APIResponseError
+from .errors import APIInvalidGrant, APIResponseError
 
+API_OAUTH_TOKEN = "https://auth-global.api.smartthings.com/oauth/token"
 API_BASE = "https://api.smartthings.com/v1/"
 API_LOCATIONS = "locations"
 API_LOCATION = API_LOCATIONS + "/{location_id}"
@@ -169,6 +168,83 @@ class Api:
         """
         return await self.put(API_APP_OAUTH.format(app_id=app_id), data)
 
+    async def get_installed_apps(self, params: Optional = None) -> dict:
+        """
+        Get list of installedapps.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listInstallations
+        """
+        return await self.get_items(API_INSTALLEDAPPS, params=params)
+
+    async def get_installed_app(self, installed_app_id: str) -> dict:
+        """
+        Get the details of the specific installedapp.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getInstallation
+        """
+        return await self.get(
+            API_INSTALLEDAPP.format(installed_app_id=installed_app_id))
+
+    async def delete_installed_app(self, installed_app_id: str):
+        """
+        Delete an app.
+
+        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/deleteInstallation
+        """
+        return await self.delete(
+            API_INSTALLEDAPP.format(installed_app_id=installed_app_id))
+
+    async def get_subscriptions(self, installed_app_id: str) -> dict:
+        """
+        Get installedapp's subscriptions.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listSubscriptions
+        """
+        return await self.get_items(
+            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
+
+    async def create_subscription(self, installed_app_id: str,
+                                  data: dict) -> dict:
+        """
+        Create a subscription for an installedapp.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/saveSubscription
+        """
+        return await self.post(
+            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id),
+            data)
+
+    async def delete_all_subscriptions(self, installed_app_id: str) -> dict:
+        """
+        Delete all subscriptions for an installedapp.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteAllSubscriptions
+        """
+        return await self.delete(
+            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
+
+    async def get_subscription(self, installed_app_id: str,
+                               subscription_id: str) -> dict:
+        """
+        Get an individual subscription.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getSubscription
+        """
+        return await self.get(API_SUBSCRIPTION.format(
+            installed_app_id=installed_app_id,
+            subscription_id=subscription_id))
+
+    async def delete_subscription(self, installed_app_id: str,
+                                  subscription_id: str):
+        """
+        Delete an individual subscription.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteSubscription
+        """
+        return await self.delete(API_SUBSCRIPTION.format(
+            installed_app_id=installed_app_id,
+            subscription_id=subscription_id))
+
     @property
     def session(self) -> ClientSession:
         """Get the instance of the session."""
@@ -242,111 +318,27 @@ class Api:
         """Delete a resource."""
         return await self.request('delete', self._api_base + resource, params)
 
-    @staticmethod
-    def _get_next_link(data):
-        links = data.get('_links')
-        if not links:
-            return None
-        next_link = links.get('next')
-        if not next_link:
-            return None
-        return next_link.get('href')
-
-
-class api_old:  # pylint: disable=invalid-name
-    """
-    Utility for invoking the SmartThings Cloud API.
-
-    https://smartthings.developer.samsung.com/docs/api-ref/st-api.html
-    """
-
-    def __init__(self, token: str):
-        """Initialize a new instance of the API class."""
-        self._headers = {"Authorization": "Bearer " + token}
-
-    def get_installedapps(self) -> dict:
-        """
-        Get list of installedapps.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/listInstallations
-        """
-        return self._request_paged_list('get', API_INSTALLEDAPPS)
-
-    def get_installedapp(self, installed_app_id: str) -> dict:
-        """
-        Get the details of the specific installedapp.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getInstallation
-        """
-        return self._request(
-            'get',
-            API_INSTALLEDAPP.format(installed_app_id=installed_app_id))
-
-    def delete_installedapp(self, installed_app_id: str):
-        """
-        Delete an app.
-
-        https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/deleteInstallation
-        """
-        return self._request(
-            'delete', API_INSTALLEDAPP.format(
-                installed_app_id=installed_app_id))
-
-    def get_subscriptions(self, installed_app_id: str) -> dict:
-        """
-        Get installedapp's subscriptions.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listSubscriptions
-        """
-        return self._request_paged_list(
-            'get',
-            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
-
-    def create_subscription(self, installed_app_id: str, data: dict) -> dict:
-        """
-        Create a subscription for an installedapp.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/saveSubscription
-        """
-        return self._request(
-            'post',
-            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id),
-            data)
-
-    def delete_all_subscriptions(self, installed_app_id: str) -> dict:
-        """
-        Delete all subscriptions for an installedapp.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteAllSubscriptions
-        """
-        return self._request(
-            'delete',
-            API_SUBSCRIPTIONS.format(installed_app_id=installed_app_id))
-
-    def get_subscription(self, installed_app_id: str, subscription_id: str) \
-            -> dict:
-        """
-        Get an individual subscription.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/getSubscription
-        """
-        return self._request(
-            'get',
-            API_SUBSCRIPTION.format(
-                installed_app_id=installed_app_id,
-                subscription_id=subscription_id))
-
-    def delete_subscription(self, installed_app_id: str, subscription_id: str):
-        """
-        Delete an individual subscription.
-
-        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/deleteSubscription
-        """
-        return self._request(
-            'delete',
-            API_SUBSCRIPTION.format(
-                installed_app_id=installed_app_id,
-                subscription_id=subscription_id))
+    async def get_token(self, client_id: str, client_secret: str,
+                        refresh_token: str):
+        """Obtain a new access and refresh token."""
+        payload = {
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token
+        }
+        async with self._session.request(
+                'post', API_OAUTH_TOKEN,
+                auth=BasicAuth(client_id, client_secret),
+                data=payload) as resp:
+            if resp.status == 200:
+                return await resp.json()
+            if resp.status == 400:
+                data = {}
+                try:
+                    data = await resp.json()
+                except Exception:  # pylint: disable=broad-except
+                    pass
+                raise APIInvalidGrant(data.get('error_description'))
+            resp.raise_for_status()
 
     @staticmethod
     def _get_next_link(data):
@@ -357,32 +349,3 @@ class api_old:  # pylint: disable=invalid-name
         if not next_link:
             return None
         return next_link.get('href')
-
-    def _request_paged_list(self, method: str, resource: str,
-                            data: dict = None, params: dict = None):
-        response = self._request(method, resource, data, params)
-        items = response['items']
-        next_link = api_old._get_next_link(response)
-        while next_link:
-            response = self._request(method, data=data, params=params,
-                                     url=next_link)
-            items.extend(response['items'])
-            next_link = api_old._get_next_link(response)
-        return {'items': items}
-
-    def _request(self, method: str, resource: str = None, data: dict = None,
-                 params: dict = None, *, url: str = None):
-        response = requests.request(
-            method,
-            url if url else API_BASE + resource,
-            params=params,
-            json=data,
-            headers=self._headers)
-
-        if response.ok:
-            return response.json()
-        if response.status_code == 401:
-            raise errors.APIUnauthorizedError
-        elif response.status_code == 403:
-            raise errors.APIForbiddenError
-        raise errors.APIUnknownError
