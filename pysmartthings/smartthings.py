@@ -17,7 +17,7 @@ from .subscription import Subscription, SubscriptionEntity
 class SmartThings:
     """Define a class for interacting with the SmartThings Cloud API."""
 
-    def __init__(self, token, session: ClientSession = None):
+    def __init__(self, session: ClientSession, token: str):
         """Initialize the SmartThingsApi."""
         self._service = Api(session, token)
 

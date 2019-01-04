@@ -115,7 +115,7 @@ def smartthings(event_loop):
     register_url_mocks(mocker)
     session = event_loop.run_until_complete(
         __create_session(event_loop, mocker))
-    yield SmartThings(AUTH_TOKEN, session)
+    yield SmartThings(session, AUTH_TOKEN)
     event_loop.run_until_complete(session.close())
 
 
