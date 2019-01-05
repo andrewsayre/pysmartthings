@@ -2,15 +2,12 @@ language: python
 matrix:
   fast_finish: true
   include:
-    - python: "3.7"
+    - python: "3.5"
       env: TOXENV=pylint
-      dist: xenial
-    - python: "3.7"
+    - python: "3.5"
       env: TOXENV=lint
-      dist: xenial
-    - python: "3.7"
+    - python: "3.5"
       env: TOXENV=cov
-      dist: xenial
       after_success: coveralls
     - python: "3.5"
       env: TOXENV=py35
@@ -19,7 +16,7 @@ matrix:
     - python: "3.7"
       env: TOXENV=py37
       dist: xenial
-install: pip install -U tox coveralls aiohttp
+install: pip install -U tox coveralls
 script: tox
 deploy:
   provider: pypi
