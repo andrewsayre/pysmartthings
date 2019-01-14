@@ -286,6 +286,7 @@ class DeviceEntity(Entity, Device):
             Capability.switch_level, Command.set_level, [level, duration])
         if result and set_status:
             self.status.level = level
+            self.status.switch = level > 0
         return result
 
     @property

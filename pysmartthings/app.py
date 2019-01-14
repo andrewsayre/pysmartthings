@@ -164,6 +164,11 @@ class App:
         """Get the classifications of the app."""
         return self._classifications
 
+    @classifications.setter
+    def classifications(self, value: List[str]):
+        """Set the classifications of the app."""
+        self._classifications = list(value)
+
     @property
     def app_type(self) -> str:
         """
