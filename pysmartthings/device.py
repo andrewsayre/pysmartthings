@@ -27,6 +27,8 @@ class Attribute:
 class Capability:
     """Define common capabilities."""
 
+    color_control = 'colorControl',
+    color_temperature = 'colorTemperature',
     light = 'light'
     motion_sensor = 'motionSensor'
     switch = 'switch'
