@@ -47,6 +47,17 @@ def register_url_mocks(mocker):
                 request='device_command_post_switch_off', response={})
     mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
                 request='device_command_post_set_level', response={})
+    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                request='device_command_post_set_color_temperature',
+                response={})
+    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                request='device_command_post_set_hue', response={})
+    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                request='device_command_post_set_saturation', response={})
+    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                request='device_command_post_set_color', response={})
+    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                request='device_command_post_set_color_hex', response={})
 
     # Apps
     mocker.get(API_APPS, response='apps')

@@ -1,5 +1,6 @@
 """Defines a SmartThings device."""
-
+import  colorsys
+import re
 from enum import Enum
 from typing import Any, Dict, Optional, Sequence
 
@@ -7,16 +8,38 @@ from .api import Api
 from .entity import Entity
 
 
+def hs_to_hex(hue: float, saturation: float) -> str:
+    """Convert hue and saturation to a string hex color."""
+    rgb = colorsys.hsv_to_rgb(hue/100, saturation/100, 100)
+    return '#{:02x}{:02x}{:02x}'.format(round(rgb[0]), round(rgb[1]), round(rgb[2])).upper()
+
+
+def hex_to_hs(color_hex: str) -> (int, int):
+    """Convert a string hex color to hue and saturation components."""
+    color_hex = color_hex.lstrip('#')
+    rgb = [int(color_hex[i:i + len(color_hex) // 3], 16)/255.0
+           for i in range(0, len(color_hex), len(color_hex) // 3)]
+    hsv = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
+    return round(hsv[0]*100, 3), round(hsv[1]*100, 3)
+
+
+COLOR_HEX_MATCHER = re.compile('^#[A-Fa-f0-9]{6}$')
+
+
 class Attribute:
     """Define common attributes."""
 
     acceleration = 'acceleration'
+    color = 'color'
+    color_temperature = 'colorTemperature'
     contact = 'contact'
     filter_status = 'filterStatus'
+    hue = 'hue'
     level = 'level'
     motion = 'motion'
     mute = 'mute'
     presence = 'presence'
+    saturation = 'saturation'
     sound = 'sound'
     switch = 'switch'
     tamper = 'tamper'
@@ -27,8 +50,8 @@ class Attribute:
 class Capability:
     """Define common capabilities."""
 
-    color_control = 'colorControl',
-    color_temperature = 'colorTemperature',
+    color_control = 'colorControl'
+    color_temperature = 'colorTemperature'
     light = 'light'
     motion_sensor = 'motionSensor'
     switch = 'switch'
@@ -40,7 +63,11 @@ class Command:
 
     off = 'off'
     on = 'on'
+    set_color = 'setColor'
+    set_color_temperature = 'setColorTemperature'
+    set_hue = 'setHue'
     set_level = 'setLevel'
+    set_saturation = 'setSaturation'
 
 
 class DeviceType(Enum):
@@ -210,6 +237,71 @@ class DeviceStatus:
         return self._attributes
 
     @property
+    def color(self) -> Optional[str]:
+        """Get the color attribute."""
+        return self._attributes.get(Attribute.color)
+
+    @color.setter
+    def color(self, value: str):
+        """Set the color attribute."""
+        if not COLOR_HEX_MATCHER.match(value):
+            raise ValueError('value was not a properly formatted color hex, i.e. #000000.')
+        self._attributes[Attribute.color] = value
+
+    @property
+    def color_temperature(self) -> int:
+        """Get the color temperature attribute."""
+        return int(self._attributes.get(Attribute.color_temperature, 1))
+
+    @color_temperature.setter
+    def color_temperature(self, value: int):
+        """Set the color temperature attribute."""
+        if not 1 <= value <= 30000:
+            raise ValueError('value must be scaled between 1-30000.')
+        self._attributes[Attribute.color_temperature] = value
+
+    @property
+    def hue(self) -> float:
+        """Get the hue attribute, scaled 0-100."""
+        return float(self._attributes.get(Attribute.hue, 0))
+
+    @hue.setter
+    def hue(self, value: float):
+        """Set the hue attribute, scaled 0-100"""
+        if not 0 <= value <= 100:
+            raise ValueError('value must be scaled between 0-100.')
+        self._attributes[Attribute.hue] = value
+
+    @property
+    def level(self) -> int:
+        """Get the level attribute, scaled 0-100."""
+        return int(self._attributes.get(Attribute.level, 0))
+
+    @level.setter
+    def level(self, value: int):
+        """Set the level of the attribute, scaled 0-100."""
+        if not 0 <= value <= 100:
+            raise ValueError('value must be scaled between 0-100.')
+        self._attributes[Attribute.level] = value
+
+    @property
+    def saturation(self) -> float:
+        """Get the saturation attribute, scaled 0-100."""
+        return float(self._attributes.get(Attribute.saturation, 0))
+
+    @saturation.setter
+    def saturation(self, value: float):
+        """Set the saturation attribute, scaled 0-100."""
+        if not 0 <= value <= 100:
+            raise ValueError('value must be scaled between 0-100.')
+        self._attributes[Attribute.saturation] = value
+
+    @property
+    def motion(self) -> bool:
+        """Get the motion attribute."""
+        return self.is_on(Attribute.motion)
+
+    @property
     def switch(self) -> bool:
         """Get the switch attribute."""
         return self.is_on(Attribute.switch)
@@ -219,21 +311,6 @@ class DeviceStatus:
         """Set the value of the switch attribute."""
         self._attributes[Attribute.switch] = \
             ATTRIBUTE_ON_VALUES[Attribute.switch] if value else 'off'
-
-    @property
-    def level(self) -> int:
-        """Get the level attribute."""
-        return int(self._attributes.get(Attribute.level, 0))
-
-    @level.setter
-    def level(self, value: int):
-        """Set the level of the attribute."""
-        self._attributes[Attribute.level] = value
-
-    @property
-    def motion(self) -> bool:
-        """Get the motion attribute."""
-        return self.is_on(Attribute.motion)
 
 
 class DeviceEntity(Entity, Device):
@@ -261,34 +338,106 @@ class DeviceEntity(Entity, Device):
         """Save the changes made to the device."""
         raise NotImplementedError
 
-    async def command(self, capability, command, args=None):
+    async def command(self, capability, command, args=None) -> bool:
         """Execute a command on the device."""
         response = await self._api.post_device_command(
             self._device_id, capability, command, args)
         return response == {}
 
-    async def switch_on(self, set_status: bool = False) -> bool:
-        """Turn on the device."""
-        result = await self.command(Capability.switch, Command.on)
+    async def set_color(
+            self, hue: Optional[float] = None,
+            saturation: Optional[float] = None,
+            color_hex: Optional[str] = None,
+            set_status: bool = False) -> bool:
+        """Call the set color command."""
+        color_map = {}
+        if color_hex:
+            if not COLOR_HEX_MATCHER.match(color_hex):
+                raise ValueError('color_hex was not a properly formatted color hex, i.e. #000000.')
+            color_map['hex'] = color_hex
+        else:
+            if not 0 <= hue <= 100:
+                raise ValueError('hue must be scaled between 0-100.')
+            if not 0 <= saturation <= 100:
+                raise ValueError('saturation must be scaled between 0-100.')
+            color_map['hue'] = hue
+            color_map['saturation'] = saturation
+
+        result = await self.command(
+            Capability.color_control, Command.set_color, [color_map])
         if result and set_status:
-            self.status.switch = True
+            if color_hex:
+                self.status.color = color_hex
+                self.status.hue, self.status.saturation = hex_to_hs(color_hex)
+            else:
+                self.status.color = hs_to_hex(hue, saturation)
+                self.status.hue = hue
+                self.status.saturation = saturation
         return result
 
-    async def switch_off(self, set_status: bool = False) -> bool:
-        """Turn on the device."""
-        result = await self.command(Capability.switch, Command.off)
+    async def set_color_temperature(self, temperature: int,
+                                    set_status: bool = False) -> bool:
+        """Call the color temperature device command."""
+        if not 1 <= temperature <= 30000:
+            raise ValueError('temperature must be scaled between 1-30000.')
+
+        result = await self.command(
+            Capability.color_temperature, Command.set_color_temperature,
+            [temperature])
         if result and set_status:
-            self.status.switch = False
+            self.status.color_temperature = temperature
         return result
 
-    async def set_level(self, level: int, duration: int,
+    async def set_hue(self, hue: int, set_status: bool = False) -> bool:
+        """Call the set hue device command."""
+        if not 0 <= hue <= 100:
+            raise ValueError('hue must be scaled between 0-100.')
+
+        result = await self.command(
+            Capability.color_control, Command.set_hue, [hue])
+        if result and set_status:
+            self.status.hue = hue
+        return result
+
+    async def set_level(self, level: int, duration: int = 0,
                         set_status: bool = False) -> bool:
-        """Set the level of the device."""
+        """Call the set level device command."""
+        if not 0 <= level <= 100:
+            raise ValueError('level must be scaled between 0-100.')
+        if duration < 0:
+            raise ValueError('duration must be >= 0.')
+
         result = await self.command(
             Capability.switch_level, Command.set_level, [level, duration])
         if result and set_status:
             self.status.level = level
             self.status.switch = level > 0
+        return result
+
+    async def set_saturation(
+            self, saturation: int, set_status: bool = False) -> bool:
+        """Call the set saturation device command."""
+        if not 0 <= saturation <= 100:
+            raise ValueError('saturation must be scaled between 0-100.')
+
+        result = await self.command(
+            Capability.color_control, Command.set_saturation, [saturation])
+        if result and set_status:
+            self.status.saturation = saturation
+        return result
+
+    async def switch_off(self, set_status: bool = False) -> bool:
+        """Call the switch off device command."""
+        result = await self.command(Capability.switch, Command.off)
+        if result and set_status:
+            self.status.switch = False
+        return result
+
+    async def switch_on(self, set_status: bool = False) -> bool:
+        """Call the switch on device command."""
+        result = await self.command(Capability.switch, Command.on)
+        if result and set_status:
+            self.status.switch = True
         return result
 
     @property

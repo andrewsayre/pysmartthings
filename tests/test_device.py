@@ -137,6 +137,21 @@ class TestDeviceEntity:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_set_level_invalid(api):
+        """Tests the set_level method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert level
+        levels = [-1, 101]
+        for level in levels:
+            with pytest.raises(ValueError):
+                await device.set_level(level)
+        # Assert duration
+        with pytest.raises(ValueError):
+            await device.set_level(100, -1)
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_set_level_update(api):
         """Tests the set_level method."""
         # Arrange
@@ -156,6 +171,196 @@ class TestDeviceEntity:
         status = device.status
         # Assert
         assert status.device_id == DEVICE_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_temperature(api):
+        """Tests the set_color_temperature method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_color_temperature(3000)
+        # Assert
+        assert result
+        assert device.status.color_temperature == 1
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_temperature_invalid(api):
+        """Tests the set_color_temperature method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        values = [0, 30001]
+        for value in values:
+            with pytest.raises(ValueError):
+                await device.set_color_temperature(value)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_temperature_update(api):
+        """Tests the set_color_temperature method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_color_temperature(3000, True)
+        # Assert
+        assert result
+        assert device.status.color_temperature == 3000
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_hue(api):
+        """Tests the set_hue method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_hue(75)
+        # Assert
+        assert result
+        assert device.status.hue == 0
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_hue_invalid(api):
+        """Tests the set_hue method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert
+        levels = [-1, 101]
+        for level in levels:
+            with pytest.raises(ValueError):
+                await device.set_hue(level)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_hue_update(api):
+        """Tests the set_hue method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_hue(75, True)
+        # Assert
+        assert result
+        assert device.status.hue == 75
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_saturation(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_saturation(75)
+        # Assert
+        assert result
+        assert device.status.saturation == 0
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_saturation_invalid(api):
+        """Tests the set_saturation method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert
+        levels = [-1, 101]
+        for level in levels:
+            with pytest.raises(ValueError):
+                await device.set_saturation(level)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_saturation_update(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_saturation(75, True)
+        # Assert
+        assert result
+        assert device.status.saturation == 75
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color(api):
+        """Tests the set_color method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_color(25, 50)
+        # Assert
+        assert result
+        assert device.status.hue == 0
+        assert device.status.saturation == 0
+        assert device.status.color is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_invalid(api):
+        """Tests the set_saturation method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                await device.set_color(value, 0)
+            with pytest.raises(ValueError):
+                await device.set_color(0, value)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_update(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_color(25, 50, set_status=True)
+        # Assert
+        assert result
+        assert device.status.hue == 25
+        assert device.status.saturation == 50
+        assert device.status.color == '#4B6432'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_hex(api):
+        """Tests the set_color method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_color(color_hex='#4B6432')
+        # Assert
+        assert result
+        assert device.status.hue == 0
+        assert device.status.saturation == 0
+        assert device.status.color is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_hex_invalid(api):
+        """Tests the set_color method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert
+        values = ['000000', '#00000', '#G00000']
+        for value in values:
+            with pytest.raises(ValueError):
+                await device.set_color(color_hex=value)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_color_update_hex(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_color(color_hex='#4B6432', set_status=True)
+        # Assert
+        assert result
+        assert device.status.hue == 25
+        assert device.status.saturation == 50
+        assert device.status.color == '#4B6432'
 
 
 class TestDeviceStatus:
@@ -209,7 +414,7 @@ class TestDeviceStatus:
 
     @staticmethod
     def test_switch():
-        """Tests the init method."""
+        """Tests the switch property."""
         # Arrange
         status = DeviceStatus(None, device_id=DEVICE_ID)
         # Act
@@ -219,13 +424,68 @@ class TestDeviceStatus:
 
     @staticmethod
     def test_level():
-        """Tests the init method."""
+        """Tests the level property."""
         # Arrange
         status = DeviceStatus(None, device_id=DEVICE_ID)
         # Act
         status.level = 50
         # Assert
         assert status.level == 50
+
+    @staticmethod
+    def test_level_range():
+        """Tests the level property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.level = value
+
+    @staticmethod
+    def test_hue_range():
+        """Tests the hue property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.hue = value
+
+    @staticmethod
+    def test_saturation_range():
+        """Tests the hue property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.saturation = value
+
+    @staticmethod
+    def test_color_temperature_range():
+        """Tests the hue property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [0, 30001]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.color_temperature = value
+
+    @staticmethod
+    def test_color_format():
+        """Tests the color property's validation."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = ['000000', '#00000', '#HH2000']
+        for value in values:
+            with pytest.raises(ValueError):
+                status.color = value
 
     @staticmethod
     def test_is_on():

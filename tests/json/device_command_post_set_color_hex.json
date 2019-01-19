@@ -1,0 +1,14 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "colorControl",
+      "command": "setColor",
+      "arguments": [
+        {
+          "hex": "#4B6432"
+        }
+      ]
+    }
+  ]
+}

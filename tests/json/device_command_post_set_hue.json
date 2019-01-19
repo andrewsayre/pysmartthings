@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "colorControl",
+      "command": "setHue",
+      "arguments": [75]
+    }
+  ]
+}

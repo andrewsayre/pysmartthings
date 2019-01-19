@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "colorTemperature",
+      "command": "setColorTemperature",
+      "arguments": [3000]
+    }
+  ]
+}
