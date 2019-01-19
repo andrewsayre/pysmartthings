@@ -1,7 +1,7 @@
 """Defines a SmartThings device."""
-import  colorsys
-import re
+import colorsys
 from enum import Enum
+import re
 from typing import Any, Dict, Optional, Sequence
 
 from .api import Api
@@ -11,7 +11,8 @@ from .entity import Entity
 def hs_to_hex(hue: float, saturation: float) -> str:
     """Convert hue and saturation to a string hex color."""
     rgb = colorsys.hsv_to_rgb(hue/100, saturation/100, 100)
-    return '#{:02x}{:02x}{:02x}'.format(round(rgb[0]), round(rgb[1]), round(rgb[2])).upper()
+    return '#{:02x}{:02x}{:02x}'.format(
+        round(rgb[0]), round(rgb[1]), round(rgb[2])).upper()
 
 
 def hex_to_hs(color_hex: str) -> (int, int):
@@ -245,7 +246,8 @@ class DeviceStatus:
     def color(self, value: str):
         """Set the color attribute."""
         if not COLOR_HEX_MATCHER.match(value):
-            raise ValueError('value was not a properly formatted color hex, i.e. #000000.')
+            raise ValueError(
+                'value was not a properly formatted color hex, i.e. #000000.')
         self._attributes[Attribute.color] = value
 
     @property
@@ -267,7 +269,7 @@ class DeviceStatus:
 
     @hue.setter
     def hue(self, value: float):
-        """Set the hue attribute, scaled 0-100"""
+        """Set the hue attribute, scaled 0-100."""
         if not 0 <= value <= 100:
             raise ValueError('value must be scaled between 0-100.')
         self._attributes[Attribute.hue] = value
@@ -353,7 +355,8 @@ class DeviceEntity(Entity, Device):
         color_map = {}
         if color_hex:
             if not COLOR_HEX_MATCHER.match(color_hex):
-                raise ValueError('color_hex was not a properly formatted color hex, i.e. #000000.')
+                raise ValueError("color_hex was not a properly formatted "
+                                 "color hex, i.e. #000000.")
             color_map['hex'] = color_hex
         else:
             if not 0 <= hue <= 100:
