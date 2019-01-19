@@ -134,6 +134,7 @@ class TestDeviceEntity:
         # Assert
         assert result
         assert device.status.level == 0
+        assert not device.status.switch
 
     @staticmethod
     @pytest.mark.asyncio
@@ -161,6 +162,43 @@ class TestDeviceEntity:
         # Assert
         assert result
         assert device.status.level == 75
+        assert device.status.switch
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_fan_speed(api):
+        """Tests the set_fan_speed method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_fan_speed(66)
+        # Assert
+        assert result
+        assert device.status.level == 0
+        assert not device.status.switch
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_fan_speed_invalid(api):
+        """Tests the set_fan_speed method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert
+        with pytest.raises(ValueError):
+            await device.set_fan_speed(-1)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_fan_speed_update(api):
+        """Tests the set_fan_speed method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_fan_speed(66, True)
+        # Assert
+        assert result
+        assert device.status.fan_speed == 66
+        assert device.status.switch
 
     @staticmethod
     def test_status():
@@ -442,6 +480,25 @@ class TestDeviceStatus:
         for value in values:
             with pytest.raises(ValueError):
                 status.level = value
+
+    @staticmethod
+    def test_fan_speed():
+        """Tests the fan_speed property."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act
+        status.fan_speed = 50
+        # Assert
+        assert status.fan_speed == 50
+
+    @staticmethod
+    def test_fan_speed_range():
+        """Tests the fan_speed property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        with pytest.raises(ValueError):
+            status.level = -1
 
     @staticmethod
     def test_hue_range():

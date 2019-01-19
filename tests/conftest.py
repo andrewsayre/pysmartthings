@@ -58,6 +58,8 @@ def register_url_mocks(mocker):
                 request='device_command_post_set_color', response={})
     mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
                 request='device_command_post_set_color_hex', response={})
+    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                request='device_command_post_set_fan_speed', response={})
 
     # Apps
     mocker.get(API_APPS, response='apps')

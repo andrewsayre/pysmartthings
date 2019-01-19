@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "fanSpeed",
+      "command": "setFanSpeed",
+      "arguments": [66]
+    }
+  ]
+}

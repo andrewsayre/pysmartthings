@@ -34,6 +34,7 @@ class Attribute:
     color = 'color'
     color_temperature = 'colorTemperature'
     contact = 'contact'
+    fan_speed = 'fanSpeed'
     filter_status = 'filterStatus'
     hue = 'hue'
     level = 'level'
@@ -53,6 +54,7 @@ class Capability:
 
     color_control = 'colorControl'
     color_temperature = 'colorTemperature'
+    fan_speed = 'fanSpeed'
     light = 'light'
     motion_sensor = 'motionSensor'
     switch = 'switch'
@@ -66,6 +68,7 @@ class Command:
     on = 'on'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
+    set_fan_speed = 'setFanSpeed'
     set_hue = 'setHue'
     set_level = 'setLevel'
     set_saturation = 'setSaturation'
@@ -247,7 +250,7 @@ class DeviceStatus:
         """Set the color attribute."""
         if not COLOR_HEX_MATCHER.match(value):
             raise ValueError(
-                'value was not a properly formatted color hex, i.e. #000000.')
+                "value was not a properly formatted color hex, i.e. #000000.")
         self._attributes[Attribute.color] = value
 
     @property
@@ -259,8 +262,20 @@ class DeviceStatus:
     def color_temperature(self, value: int):
         """Set the color temperature attribute."""
         if not 1 <= value <= 30000:
-            raise ValueError('value must be scaled between 1-30000.')
+            raise ValueError("value must be scaled between 1-30000.")
         self._attributes[Attribute.color_temperature] = value
+
+    @property
+    def fan_speed(self) -> int:
+        """Get the fan speed attribute."""
+        return int(self._attributes.get(Attribute.fan_speed, 0))
+
+    @fan_speed.setter
+    def fan_speed(self, value: int):
+        """Set the fan speed attribute."""
+        if value < 0:
+            raise ValueError("value must be >= 0.")
+        self._attributes[Attribute.fan_speed] = value
 
     @property
     def hue(self) -> float:
@@ -271,7 +286,7 @@ class DeviceStatus:
     def hue(self, value: float):
         """Set the hue attribute, scaled 0-100."""
         if not 0 <= value <= 100:
-            raise ValueError('value must be scaled between 0-100.')
+            raise ValueError("value must be scaled between 0-100.")
         self._attributes[Attribute.hue] = value
 
     @property
@@ -283,7 +298,7 @@ class DeviceStatus:
     def level(self, value: int):
         """Set the level of the attribute, scaled 0-100."""
         if not 0 <= value <= 100:
-            raise ValueError('value must be scaled between 0-100.')
+            raise ValueError("value must be scaled between 0-100.")
         self._attributes[Attribute.level] = value
 
     @property
@@ -295,7 +310,7 @@ class DeviceStatus:
     def saturation(self, value: float):
         """Set the saturation attribute, scaled 0-100."""
         if not 0 <= value <= 100:
-            raise ValueError('value must be scaled between 0-100.')
+            raise ValueError("value must be scaled between 0-100.")
         self._attributes[Attribute.saturation] = value
 
     @property
@@ -360,9 +375,9 @@ class DeviceEntity(Entity, Device):
             color_map['hex'] = color_hex
         else:
             if not 0 <= hue <= 100:
-                raise ValueError('hue must be scaled between 0-100.')
+                raise ValueError("hue must be scaled between 0-100.")
             if not 0 <= saturation <= 100:
-                raise ValueError('saturation must be scaled between 0-100.')
+                raise ValueError("saturation must be scaled between 0-100.")
             color_map['hue'] = hue
             color_map['saturation'] = saturation
 
@@ -382,7 +397,7 @@ class DeviceEntity(Entity, Device):
                                     set_status: bool = False) -> bool:
         """Call the color temperature device command."""
         if not 1 <= temperature <= 30000:
-            raise ValueError('temperature must be scaled between 1-30000.')
+            raise ValueError("temperature must be scaled between 1-30000.")
 
         result = await self.command(
             Capability.color_temperature, Command.set_color_temperature,
@@ -391,10 +406,23 @@ class DeviceEntity(Entity, Device):
             self.status.color_temperature = temperature
         return result
 
+    async def set_fan_speed(
+            self, speed: int, set_status: bool = False) -> bool:
+        """Call the set fan speed device command."""
+        if speed < 0:
+            raise ValueError("value must be >= 0.")
+
+        result = await self.command(
+            Capability.fan_speed, Command.set_fan_speed, [speed])
+        if result and set_status:
+            self.status.fan_speed = speed
+            self.status.switch = speed > 0
+        return result
+
     async def set_hue(self, hue: int, set_status: bool = False) -> bool:
         """Call the set hue device command."""
         if not 0 <= hue <= 100:
-            raise ValueError('hue must be scaled between 0-100.')
+            raise ValueError("hue must be scaled between 0-100.")
 
         result = await self.command(
             Capability.color_control, Command.set_hue, [hue])
@@ -406,9 +434,9 @@ class DeviceEntity(Entity, Device):
                         set_status: bool = False) -> bool:
         """Call the set level device command."""
         if not 0 <= level <= 100:
-            raise ValueError('level must be scaled between 0-100.')
+            raise ValueError("level must be scaled between 0-100.")
         if duration < 0:
-            raise ValueError('duration must be >= 0.')
+            raise ValueError("duration must be >= 0.")
 
         result = await self.command(
             Capability.switch_level, Command.set_level, [level, duration])
@@ -421,7 +449,7 @@ class DeviceEntity(Entity, Device):
             self, saturation: int, set_status: bool = False) -> bool:
         """Call the set saturation device command."""
         if not 0 <= saturation <= 100:
-            raise ValueError('saturation must be scaled between 0-100.')
+            raise ValueError("saturation must be scaled between 0-100.")
 
         result = await self.command(
             Capability.color_control, Command.set_saturation, [saturation])
