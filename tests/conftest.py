@@ -5,7 +5,7 @@ from pysmartthings.api import (
     API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
     API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_INSTALLEDAPP,
     API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS, API_OAUTH_TOKEN,
-    API_SUBSCRIPTION, API_SUBSCRIPTIONS, Api)
+    API_SCENE_EXECUTE, API_SCENES, API_SUBSCRIPTION, API_SUBSCRIPTIONS, Api)
 from pysmartthings.smartthings import SmartThings
 
 from .utilities import ClientMocker
@@ -19,6 +19,7 @@ INSTALLED_APP_ID = '4514eb36-f5fd-4ab2-9520-0597acd1d212'
 LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
 REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
 SUBSCRIPTION_ID = '7bdf5909-57c4-41f3-9089-e520513bd92a'
+SCENE_ID = '9b58411f-5d26-418d-b193-3434a77c484a'
 
 
 def register_url_mocks(mocker):
@@ -117,6 +118,13 @@ def register_url_mocks(mocker):
 
     # OAuth Token
     mocker.request('post', API_OAUTH_TOKEN, response='token_response')
+
+    # Scenes
+    mocker.get(API_SCENES, response='scenes')
+    mocker.get(API_SCENES, response='scenes_location_filter',
+               params=[('locationId', LOCATION_ID)])
+    mocker.post(API_SCENE_EXECUTE.format(scene_id=SCENE_ID),
+                response={'status': 'success'})
 
 
 @pytest.fixture

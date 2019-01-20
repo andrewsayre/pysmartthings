@@ -13,6 +13,7 @@ from .installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
 from .location import Location, LocationEntity
 from .oauthtoken import OAuthToken
+from .scene import Scene, SceneEntity
 from .smartthings import SmartThings
 from .subscription import SourceType, Subscription, SubscriptionEntity
 
@@ -50,6 +51,9 @@ __all__ = [
     'LocationEntity',
     # oauthtoken
     'OAuthToken',
+    # scene
+    'Scene',
+    'SceneEntity',
     # smartthings
     'SmartThings',
     # subscription

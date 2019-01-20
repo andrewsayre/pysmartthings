@@ -11,11 +11,14 @@ from .app import (
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
+from .scene import SceneEntity
 from .subscription import Subscription, SubscriptionEntity
 
 
 class SmartThings:
     """Define a class for interacting with the SmartThings Cloud API."""
+
+    __slots__ = ['_service']
 
     def __init__(self, session: ClientSession, token: str):
         """Initialize the SmartThingsApi."""
@@ -142,3 +145,16 @@ class SmartThings:
         entity = await self._service.create_subscription(
             subscription.installed_app_id, subscription.to_data())
         return SubscriptionEntity(self._service, entity)
+
+    async def scenes(self, *, location_id: Optional[str] = None):
+        """Get a list of scenes and optionally filter by location."""
+        params = []
+        if location_id:
+            params.append(('locationId', location_id))
+        resp = await self._service.get_scenes(params)
+        return [SceneEntity(self._service, entity) for entity in resp]
+
+    async def execute_scene(self, scene_id: str) -> bool:
+        """Execute the scene with the specified id."""
+        result = await self._service.execute_scene(scene_id)
+        return result == {'status': 'success'}

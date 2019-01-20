@@ -13,7 +13,8 @@ The package is still in beta, but the following features are available:
 2. Devices: List, Get, Command, Status
 3. Apps: List, Get, Create, Update, Delete, Settings Get & Update, OAuth: Get & Update
 4. InstalledApps: List, Get, Delete
-5. Subscriptions: List, Get, Create, Delete, Delete All  
+5. Subscriptions: List, Get, Create, Delete, Delete All
+6. Scenes: List, Execute
 ## Installation
 ```commandline
 pip install pysmartthings

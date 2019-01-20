@@ -22,6 +22,8 @@ API_INSTALLEDAPPS = "installedapps"
 API_INSTALLEDAPP = "installedapps/{installed_app_id}"
 API_SUBSCRIPTIONS = API_INSTALLEDAPP + "/subscriptions"
 API_SUBSCRIPTION = API_SUBSCRIPTIONS + "/{subscription_id}"
+API_SCENES = "scenes"
+API_SCENE_EXECUTE = "scenes/{scene_id}/execute"
 
 
 class Api:
@@ -30,6 +32,8 @@ class Api:
 
     https://smartthings.developer.samsung.com/docs/api-ref/st-api.html
     """
+
+    __slots__ = ['_session', '_token', '_api_base']
 
     def __init__(self, session: ClientSession, token: str, *,
                  api_base: str = API_BASE):
@@ -244,6 +248,23 @@ class Api:
         return await self.delete(API_SUBSCRIPTION.format(
             installed_app_id=installed_app_id,
             subscription_id=subscription_id))
+
+    async def get_scenes(self, params: Optional = None):
+        """
+        Get scenes.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/listScenes
+        """
+        return await self.get_items(API_SCENES, params=params)
+
+    async def execute_scene(self, scene_id: str) -> bool:
+        """
+        Execute a scene.
+
+        https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/executeScene
+        """
+        return await self.post(
+            API_SCENE_EXECUTE.format(scene_id=scene_id), data=None)
 
     @property
     def session(self) -> ClientSession:

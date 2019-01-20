@@ -6,7 +6,8 @@ from pysmartthings.app import App, AppOAuth, AppSettings
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
-    APP_ID, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID, SUBSCRIPTION_ID)
+    APP_ID, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID, SCENE_ID,
+    SUBSCRIPTION_ID)
 from .utilities import get_json
 
 
@@ -224,3 +225,30 @@ class TestSmartThings:
         entity = await smartthings.create_subscription(sub)
         # Assert
         assert entity.subscription_id == SUBSCRIPTION_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_scenes(smartthings):
+        """Tests the scenes method."""
+        # Act
+        scenes = await smartthings.scenes()
+        # Assert
+        assert len(scenes) == 2
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_scenes_with_location_filter(smartthings):
+        """Tests the scenes method."""
+        # Act
+        scenes = await smartthings.scenes(location_id=LOCATION_ID)
+        # Assert
+        assert len(scenes) == 1
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_execute_scene(smartthings):
+        """Tests the execute scene method."""
+        # Act
+        result = await smartthings.execute_scene(SCENE_ID)
+        # Assert
+        assert result
