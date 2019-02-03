@@ -1,5 +1,31 @@
 {
     "components": {
+        "topButton": {
+            "button": {
+                "button": {
+                    "value": null
+                },
+                "numberOfButtons": {
+                    "value": 1
+                },
+                "supportedButtonValues": {
+                    "value": null
+                }
+            }
+        },
+        "bottomButton": {
+            "button": {
+                "button": {
+                    "value": null
+                },
+                "numberOfButtons": {
+                    "value": 1
+                },
+                "supportedButtonValues": {
+                    "value": null
+                }
+            }
+        },
         "main": {
             "button": {
                 "button": {

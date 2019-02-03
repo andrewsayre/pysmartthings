@@ -9,6 +9,15 @@
     "deviceNetworkType": "ZWAVE",
     "components": [
         {
+            "id": "bottomButton",
+            "capabilities": [
+                {
+                    "id": "button",
+                    "version": 1
+                }
+            ]
+        },
+        {
             "id": "main",
             "capabilities": [
                 {
@@ -41,6 +50,15 @@
                 },
                 {
                     "id": "light",
+                    "version": 1
+                }
+            ]
+        },
+        {
+            "id": "topButton",
+            "capabilities": [
+                {
+                    "id": "button",
                     "version": 1
                 }
             ]

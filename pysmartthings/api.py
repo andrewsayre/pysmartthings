@@ -78,8 +78,8 @@ class Api:
         """Get the status of a specific device."""
         return await self.get(API_DEVICE_STATUS.format(device_id=device_id))
 
-    async def post_device_command(self, device_id, capability, command, args,
-                                  component="main") -> object:
+    async def post_device_command(self, device_id, component_id, capability,
+                                  command, args) -> object:
         """
         Execute commands on a device.
 
@@ -88,7 +88,7 @@ class Api:
         data = {
             "commands": [
                 {
-                    "component": component,
+                    "component": component_id,
                     "capability": capability,
                     "command": command
                 }

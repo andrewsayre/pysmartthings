@@ -110,7 +110,7 @@ class Device:
         self._device_type_id = None
         self._device_type_name = None
         self._device_type_network = None
-        self._components = {}
+        self._components = dict()
         self._capabilities = []
 
     def apply_data(self, data: dict):
@@ -122,14 +122,13 @@ class Device:
         self._type = DeviceType(data['type'])
         self._components.clear()
         self._capabilities.clear()
-        for comp_data in data['components']:
-            capabilities = []
-            for capability_data in comp_data['capabilities']:
-                capability_id = capability_data['id']
-                capabilities.append(capability_id)
-                if id not in self._capabilities:
-                    self._capabilities.append(capability_id)
-            self._components[comp_data['id']] = capabilities
+        for component in data['components']:
+            capabilities = [c['id'] for c in component['capabilities']]
+            component_id = component['id']
+            if component_id == 'main':
+                self._capabilities.extend(capabilities)
+            else:
+                self._components[component_id] = capabilities
         if self._type is DeviceType.DTH:
             dth = data['dth']
             self._device_type_id = dth["deviceTypeId"]
@@ -187,40 +186,13 @@ class Device:
         return self._capabilities
 
 
-class DeviceStatus:
-    """Define the device status."""
+class DeviceStatusBase:
+    """Define the base status of device components."""
 
-    def __init__(self, api: Api, device_id: str, data=None):
-        """Create a new instance of the DeviceStatusEntity class."""
-        self._api = api
-        self._attributes = {}
-        self._device_id = device_id
-        if data:
-            self.apply_data(data)
-
-    @property
-    def device_id(self) -> str:
-        """Get the device id."""
-        return self._device_id
-
-    @device_id.setter
-    def device_id(self, value: str):
-        """Set the device id."""
-        self._device_id = value
-
-    def apply_data(self, data: dict):
-        """Apply the values from the given data structure."""
-        self._attributes.clear()
-        for capabilities in data['components'].values():
-            for attributes in capabilities.values():
-                for attribute, value in attributes.items():
-                    self._attributes[attribute] = value['value']
-
-    def apply_attribute_update(self, component_id: str, capability: str,
-                               attribute: str, value: Any):
-        """Apply an update to a specific attribute."""
-        # component_id and capability future usage.
-        self._attributes[attribute] = value
+    def __init__(self, component_id, attributes=None):
+        """Initialize the status class."""
+        self._attributes = attributes or {}
+        self._component_id = component_id
 
     def is_on(self, attribute: str) -> bool:
         """Determine if a specific attribute contains an on/True value."""
@@ -228,12 +200,6 @@ class DeviceStatus:
             return bool(self._attributes.get(attribute))
         return self._attributes.get(attribute) == \
             ATTRIBUTE_ON_VALUES[attribute]
-
-    async def refresh(self):
-        """Refresh the values of the entity."""
-        data = await self._api.get_device_status(self.device_id)
-        if data:
-            self.apply_data(data)
 
     @property
     def attributes(self):
@@ -264,6 +230,11 @@ class DeviceStatus:
         if not 1 <= value <= 30000:
             raise ValueError("value must be scaled between 1-30000.")
         self._attributes[Attribute.color_temperature] = value
+
+    @property
+    def component_id(self) -> str:
+        """Get the component id of the status."""
+        return self._component_id
 
     @property
     def fan_speed(self) -> int:
@@ -330,6 +301,63 @@ class DeviceStatus:
             ATTRIBUTE_ON_VALUES[Attribute.switch] if value else 'off'
 
 
+class DeviceStatus(DeviceStatusBase):
+    """Define the device status."""
+
+    def __init__(self, api: Api, device_id: str, data=None):
+        """Create a new instance of the DeviceStatusEntity class."""
+        super().__init__('main')
+        self._api = api
+        self._device_id = device_id
+        self._components = {}
+        if data:
+            self.apply_data(data)
+
+    def apply_attribute_update(self, component_id: str, capability: str,
+                               attribute: str, value: Any):
+        """Apply an update to a specific attribute."""
+        # capability future usage.
+        if component_id == 'main':
+            self._attributes[attribute] = value
+        elif component_id in self._components.keys():
+            self._components[component_id].attributes[attribute] = value
+
+    def apply_data(self, data: dict):
+        """Apply the values from the given data structure."""
+        self._components.clear()
+        for component_id, component in data['components'].items():
+            attributes = {}
+            for capabilities in component.values():
+                for attribute, value in capabilities.items():
+                    attributes[attribute] = value['value']
+            if component_id == 'main':
+                self._attributes = attributes
+            else:
+                self._components[component_id] = \
+                    DeviceStatusBase(component_id, attributes)
+
+    @property
+    def components(self) -> Dict[str, DeviceStatusBase]:
+        """Get the component status instances."""
+        return self._components
+
+    @property
+    def device_id(self) -> str:
+        """Get the device id."""
+        return self._device_id
+
+    @device_id.setter
+    def device_id(self, value: str):
+        """Set the device id."""
+        self._device_id = value
+
+    async def refresh(self):
+        """Refresh the values of the entity."""
+        data = await self._api.get_device_status(self.device_id)
+        if data:
+            self.apply_data(data)
+
+
 class DeviceEntity(Entity, Device):
     """Define a device entity."""
 
@@ -355,17 +383,19 @@ class DeviceEntity(Entity, Device):
         """Save the changes made to the device."""
         raise NotImplementedError
 
-    async def command(self, capability, command, args=None) -> bool:
+    async def command(self, component_id: str, capability, command,
+                      args=None) -> bool:
         """Execute a command on the device."""
         response = await self._api.post_device_command(
-            self._device_id, capability, command, args)
+            self._device_id, component_id, capability, command, args)
         return response == {}
 
     async def set_color(
             self, hue: Optional[float] = None,
             saturation: Optional[float] = None,
             color_hex: Optional[str] = None,
-            set_status: bool = False) -> bool:
+            set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
         """Call the set color command."""
         color_map = {}
         if color_hex:
@@ -382,7 +412,8 @@ class DeviceEntity(Entity, Device):
             color_map['saturation'] = saturation
 
         result = await self.command(
-            Capability.color_control, Command.set_color, [color_map])
+            component_id, Capability.color_control,
+            Command.set_color, [color_map])
         if result and set_status:
             if color_hex:
                 self.status.color = color_hex
@@ -394,44 +425,49 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def set_color_temperature(self, temperature: int,
-                                    set_status: bool = False) -> bool:
+                                    set_status: bool = False,
+                                    *, component_id: str = 'main') -> bool:
         """Call the color temperature device command."""
         if not 1 <= temperature <= 30000:
             raise ValueError("temperature must be scaled between 1-30000.")
 
         result = await self.command(
-            Capability.color_temperature, Command.set_color_temperature,
-            [temperature])
+            component_id, Capability.color_temperature,
+            Command.set_color_temperature, [temperature])
         if result and set_status:
             self.status.color_temperature = temperature
         return result
 
     async def set_fan_speed(
-            self, speed: int, set_status: bool = False) -> bool:
+            self, speed: int, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
         """Call the set fan speed device command."""
         if speed < 0:
             raise ValueError("value must be >= 0.")
 
         result = await self.command(
-            Capability.fan_speed, Command.set_fan_speed, [speed])
+            component_id, Capability.fan_speed, Command.set_fan_speed,
+            [speed])
         if result and set_status:
             self.status.fan_speed = speed
             self.status.switch = speed > 0
         return result
 
-    async def set_hue(self, hue: int, set_status: bool = False) -> bool:
+    async def set_hue(self, hue: int, set_status: bool = False,
+                      *, component_id: str = 'main') -> bool:
         """Call the set hue device command."""
         if not 0 <= hue <= 100:
             raise ValueError("hue must be scaled between 0-100.")
 
         result = await self.command(
-            Capability.color_control, Command.set_hue, [hue])
+            component_id, Capability.color_control, Command.set_hue, [hue])
         if result and set_status:
             self.status.hue = hue
         return result
 
     async def set_level(self, level: int, duration: int = 0,
-                        set_status: bool = False) -> bool:
+                        set_status: bool = False,
+                        *, component_id: str = 'main') -> bool:
         """Call the set level device command."""
         if not 0 <= level <= 100:
             raise ValueError("level must be scaled between 0-100.")
@@ -439,34 +475,41 @@ class DeviceEntity(Entity, Device):
             raise ValueError("duration must be >= 0.")
 
         result = await self.command(
-            Capability.switch_level, Command.set_level, [level, duration])
+            component_id, Capability.switch_level, Command.set_level,
+            [level, duration])
         if result and set_status:
             self.status.level = level
             self.status.switch = level > 0
         return result
 
     async def set_saturation(
-            self, saturation: int, set_status: bool = False) -> bool:
+            self, saturation: int, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
         """Call the set saturation device command."""
         if not 0 <= saturation <= 100:
             raise ValueError("saturation must be scaled between 0-100.")
 
         result = await self.command(
-            Capability.color_control, Command.set_saturation, [saturation])
+            component_id, Capability.color_control, Command.set_saturation,
+            [saturation])
         if result and set_status:
             self.status.saturation = saturation
         return result
 
-    async def switch_off(self, set_status: bool = False) -> bool:
+    async def switch_off(self, set_status: bool = False,
+                         *, component_id: str = 'main') -> bool:
         """Call the switch off device command."""
-        result = await self.command(Capability.switch, Command.off)
+        result = await self.command(
+            component_id, Capability.switch, Command.off)
         if result and set_status:
             self.status.switch = False
         return result
 
-    async def switch_on(self, set_status: bool = False) -> bool:
+    async def switch_on(self, set_status: bool = False,
+                        *, component_id: str = 'main') -> bool:
         """Call the switch on device command."""
-        result = await self.command(Capability.switch, Command.on)
+        result = await self.command(
+            component_id, Capability.switch, Command.on)
         if result and set_status:
             self.status.switch = True
         return result
