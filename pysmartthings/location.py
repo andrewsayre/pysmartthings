@@ -74,7 +74,7 @@ class Location:
         return self._country_code
 
     @property
-    def timezone_id(self) ->str:
+    def timezone_id(self) -> str:
         """Get the ID matching the Java Time Zone ID of the location."""
         return self._timezone_id
 
