@@ -5,6 +5,7 @@ import re
 from typing import Any, Dict, Optional, Sequence
 
 from .api import Api
+from .capability import ATTRIBUTE_ON_VALUES, Attribute, Capability
 from .entity import Entity
 
 
@@ -27,40 +28,6 @@ def hex_to_hs(color_hex: str) -> (int, int):
 COLOR_HEX_MATCHER = re.compile('^#[A-Fa-f0-9]{6}$')
 
 
-class Attribute:
-    """Define common attributes."""
-
-    acceleration = 'acceleration'
-    color = 'color'
-    color_temperature = 'colorTemperature'
-    contact = 'contact'
-    fan_speed = 'fanSpeed'
-    filter_status = 'filterStatus'
-    hue = 'hue'
-    level = 'level'
-    motion = 'motion'
-    mute = 'mute'
-    presence = 'presence'
-    saturation = 'saturation'
-    sound = 'sound'
-    switch = 'switch'
-    tamper = 'tamper'
-    valve = 'valve'
-    water = 'water'
-
-
-class Capability:
-    """Define common capabilities."""
-
-    color_control = 'colorControl'
-    color_temperature = 'colorTemperature'
-    fan_speed = 'fanSpeed'
-    light = 'light'
-    motion_sensor = 'motionSensor'
-    switch = 'switch'
-    switch_level = 'switchLevel'
-
-
 class Command:
     """Define common commands."""
 
@@ -80,21 +47,6 @@ class DeviceType(Enum):
     UNKNOWN = 'UNKNOWN'
     DTH = 'DTH'
     ENDPOINT_APP = 'ENDPOINT_APP'
-
-
-ATTRIBUTE_ON_VALUES = {
-    Attribute.acceleration: 'active',
-    Attribute.contact: 'open',
-    Attribute.filter_status: 'replace',
-    Attribute.motion: 'active',
-    Attribute.mute: 'muted',
-    Attribute.presence: 'present',
-    Attribute.sound: 'detected',
-    Attribute.switch: 'on',
-    Attribute.tamper: 'detected',
-    Attribute.valve: 'open',
-    Attribute.water: 'wet'
-}
 
 
 class Device:

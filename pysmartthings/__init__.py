@@ -4,10 +4,10 @@ from .app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
     AppEntity, AppOAuth, AppOAuthClient, AppOAuthEntity, AppSettings,
     AppSettingsEntity)
+from .capability import Attribute, Capability, ATTRIBUTES, CAPABILITIES, CAPABILITIES_TO_ATTRIBUTES
 from .const import __title__, __version__  # noqa
 from .device import (
-    Attribute, Capability, Command, Device, DeviceEntity, DeviceStatus,
-    DeviceType)
+    Command, Device, DeviceEntity, DeviceStatus, DeviceStatusBase, DeviceType)
 from .errors import APIErrorDetail, APIInvalidGrant, APIResponseError
 from .installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
@@ -29,13 +29,18 @@ __all__ = [
     'AppOAuthEntity',
     'AppSettings',
     'AppSettingsEntity',
-    # device
+    # capability
+    'ATTRIBUTES',
+    'CAPABILITIES',
+    'CAPABILITIES_TO_ATTRIBUTES',
     'Attribute',
     'Capability',
+    # device
     'Command',
     'Device',
     'DeviceEntity',
     'DeviceStatus',
+    'DeviceStatusBase',
     'DeviceType',
     # error
     'APIErrorDetail',
