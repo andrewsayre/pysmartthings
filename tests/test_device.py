@@ -5,7 +5,7 @@ import pytest
 from pysmartthings.device import (
     Attribute, Device, DeviceEntity, DeviceStatus, DeviceType)
 
-from .conftest import DEVICE_ID, LOCATION_ID
+from .conftest import DEVICE_ID, LOCATION_ID, ROOM_ID
 from .utilities import get_json
 
 
@@ -35,6 +35,7 @@ class TestDevice:
         assert device.name == 'GE In-Wall Smart Dimmer'
         assert device.label == 'Front Porch Lights'
         assert device.location_id == LOCATION_ID
+        assert device.room_id == ROOM_ID
         assert device.type is DeviceType.DTH
         assert device.device_type_id == '8a9d4b1e3b9b1fe3013b9b206a7f000d'
         assert device.device_type_name == 'Dimmer Switch'

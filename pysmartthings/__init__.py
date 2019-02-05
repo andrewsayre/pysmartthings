@@ -4,7 +4,9 @@ from .app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
     AppEntity, AppOAuth, AppOAuthClient, AppOAuthEntity, AppSettings,
     AppSettingsEntity)
-from .capability import Attribute, Capability, ATTRIBUTES, CAPABILITIES, CAPABILITIES_TO_ATTRIBUTES
+from .capability import (
+    ATTRIBUTES, CAPABILITIES, CAPABILITIES_TO_ATTRIBUTES, Attribute,
+    Capability)
 from .const import __title__, __version__  # noqa
 from .device import (
     Command, Device, DeviceEntity, DeviceStatus, DeviceStatusBase, DeviceType)

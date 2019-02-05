@@ -4,8 +4,9 @@ import pytest
 from pysmartthings.api import (
     API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
     API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_INSTALLEDAPP,
-    API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS, API_OAUTH_TOKEN,
-    API_SCENE_EXECUTE, API_SCENES, API_SUBSCRIPTION, API_SUBSCRIPTIONS, Api)
+    API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS, API_OAUTH_TOKEN, API_ROOM,
+    API_ROOMS, API_SCENE_EXECUTE, API_SCENES, API_SUBSCRIPTION,
+    API_SUBSCRIPTIONS, Api)
 from pysmartthings.smartthings import SmartThings
 
 from .utilities import ClientMocker
@@ -17,6 +18,7 @@ CLIENT_SECRET = '9b3fd445-42d6-441b-b386-99ea51e13cb0'
 DEVICE_ID = '743de49f-036f-4e9c-839a-2f89d57607db'
 INSTALLED_APP_ID = '4514eb36-f5fd-4ab2-9520-0597acd1d212'
 LOCATION_ID = '397678e5-9995-4a39-9d9f-ae6ba310236b'
+ROOM_ID = '7715151d-0314-457a-a82c-5ce48900e065'
 REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
 SUBSCRIPTION_ID = '7bdf5909-57c4-41f3-9089-e520513bd92a'
 SCENE_ID = '9b58411f-5d26-418d-b193-3434a77c484a'
@@ -31,6 +33,11 @@ def register_url_mocks(mocker):
     mocker.get(API_LOCATIONS, response='locations')
     mocker.get(API_LOCATION.format(location_id=LOCATION_ID),
                response='location')
+
+    # Rooms
+    mocker.get(API_ROOMS.format(location_id=LOCATION_ID), response='rooms')
+    mocker.get(API_ROOM.format(location_id=LOCATION_ID, room_id=ROOM_ID),
+               response='room')
 
     # Devices
     mocker.get(API_DEVICES, response='devices')

@@ -6,7 +6,7 @@ from pysmartthings.app import App, AppOAuth, AppSettings
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
-    APP_ID, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID, SCENE_ID,
+    APP_ID, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID, ROOM_ID, SCENE_ID,
     SUBSCRIPTION_ID)
 from .utilities import get_json
 
@@ -62,6 +62,24 @@ class TestSmartThings:
         location = await smartthings.location(LOCATION_ID)
         # Assert
         assert location.location_id == LOCATION_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_rooms(smartthings):
+        """Tests the rooms(id) method."""
+        # Act
+        rooms = await smartthings.rooms(LOCATION_ID)
+        # Assert
+        assert len(rooms) == 1
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_room(smartthings):
+        """Tests the room(id, id) method."""
+        # Act
+        room = await smartthings.room(LOCATION_ID, ROOM_ID)
+        # Assert
+        assert room.room_id == ROOM_ID
 
     @staticmethod
     @pytest.mark.asyncio

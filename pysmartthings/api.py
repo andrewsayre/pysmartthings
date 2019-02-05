@@ -10,6 +10,8 @@ API_OAUTH_TOKEN = "https://auth-global.api.smartthings.com/oauth/token"
 API_BASE = "https://api.smartthings.com/v1/"
 API_LOCATIONS = "locations"
 API_LOCATION = API_LOCATIONS + "/{location_id}"
+API_ROOMS = "locations/{location_id}/rooms"
+API_ROOM = "locations/{location_id}/rooms/{room_id}"
 API_DEVICES = "devices"
 API_DEVICE = API_DEVICES + "/{device_id}"
 API_DEVICE_STATUS = "devices/{device_id}/status"
@@ -57,6 +59,23 @@ class Api:
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getLocation
         """
         return await self.get(API_LOCATION.format(location_id=location_id))
+
+    async def get_rooms(self, location_id: str) -> dict:
+        """
+        Get a location's rooms.
+
+        This API call is undocumented.
+        """
+        return await self.get_items(API_ROOMS.format(location_id=location_id))
+
+    async def get_room(self, location_id: str, room_id: str) -> dict:
+        """
+        Get a specific room within a location.
+
+        This API call is undocumented.
+        """
+        return await self.get(
+            API_ROOM.format(location_id=location_id, room_id=room_id))
 
     async def get_devices(self, params: Optional = None) -> dict:
         """

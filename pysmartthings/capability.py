@@ -31,7 +31,8 @@ CAPABILITIES_TO_ATTRIBUTES = {
                             'dryerJobState', 'completionTime'],
     'dustSensor': ['fineDustLevel', 'dustLevel'],
     'energyMeter': ['energy'],
-    'equivalentCarbonDioxideMeasurement': ['equivalentCarbonDioxideMeasurement'],
+    'equivalentCarbonDioxideMeasurement':
+        ['equivalentCarbonDioxideMeasurement'],
     'fanSpeed': ['fanSpeed'],
     'filterStatus': ['filterStatus'],
     'formaldehydeMeasurement': ['formaldehydeLevel'],
@@ -46,8 +47,9 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'motionSensor': ['motion'],
     'odorSensor': ['odorLevel'],
     'ovenMode': ['ovenMode'],
-    'ovenOperatingState': ['machineState', 'supportedMachineStates', 'ovenJobState',
-                           'completionTime', 'operationTime', 'progress'],
+    'ovenOperatingState': ['machineState', 'supportedMachineStates',
+                           'ovenJobState', 'completionTime', 'operationTime',
+                           'progress'],
     'ovenSetpoint': ['ovenSetpoint'],
     'powerMeter': ['power'],
     'powerSource': ['powerSource'],
@@ -115,7 +117,8 @@ class Capability:
     dryer_operating_state = 'dryerOperatingState'
     dust_sensor = 'dustSensor'
     energy_meter = 'energyMeter'
-    equivalent_carbon_dioxide_measurement = 'equivalentCarbonDioxideMeasurement'
+    equivalent_carbon_dioxide_measurement = \
+        'equivalentCarbonDioxideMeasurement'
     fan_speed = 'fanSpeed'
     filter_status = 'filterStatus'
     formaldehyde_measurement = 'formaldehydeMeasurement'
@@ -191,7 +194,8 @@ class Attribute:
     dryer_mode = 'dryerMode'
     dust_level = 'dustLevel'
     energy = 'energy'
-    equivalent_carbon_dioxide_measurement = 'equivalentCarbonDioxideMeasurement'
+    equivalent_carbon_dioxide_measurement = \
+        'equivalentCarbonDioxideMeasurement'
     fan_speed = 'fanSpeed'
     filter_status = 'filterStatus'
     fine_dust_level = 'fineDustLevel'

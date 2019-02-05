@@ -58,6 +58,7 @@ class Device:
         self._name = None
         self._label = None
         self._location_id = None
+        self._room_id = None
         self._type = DeviceType.UNKNOWN
         self._device_type_id = None
         self._device_type_name = None
@@ -71,6 +72,7 @@ class Device:
         self._name = data['name']
         self._label = data['label']
         self._location_id = data['locationId']
+        self._room_id = data.get('roomId')
         self._type = DeviceType(data['type'])
         self._components.clear()
         self._capabilities.clear()
@@ -106,6 +108,11 @@ class Device:
     def location_id(self) -> str:
         """Get the SmartThings location assigned to the device."""
         return self._location_id
+
+    @property
+    def room_id(self):
+        """Get the room assigned to the device."""
+        return self._room_id
 
     @property
     def type(self) -> DeviceType:

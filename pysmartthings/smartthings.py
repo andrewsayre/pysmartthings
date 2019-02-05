@@ -11,6 +11,7 @@ from .app import (
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
+from .room import RoomEntity
 from .scene import SceneEntity
 from .subscription import Subscription, SubscriptionEntity
 
@@ -33,6 +34,16 @@ class SmartThings:
         """Retrieve a location with the specified ID."""
         entity = await self._service.get_location(location_id)
         return LocationEntity(self._service, entity)
+
+    async def rooms(self, location_id: str) -> List[RoomEntity]:
+        """Retrieve a list of rooms for a location."""
+        resp = await self._service.get_rooms(location_id)
+        return [RoomEntity(self._service, entity) for entity in resp]
+
+    async def room(self, location_id: str, room_id: str) -> RoomEntity:
+        """Retrieve a specific room."""
+        entity = await self._service.get_room(location_id, room_id)
+        return RoomEntity(self._service, entity)
 
     async def devices(self, *, location_ids: Optional[Sequence[str]] = None,
                       capabilities: Optional[Sequence[str]] = None,
