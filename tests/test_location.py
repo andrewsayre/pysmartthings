@@ -39,18 +39,29 @@ class TestLocationEntity:
     async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        location = LocationEntity(api, location_id=LOCATION_ID)
+        entity = LocationEntity(api, location_id=LOCATION_ID)
         # Act
-        await location.refresh()
+        await entity.refresh()
         # Assert
-        assert location.name == 'Test Home'
+        assert entity.name == 'Test Home'
 
     @staticmethod
     @pytest.mark.asyncio
     async def test_save(api):
         """Tests the save method."""
         # Arrange
-        location = LocationEntity(api)
+        entity = LocationEntity(api)
         # Act/Assert
         with pytest.raises(NotImplementedError):
-            await location.save()
+            await entity.save()
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_rooms(api):
+        """Tests the refresh method."""
+        # Arrange
+        entity = LocationEntity(api, location_id=LOCATION_ID)
+        # Act
+        rooms = await entity.rooms()
+        # Assert
+        assert len(rooms) == 1

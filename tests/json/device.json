@@ -4,10 +4,20 @@
     "label": "Front Porch Lights",
     "deviceManufacturerCode": "0063-4944-3038",
     "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+    "roomId": "7715151d-0314-457a-a82c-5ce48900e065",
     "deviceTypeId": "8a9d4b1e3b9b1fe3013b9b206a7f000d",
     "deviceTypeName": "Dimmer Switch",
     "deviceNetworkType": "ZWAVE",
     "components": [
+        {
+            "id": "bottomButton",
+            "capabilities": [
+                {
+                    "id": "button",
+                    "version": 1
+                }
+            ]
+        },
         {
             "id": "main",
             "capabilities": [
@@ -41,6 +51,15 @@
                 },
                 {
                     "id": "light",
+                    "version": 1
+                }
+            ]
+        },
+        {
+            "id": "topButton",
+            "capabilities": [
+                {
+                    "id": "button",
                     "version": 1
                 }
             ]

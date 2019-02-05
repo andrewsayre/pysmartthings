@@ -5,7 +5,7 @@ import pytest
 from pysmartthings.device import (
     Attribute, Device, DeviceEntity, DeviceStatus, DeviceType)
 
-from .conftest import DEVICE_ID, LOCATION_ID
+from .conftest import DEVICE_ID, LOCATION_ID, ROOM_ID
 from .utilities import get_json
 
 
@@ -35,6 +35,7 @@ class TestDevice:
         assert device.name == 'GE In-Wall Smart Dimmer'
         assert device.label == 'Front Porch Lights'
         assert device.location_id == LOCATION_ID
+        assert device.room_id == ROOM_ID
         assert device.type is DeviceType.DTH
         assert device.device_type_id == '8a9d4b1e3b9b1fe3013b9b206a7f000d'
         assert device.device_type_name == 'Dimmer Switch'
@@ -43,9 +44,8 @@ class TestDevice:
             'switch', 'switchLevel', 'refresh', 'indicator', 'sensor',
             'actuator', 'healthCheck', 'light']
         assert device.components == {
-            "main": [
-                'switch', 'switchLevel', 'refresh', 'indicator', 'sensor',
-                'actuator', 'healthCheck', 'light']
+            "bottomButton": ['button'],
+            "topButton": ['button']
         }
 
 
@@ -415,6 +415,7 @@ class TestDeviceStatus:
         assert not status.switch
         assert not status.motion
         assert status.level == 0
+        assert status.component_id == 'main'
 
     @staticmethod
     def test_apply_data():
@@ -427,6 +428,9 @@ class TestDeviceStatus:
         assert len(status.attributes) == 9
         assert status.switch
         assert status.level == 100
+        assert len(status.components) == 2
+        assert len(status.components['topButton'].attributes) == 3
+        assert len(status.components['bottomButton'].attributes) == 3
 
     @staticmethod
     def test_apply_attribute_update():
@@ -438,6 +442,18 @@ class TestDeviceStatus:
         status.apply_attribute_update('main', 'switchLevel', 'level', 50)
         # Assert
         assert status.level == 50
+
+    @staticmethod
+    def test_apply_attribute_update_child_status():
+        """Tests the apply_attribute_update method to a child status."""
+        # Arrange
+        data = get_json('device_status.json')
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act
+        status.apply_attribute_update(
+            'bottomButton', 'switchLevel', 'level', 50)
+        # Assert
+        assert status.components['bottomButton'].level == 50
 
     @staticmethod
     @pytest.mark.asyncio
@@ -498,7 +514,7 @@ class TestDeviceStatus:
         status = DeviceStatus(None, device_id=DEVICE_ID)
         # Act/Assert
         with pytest.raises(ValueError):
-            status.level = -1
+            status.fan_speed = -1
 
     @staticmethod
     def test_hue_range():

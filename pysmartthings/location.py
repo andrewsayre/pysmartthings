@@ -1,9 +1,10 @@
 """Define the SmartThing location."""
 
-from typing import Optional
+from typing import List, Optional
 
 from .api import Api
 from .entity import Entity
+from .room import RoomEntity
 
 
 class Location:
@@ -74,7 +75,7 @@ class Location:
         return self._country_code
 
     @property
-    def timezone_id(self) ->str:
+    def timezone_id(self) -> str:
         """Get the ID matching the Java Time Zone ID of the location."""
         return self._timezone_id
 
@@ -102,3 +103,8 @@ class LocationEntity(Entity, Location):
         """Location does not support updating at this time."""
         raise NotImplementedError(
             'Location does not support updating at this time.')
+
+    async def rooms(self) -> List[RoomEntity]:
+        """Get the rooms contained within the location."""
+        resp = await self._api.get_rooms(self._location_id)
+        return [RoomEntity(self._api, entity) for entity in resp]

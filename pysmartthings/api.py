@@ -10,6 +10,8 @@ API_OAUTH_TOKEN = "https://auth-global.api.smartthings.com/oauth/token"
 API_BASE = "https://api.smartthings.com/v1/"
 API_LOCATIONS = "locations"
 API_LOCATION = API_LOCATIONS + "/{location_id}"
+API_ROOMS = "locations/{location_id}/rooms"
+API_ROOM = "locations/{location_id}/rooms/{room_id}"
 API_DEVICES = "devices"
 API_DEVICE = API_DEVICES + "/{device_id}"
 API_DEVICE_STATUS = "devices/{device_id}/status"
@@ -58,6 +60,50 @@ class Api:
         """
         return await self.get(API_LOCATION.format(location_id=location_id))
 
+    async def get_rooms(self, location_id: str) -> dict:
+        """
+        Get a location's rooms.
+
+        This API call is undocumented.
+        """
+        return await self.get_items(API_ROOMS.format(location_id=location_id))
+
+    async def get_room(self, location_id: str, room_id: str) -> dict:
+        """
+        Get a specific room within a location.
+
+        This API call is undocumented.
+        """
+        return await self.get(
+            API_ROOM.format(location_id=location_id, room_id=room_id))
+
+    async def create_room(self, location_id: str, data: dict):
+        """
+        Create a room.
+
+        This API call is undocumented.
+        """
+        return await self.post(
+            API_ROOMS.format(location_id=location_id), data)
+
+    async def update_room(self, location_id: str, room_id: str, data: dict):
+        """
+        Update a room.
+
+        This API call is undocumented.
+        """
+        return await self.put(
+            API_ROOM.format(location_id=location_id, room_id=room_id), data)
+
+    async def delete_room(self, location_id: str, room_id: str):
+        """
+        Delete a room.
+
+        This API call is undocumented.
+        """
+        return await self.delete(
+            API_ROOM.format(location_id=location_id, room_id=room_id))
+
     async def get_devices(self, params: Optional = None) -> dict:
         """
         Get the device definitions.
@@ -78,8 +124,8 @@ class Api:
         """Get the status of a specific device."""
         return await self.get(API_DEVICE_STATUS.format(device_id=device_id))
 
-    async def post_device_command(self, device_id, capability, command, args,
-                                  component="main") -> object:
+    async def post_device_command(self, device_id, component_id, capability,
+                                  command, args) -> object:
         """
         Execute commands on a device.
 
@@ -88,7 +134,7 @@ class Api:
         data = {
             "commands": [
                 {
-                    "component": component,
+                    "component": component_id,
                     "capability": capability,
                     "command": command
                 }
