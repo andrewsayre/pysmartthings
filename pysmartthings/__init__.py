@@ -14,6 +14,7 @@ from .errors import APIErrorDetail, APIInvalidGrant, APIResponseError
 from .installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
 from .location import Location, LocationEntity
+from .room import Room, RoomEntity
 from .oauthtoken import OAuthToken
 from .scene import Scene, SceneEntity
 from .smartthings import SmartThings
@@ -56,6 +57,9 @@ __all__ = [
     # location
     'Location',
     'LocationEntity',
+    # room
+    'Room',
+    'RoomEntity',
     # oauthtoken
     'OAuthToken',
     # scene
