@@ -77,6 +77,33 @@ class Api:
         return await self.get(
             API_ROOM.format(location_id=location_id, room_id=room_id))
 
+    async def create_room(self, location_id: str, data: dict):
+        """
+        Create a room.
+
+        This API call is undocumented.
+        """
+        return await self.post(
+            API_ROOMS.format(location_id=location_id), data)
+
+    async def update_room(self, location_id: str, room_id: str, data: dict):
+        """
+        Update a room.
+
+        This API call is undocumented.
+        """
+        return await self.put(
+            API_ROOM.format(location_id=location_id, room_id=room_id), data)
+
+    async def delete_room(self, location_id: str, room_id: str):
+        """
+        Delete a room.
+
+        This API call is undocumented.
+        """
+        return await self.delete(
+            API_ROOM.format(location_id=location_id, room_id=room_id))
+
     async def get_devices(self, params: Optional = None) -> dict:
         """
         Get the device definitions.

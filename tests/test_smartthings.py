@@ -3,6 +3,7 @@
 import pytest
 
 from pysmartthings.app import App, AppOAuth, AppSettings
+from pysmartthings.room import Room
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
@@ -74,12 +75,50 @@ class TestSmartThings:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_create_room(smartthings):
+        """Tests the create room method."""
+        # Arrange
+        room = Room()
+        room.name = 'Theater'
+        room.background_image = 'Test'
+        room.location_id = LOCATION_ID
+        # Act
+        room = await smartthings.create_room(room)
+        # Assert
+        assert room.room_id == ROOM_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_update_room(smartthings):
+        """Tests the create room method."""
+        # Arrange
+        room = Room()
+        room.name = 'Theater'
+        room.background_image = 'Test'
+        room.location_id = LOCATION_ID
+        room.room_id = ROOM_ID
+        # Act
+        room = await smartthings.update_room(room)
+        # Assert
+        assert room.room_id == ROOM_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_room(smartthings):
         """Tests the room(id, id) method."""
         # Act
         room = await smartthings.room(LOCATION_ID, ROOM_ID)
         # Assert
         assert room.room_id == ROOM_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_delete_room(smartthings):
+        """Tests the delete room."""
+        # Act
+        result = await smartthings.delete_room(LOCATION_ID, ROOM_ID)
+        # Assert
+        assert result
 
     @staticmethod
     @pytest.mark.asyncio

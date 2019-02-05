@@ -21,7 +21,7 @@ class TestRoom:
         assert room.room_id == ROOM_ID
         assert room.location_id == LOCATION_ID
         assert room.name == 'Theater'
-        assert not room.background_image
+        assert room.background_image == 'Test'
 
 
 class TestRoomEntity:
@@ -43,7 +43,11 @@ class TestRoomEntity:
     async def test_save(api):
         """Tests the save method."""
         # Arrange
-        entity = RoomEntity(api)
-        # Act/Assert
-        with pytest.raises(NotImplementedError):
-            await entity.save()
+        entity = RoomEntity(api, location_id=LOCATION_ID, room_id=ROOM_ID)
+        entity.name = 'Theater'
+        entity.background_image = 'Test'
+        # Act
+        await entity.save()
+        # Assert
+        assert entity.name == 'Theater'
+        assert entity.background_image == 'Test'

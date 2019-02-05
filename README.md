@@ -10,7 +10,7 @@ A python library for interacting with the SmartThings cloud API build with [asyn
 ## Features
 The package is still in beta, but the following features are available:
 1. Locations: List, Get
-1. Rooms: List, Get
+1. Rooms: List, Get, Create, Update, Delete
 1. Devices: List, Get, Command, Status
 1. Apps: List, Get, Create, Update, Delete, Settings Get & Update, OAuth: Get & Update
 1. InstalledApps: List, Get, Delete

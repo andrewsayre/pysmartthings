@@ -38,6 +38,12 @@ def register_url_mocks(mocker):
     mocker.get(API_ROOMS.format(location_id=LOCATION_ID), response='rooms')
     mocker.get(API_ROOM.format(location_id=LOCATION_ID, room_id=ROOM_ID),
                response='room')
+    mocker.post(API_ROOMS.format(location_id=LOCATION_ID),
+                request='room_post', response='room')
+    mocker.put(API_ROOM.format(location_id=LOCATION_ID, room_id=ROOM_ID),
+               request='room_put', response='room')
+    mocker.delete(API_ROOM.format(location_id=LOCATION_ID, room_id=ROOM_ID),
+                  response={})
 
     # Devices
     mocker.get(API_DEVICES, response='devices')
