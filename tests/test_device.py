@@ -456,6 +456,45 @@ class TestDeviceStatus:
         assert status.components['bottomButton'].level == 50
 
     @staticmethod
+    async def test_values():
+        """Test the values property."""
+        # Arrange
+        data = get_json('device_status.json')
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.values == {
+            'button': None,
+            'numberOfButtons': None,
+            'supportedButtonValues': None,
+            'indicatorStatus': 'when off',
+            'switch': 'on',
+            'checkInterval': 1920,
+            'healthStatus': None,
+            'DeviceWatch-DeviceStatus': None,
+            'level': 100
+        }
+
+    @staticmethod
+    async def test_attributes():
+        """Test the attributes property."""
+        # Arrange
+        data = get_json('device_status.json')
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.attributes == {
+            'button': (None, None, None),
+            'numberOfButtons': (None, None, None),
+            'supportedButtonValues': (None, None, None),
+            'indicatorStatus': ('when off', None, None),
+            'switch': ('on', None, None),
+            'checkInterval': (1920, 's', {"protocol": "zwave",
+                                          "hubHardwareId": "000F"}),
+            'healthStatus': (None, None, None),
+            'DeviceWatch-DeviceStatus': (None, None, None),
+            'level': (100, '%', None)
+        }
+
+    @staticmethod
     @pytest.mark.asyncio
     async def test_refresh(api):
         """Tests the refresh method."""
@@ -565,8 +604,8 @@ class TestDeviceStatus:
         """Tests the is_on method."""
         # Arrange
         status = DeviceStatus(None, device_id=DEVICE_ID)
-        status.attributes[Attribute.acceleration] = 'active'
-        status.attributes[Attribute.level] = 100
+        status.update_attribute_value(Attribute.acceleration, 'active')
+        status.level = 100
         # Act/Assert
         assert status.is_on(Attribute.acceleration)
         assert status.is_on(Attribute.level)

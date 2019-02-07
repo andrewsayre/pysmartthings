@@ -14,8 +14,8 @@ from .errors import APIErrorDetail, APIInvalidGrant, APIResponseError
 from .installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
 from .location import Location, LocationEntity
-from .room import Room, RoomEntity
 from .oauthtoken import OAuthToken
+from .room import Room, RoomEntity
 from .scene import Scene, SceneEntity
 from .smartthings import SmartThings
 from .subscription import SourceType, Subscription, SubscriptionEntity

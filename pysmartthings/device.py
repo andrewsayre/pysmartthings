@@ -1,12 +1,17 @@
 """Defines a SmartThings device."""
+from collections import defaultdict, namedtuple
 import colorsys
 from enum import Enum
 import re
-from typing import Any, Dict, Optional, Sequence
+from typing import Any, Dict, Mapping, Optional, Sequence
 
 from .api import Api
 from .capability import ATTRIBUTE_ON_VALUES, Attribute, Capability
 from .entity import Entity
+
+COLOR_HEX_MATCHER = re.compile('^#[A-Fa-f0-9]{6}$')
+Status = namedtuple('status', 'value unit data')
+STATUS_NONE = Status(None, None, None)
 
 
 def hs_to_hex(hue: float, saturation: float) -> str:
@@ -23,9 +28,6 @@ def hex_to_hs(color_hex: str) -> (int, int):
            for i in range(0, len(color_hex), len(color_hex) // 3)]
     hsv = colorsys.rgb_to_hsv(rgb[0], rgb[1], rgb[2])
     return round(hsv[0]*100, 3), round(hsv[1]*100, 3)
-
-
-COLOR_HEX_MATCHER = re.compile('^#[A-Fa-f0-9]{6}$')
 
 
 class Command:
@@ -148,27 +150,38 @@ class Device:
 class DeviceStatusBase:
     """Define the base status of device components."""
 
-    def __init__(self, component_id, attributes=None):
+    def __init__(self, component_id: str,
+                 attributes: Optional[Mapping[str, Status]] = None):
         """Initialize the status class."""
-        self._attributes = attributes or {}
+        self._attributes = defaultdict(lambda: STATUS_NONE, attributes or {})
         self._component_id = component_id
 
     def is_on(self, attribute: str) -> bool:
         """Determine if a specific attribute contains an on/True value."""
         if attribute not in ATTRIBUTE_ON_VALUES:
-            return bool(self._attributes.get(attribute))
-        return self._attributes.get(attribute) == \
+            return bool(self._attributes[attribute].value)
+        return self._attributes[attribute].value == \
             ATTRIBUTE_ON_VALUES[attribute]
 
+    def update_attribute_value(self, attribute: str, value):
+        """Update the value of an attribute while mantaining unit and data."""
+        status = self._attributes[attribute]
+        self._attributes[attribute] = Status(value, status.unit, status.data)
+
     @property
-    def attributes(self):
-        """Get all of the attribute values."""
+    def attributes(self) -> Dict[str, Status]:
+        """Get all of the attribute status objects."""
         return self._attributes
+
+    @property
+    def values(self) -> Dict[str, Any]:
+        """Get the values of the attributes."""
+        return {k: v.value for k, v in self._attributes.items()}
 
     @property
     def color(self) -> Optional[str]:
         """Get the color attribute."""
-        return self._attributes.get(Attribute.color)
+        return self._attributes[Attribute.color].value
 
     @color.setter
     def color(self, value: str):
@@ -176,19 +189,19 @@ class DeviceStatusBase:
         if not COLOR_HEX_MATCHER.match(value):
             raise ValueError(
                 "value was not a properly formatted color hex, i.e. #000000.")
-        self._attributes[Attribute.color] = value
+        self.update_attribute_value(Attribute.color, value)
 
     @property
     def color_temperature(self) -> int:
         """Get the color temperature attribute."""
-        return int(self._attributes.get(Attribute.color_temperature, 1))
+        return int(self._attributes[Attribute.color_temperature].value or 1)
 
     @color_temperature.setter
     def color_temperature(self, value: int):
         """Set the color temperature attribute."""
         if not 1 <= value <= 30000:
             raise ValueError("value must be scaled between 1-30000.")
-        self._attributes[Attribute.color_temperature] = value
+        self.update_attribute_value(Attribute.color_temperature, value)
 
     @property
     def component_id(self) -> str:
@@ -198,50 +211,50 @@ class DeviceStatusBase:
     @property
     def fan_speed(self) -> int:
         """Get the fan speed attribute."""
-        return int(self._attributes.get(Attribute.fan_speed, 0))
+        return int(self._attributes[Attribute.fan_speed].value or 0)
 
     @fan_speed.setter
     def fan_speed(self, value: int):
         """Set the fan speed attribute."""
         if value < 0:
             raise ValueError("value must be >= 0.")
-        self._attributes[Attribute.fan_speed] = value
+        self.update_attribute_value(Attribute.fan_speed, value)
 
     @property
     def hue(self) -> float:
         """Get the hue attribute, scaled 0-100."""
-        return float(self._attributes.get(Attribute.hue, 0))
+        return float(self._attributes[Attribute.hue].value or 0.0)
 
     @hue.setter
     def hue(self, value: float):
         """Set the hue attribute, scaled 0-100."""
         if not 0 <= value <= 100:
             raise ValueError("value must be scaled between 0-100.")
-        self._attributes[Attribute.hue] = value
+        self.update_attribute_value(Attribute.hue, value)
 
     @property
     def level(self) -> int:
         """Get the level attribute, scaled 0-100."""
-        return int(self._attributes.get(Attribute.level, 0))
+        return int(self._attributes[Attribute.level].value or 0)
 
     @level.setter
     def level(self, value: int):
         """Set the level of the attribute, scaled 0-100."""
         if not 0 <= value <= 100:
             raise ValueError("value must be scaled between 0-100.")
-        self._attributes[Attribute.level] = value
+        self.update_attribute_value(Attribute.level, value)
 
     @property
     def saturation(self) -> float:
         """Get the saturation attribute, scaled 0-100."""
-        return float(self._attributes.get(Attribute.saturation, 0))
+        return float(self._attributes[Attribute.saturation].value or 0.0)
 
     @saturation.setter
     def saturation(self, value: float):
         """Set the saturation attribute, scaled 0-100."""
         if not 0 <= value <= 100:
             raise ValueError("value must be scaled between 0-100.")
-        self._attributes[Attribute.saturation] = value
+        self.update_attribute_value(Attribute.saturation, value)
 
     @property
     def motion(self) -> bool:
@@ -256,8 +269,9 @@ class DeviceStatusBase:
     @switch.setter
     def switch(self, value: bool):
         """Set the value of the switch attribute."""
-        self._attributes[Attribute.switch] = \
-            ATTRIBUTE_ON_VALUES[Attribute.switch] if value else 'off'
+        status_value = ATTRIBUTE_ON_VALUES[Attribute.switch] \
+            if value else 'off'
+        self.update_attribute_value(Attribute.switch, status_value)
 
 
 class DeviceStatus(DeviceStatusBase):
@@ -277,9 +291,10 @@ class DeviceStatus(DeviceStatusBase):
         """Apply an update to a specific attribute."""
         # capability future usage.
         if component_id == 'main':
-            self._attributes[attribute] = value
+            self.update_attribute_value(attribute, value)
         elif component_id in self._components.keys():
-            self._components[component_id].attributes[attribute] = value
+            self._components[component_id].update_attribute_value(
+                attribute, value)
 
     def apply_data(self, data: dict):
         """Apply the values from the given data structure."""
@@ -288,7 +303,9 @@ class DeviceStatus(DeviceStatusBase):
             attributes = {}
             for capabilities in component.values():
                 for attribute, value in capabilities.items():
-                    attributes[attribute] = value['value']
+                    attributes[attribute] = Status(
+                        value.get('value'), value.get('unit'),
+                        value.get('data'))
             if component_id == 'main':
                 self._attributes = attributes
             else:
