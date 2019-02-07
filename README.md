@@ -76,7 +76,7 @@ Outputs:
 The current status of the device is populated when the coroutine `status.refresh()` is called.  The DeviceStatus class represents the current values of the capabilities and provides several normalized property accessors.
 ```pythonstub
     await device.status.refresh()    
-    print(device.status.attributes)
+    print(device.status.values)
     print(device.status.switch)
     print(device.status.level)
 ```
