@@ -300,7 +300,7 @@ class DeviceStatus(DeviceStatusBase):
         """Apply the values from the given data structure."""
         self._components.clear()
         for component_id, component in data['components'].items():
-            attributes = {}
+            attributes = defaultdict(lambda: STATUS_NONE)
             for capabilities in component.values():
                 for attribute, value in capabilities.items():
                     attributes[attribute] = Status(

@@ -495,6 +495,15 @@ class TestDeviceStatus:
         }
 
     @staticmethod
+    async def test_attributes_default():
+        """Test the attributes property."""
+        # Arrange
+        data = get_json('device_status.json')
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.attributes['thermostatSetpoint'] == (None, None, None)
+
+    @staticmethod
     @pytest.mark.asyncio
     async def test_refresh(api):
         """Tests the refresh method."""
