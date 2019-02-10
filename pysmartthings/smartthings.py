@@ -6,8 +6,8 @@ from aiohttp import ClientSession
 
 from .api import Api
 from .app import (
-    App, AppEntity, AppOAuth, AppOAuthClient, AppOAuthEntity, AppSettings,
-    AppSettingsEntity)
+    App, AppEntity, AppOAuth, AppOAuthClient, AppOAuthClientEntity,
+    AppOAuthEntity, AppSettings, AppSettingsEntity)
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
@@ -124,6 +124,13 @@ class SmartThings:
         entity = await self._service.update_app_oauth(
             data.app_id, data.to_data())
         return AppOAuthEntity(self._service, data.app_id, entity)
+
+    async def generate_app_oauth(
+            self, data: AppOAuth) -> AppOAuthClientEntity:
+        """Generate a new oauth client id and secret."""
+        entity = await self._service.generate_app_oauth(
+            data.app_id, data.to_data())
+        return AppOAuthClientEntity(self._service, data.app_id, entity)
 
     async def installed_apps(
             self, *, location_id: Optional[str] = None,

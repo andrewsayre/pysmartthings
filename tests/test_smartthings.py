@@ -214,6 +214,23 @@ class TestSmartThings:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_generate_app_oauth(smartthings):
+        """Tests generating new OAuth info."""
+        # Arrange
+        oauth = AppOAuth(APP_ID)
+        oauth.client_name = 'pysmartthings'
+        oauth.scope.append('r:devices:*')
+        # Act
+        entity = await smartthings.generate_app_oauth(oauth)
+        # Assert
+        assert entity.client_id == '0b6a77d4-2dff-4b00-ba33-35f660fbfb83'
+        assert entity.client_secret == '05a49aac-55d6-4092-96bf-7ca6ca3666d3'
+        assert entity.client_details.app_id == APP_ID
+        assert entity.client_details.client_name == 'pysmartthings'
+        assert entity.client_details.scope == ['r:devices:$', 'r:devices:*']
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_installed_apps(smartthings):
         """Tests the installedapps method."""
         # Act

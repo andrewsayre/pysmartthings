@@ -2,8 +2,8 @@
 
 from .app import (
     APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
-    AppEntity, AppOAuth, AppOAuthClient, AppOAuthEntity, AppSettings,
-    AppSettingsEntity)
+    AppEntity, AppOAuth, AppOAuthClient, AppOAuthClientEntity, AppOAuthEntity,
+    AppSettings, AppSettingsEntity)
 from .capability import (
     ATTRIBUTES, CAPABILITIES, CAPABILITIES_TO_ATTRIBUTES, Attribute,
     Capability)
@@ -29,6 +29,7 @@ __all__ = [
     'AppEntity',
     'AppOAuth',
     'AppOAuthClient',
+    'AppOAuthClientEntity',
     'AppOAuthEntity',
     'AppSettings',
     'AppSettingsEntity',

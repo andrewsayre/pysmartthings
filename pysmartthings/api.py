@@ -19,6 +19,7 @@ API_DEVICE_COMMAND = "devices/{device_id}/commands"
 API_APPS = "apps"
 API_APP = "apps/{app_id}"
 API_APP_OAUTH = "apps/{app_id}/oauth"
+API_APP_OAUTH_GENERATE = "apps/{app_id}/oauth/generate"
 API_APP_SETTINGS = "apps/{app_id}/settings"
 API_INSTALLEDAPPS = "installedapps"
 API_INSTALLEDAPP = "installedapps/{installed_app_id}"
@@ -217,6 +218,15 @@ class Api:
         https://smartthings.developer.samsung.com/develop/api-ref/st-api.html#operation/updateAppOauth
         """
         return await self.put(API_APP_OAUTH.format(app_id=app_id), data)
+
+    async def generate_app_oauth(self, app_id: str, data: dict) -> dict:
+        """
+        Generate a new app oauth client/secret.
+
+         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/generateAppOauth
+        """
+        return await self.post(
+            API_APP_OAUTH_GENERATE.format(app_id=app_id), data)
 
     async def get_installed_apps(self, params: Optional = None) -> dict:
         """

@@ -5,11 +5,11 @@ import re
 import pytest
 
 from pysmartthings.api import (
-    API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
-    API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_INSTALLEDAPP,
-    API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS, API_OAUTH_TOKEN, API_ROOM,
-    API_ROOMS, API_SCENE_EXECUTE, API_SCENES, API_SUBSCRIPTION,
-    API_SUBSCRIPTIONS, Api)
+    API_APP, API_APP_OAUTH, API_APP_OAUTH_GENERATE, API_APP_SETTINGS, API_APPS,
+    API_BASE, API_DEVICE, API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES,
+    API_INSTALLEDAPP, API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS,
+    API_OAUTH_TOKEN, API_ROOM, API_ROOMS, API_SCENE_EXECUTE, API_SCENES,
+    API_SUBSCRIPTION, API_SUBSCRIPTIONS, Api)
 from pysmartthings.smartthings import SmartThings
 
 from .utilities import ClientMocker
@@ -91,6 +91,9 @@ def register_url_mocks(mocker):
     mocker.put(API_APP_OAUTH.format(app_id=APP_ID),
                request='app_oauth_put_request',
                response='app_oauth_put_response')
+    mocker.post(API_APP_OAUTH_GENERATE.format(app_id=APP_ID),
+                request='app_oauth_generate_request',
+                response='app_oauth_generate_response')
 
     # InstalledApps
     mocker.get(API_INSTALLEDAPPS, response='installedapps_get_response')

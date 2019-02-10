@@ -311,8 +311,8 @@ class AppOAuth:
         self._client_name = value
 
     @property
-    def scope(self):
-        """Get the ;ist of SmartThings API OAuth scope identifiers."""
+    def scope(self) -> List[str]:
+        """Get the list of SmartThings API OAuth scope identifiers."""
         return self._scope
 
 
@@ -395,3 +395,22 @@ class AppOAuthClient:
     def client_secret(self):
         """Get the client secret."""
         return self._client_secret
+
+
+class AppOAuthClientEntity(AppOAuthClient):
+    """Define an oauth client information details."""
+
+    def __init__(self, api: Api, app_id: str, data: Optional[dict]):
+        """Init the class."""
+        self._client_details = AppOAuthEntity(api, app_id, None)
+        super().__init__(data)
+
+    def apply_data(self, data: dict):
+        """Apply the given data to the entity."""
+        super().apply_data(data)
+        self._client_details.apply_data(data['oauthClientDetails'])
+
+    @property
+    def client_details(self) -> AppOAuthEntity:
+        """Get the OAuth entity."""
+        return self._client_details
