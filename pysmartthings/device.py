@@ -38,6 +38,7 @@ class Command:
     lock = 'lock'
     open = 'open'
     on = 'on'
+    preset_position = 'presetPosition'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
     set_fan_speed = 'setFanSpeed'
@@ -365,6 +366,11 @@ class DeviceStatusBase:
         """Get the door attribute."""
         return self._attributes[Attribute.door].value
 
+    @property
+    def window_shade(self):
+        """Get the windowShade attribute."""
+        return self._attributes[Attribute.window_shade].value
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -657,21 +663,32 @@ class DeviceEntity(Entity, Device):
                    *, component_id: str = 'main') -> bool:
         """Call the open device command."""
         capability = self.get_capability(
-            Capability.door_control, Capability.garage_door_control)
+            Capability.door_control, Capability.window_shade,
+            Capability.garage_door_control)
         result = await self.command(component_id, capability, Command.open)
         if result and set_status:
-            self.status.update_attribute_value(Attribute.door, 'opening')
+            attribute = Attribute.window_shade if \
+                capability == Capability.window_shade else Attribute.door
+            self.status.update_attribute_value(attribute, 'opening')
         return result
 
     async def close(self, set_status: bool = False,
                     *, component_id: str = 'main') -> bool:
         """Call the close device command."""
         capability = self.get_capability(
-            Capability.door_control, Capability.garage_door_control)
+            Capability.door_control, Capability.window_shade,
+            Capability.garage_door_control)
         result = await self.command(component_id, capability, Command.close)
         if result and set_status:
-            self.status.update_attribute_value(Attribute.door, 'closing')
+            attribute = Attribute.window_shade if \
+                capability == Capability.window_shade else Attribute.door
+            self.status.update_attribute_value(attribute, 'closing')
         return result
+
+    async def preset_position(self, *, component_id: str = 'main') -> bool:
+        """Call the close device command."""
+        return await self.command(
+            component_id, Capability.window_shade, Command.close)
 
     @property
     def status(self):

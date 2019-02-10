@@ -681,6 +681,41 @@ class TestDeviceEntity:
         assert await device.close(set_status=True)
         assert device.status.door == 'closing'
 
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_open_window_shade(api):
+        """Tests the open method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.window_shade)
+        # Act/Assert
+        assert await device.open()
+        assert device.status.window_shade is None
+        assert await device.open(set_status=True)
+        assert device.status.window_shade == 'opening'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_close_window_shade(api):
+        """Tests the close method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.window_shade)
+        # Act/Assert
+        assert await device.close()
+        assert device.status.window_shade is None
+        assert await device.close(set_status=True)
+        assert device.status.window_shade == 'closing'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_preset_position(api):
+        """Tests the preset_position method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.preset_position()
+
 
 class TestDeviceStatus:
     """Tests for the DeviceStatus class."""
@@ -916,6 +951,7 @@ class TestDeviceStatus:
             Attribute.supported_thermostat_modes, ['auto', 'off'])
         status.update_attribute_value(Attribute.lock, 'locked')
         status.update_attribute_value(Attribute.door, 'open')
+        status.update_attribute_value(Attribute.window_shade, 'closed')
         # Act/Assert
         assert status.humidity == 50
         assert status.temperature == 55
@@ -924,3 +960,4 @@ class TestDeviceStatus:
         assert status.supported_thermostat_modes == ['auto', 'off']
         assert status.lock == 'locked'
         assert status.door == 'open'
+        assert status.window_shade == 'closed'
