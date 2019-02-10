@@ -1,5 +1,7 @@
 """Tests for the SmartThings file."""
 
+from datetime import datetime, timedelta
+
 import pytest
 
 from pysmartthings.app import App, AppOAuth, AppSettings
@@ -7,8 +9,8 @@ from pysmartthings.room import Room
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
-    APP_ID, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID, ROOM_ID, SCENE_ID,
-    SUBSCRIPTION_ID)
+    APP_ID, CLIENT_ID, CLIENT_SECRET, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID,
+    REFRESH_TOKEN, ROOM_ID, SCENE_ID, SUBSCRIPTION_ID)
 from .utilities import get_json
 
 
@@ -326,3 +328,19 @@ class TestSmartThings:
         result = await smartthings.execute_scene(SCENE_ID)
         # Assert
         assert result
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_generate_tokens(smartthings):
+        """Tests the generate_tokens method."""
+        # Act
+        token = await smartthings.generate_tokens(
+            CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN)
+        # Assert
+        assert token.refresh_token == '3d1a8d0a-a312-45c2-a9f5-95e59dc0e879'
+        assert token.access_token == 'ad0fbf27-48d4-4ee9-ba47-7f5fedd7be35'
+        assert token.scope == ['r:devices:*']
+        assert token.token_type == 'bearer'
+        assert token.expires_in == 299
+        assert token.expiration_date - datetime.now() == timedelta(0, 299)
+        assert not token.is_expired

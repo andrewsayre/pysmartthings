@@ -11,6 +11,7 @@ from .app import (
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
+from .oauthtoken import OAuthToken
 from .room import Room, RoomEntity
 from .scene import SceneEntity
 from .subscription import Subscription, SubscriptionEntity
@@ -192,3 +193,11 @@ class SmartThings:
         """Execute the scene with the specified id."""
         result = await self._service.execute_scene(scene_id)
         return result == {'status': 'success'}
+
+    async def generate_tokens(
+            self, client_id: str, client_secret: str,
+            refresh_token: str) -> OAuthToken:
+        """Generate a new refresh/access token pair."""
+        result = await self._service.generate_tokens(
+            client_id, client_secret, refresh_token)
+        return OAuthToken(self._service, result)

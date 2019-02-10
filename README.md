@@ -16,6 +16,7 @@ The package is still in beta, but the following features are available:
 1. InstalledApps: List, Get, Delete
 1. Subscriptions: List, Get, Create, Delete, Delete All
 1. Scenes: List, Execute
+1. OAuth: Generate refresh/access token pair
 ## Installation
 ```commandline
 pip install pysmartthings

@@ -395,8 +395,8 @@ class Api:
         """Delete a resource."""
         return await self.request('delete', self._api_base + resource, params)
 
-    async def get_token(self, client_id: str, client_secret: str,
-                        refresh_token: str):
+    async def generate_tokens(self, client_id: str, client_secret: str,
+                              refresh_token: str):
         """Obtain a new access and refresh token."""
         payload = {
             'grant_type': 'refresh_token',
