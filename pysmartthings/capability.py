@@ -67,6 +67,12 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'switch': ['switch'],
     'tamperAlert': ['tamper'],
     'temperatureMeasurement': ['temperature'],
+    'thermostat': ['coolingSetpoint', 'coolingSetpointRange',
+                   'heatingSetpoint', 'heatingSetpointRange', 'schedule',
+                   'temperature', 'thermostatFanMode',
+                   'supportedThermostatFanModes', 'thermostatMode',
+                   'supportedThermostatModes', 'thermostatOperatingState',
+                   'thermostatSetpoint', 'thermostatSetpointRange'],
     'thermostatCoolingSetpoint': ['coolingSetpoint'],
     'thermostatFanMode': ['thermostatFanMode', 'supportedThermostatFanModes'],
     'thermostatHeatingSetpoint': ['heatingSetpoint'],
@@ -84,7 +90,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'waterSensor': ['water'],
     'windowShade': ['windowShade']
 }
-CAPABILITIES = CAPABILITIES_TO_ATTRIBUTES.keys()
+CAPABILITIES = [c for c in CAPABILITIES_TO_ATTRIBUTES]
 ATTRIBUTES = {attrib
               for attributes in CAPABILITIES_TO_ATTRIBUTES.values()
               for attrib in attributes}
@@ -151,6 +157,7 @@ class Capability:
     switch_level = 'switchLevel'
     tamper_alert = 'tamperAlert'
     temperature_measurement = 'temperatureMeasurement'
+    thermostat = 'thermostat'
     thermostat_cooling_setpoint = 'thermostatCoolingSetpoint'
     thermostat_fan_mode = 'thermostatFanMode'
     thermostat_heating_setpoint = 'thermostatHeatingSetpoint'
@@ -187,6 +194,7 @@ class Attribute:
     completion_time = 'completionTime'
     contact = 'contact'
     cooling_setpoint = 'coolingSetpoint'
+    cooling_setpoint_range = 'coolingSetpointRange'
     dishwasher_job_state = 'dishwasherJobState'
     dishwasher_mode = 'dishwasherMode'
     door = 'door'
@@ -201,6 +209,7 @@ class Attribute:
     fine_dust_level = 'fineDustLevel'
     formaldehyde_level = 'formaldehydeLevel'
     heating_setpoint = 'heatingSetpoint'
+    heating_setpoint_range = 'heatingSetpointRange'
     hue = 'hue'
     humidity = 'humidity'
     illuminance = 'illuminance'
@@ -233,6 +242,7 @@ class Attribute:
     robot_cleaner_turbo_mode = 'robotCleanerTurboMode'
     rssi = 'rssi'
     saturation = 'saturation'
+    schedule = 'schedule'
     smoke = 'smoke'
     sound = 'sound'
     supported_button_values = 'supportedButtonValues'
@@ -248,6 +258,7 @@ class Attribute:
     thermostat_mode = 'thermostatMode'
     thermostat_operating_state = 'thermostatOperatingState'
     thermostat_setpoint = 'thermostatSetpoint'
+    thermostat_setpoint_range = 'thermostatSetpointRange'
     tv_channel = 'tvChannel'
     tvoc_level = 'tvocLevel'
     ultraviolet_index = 'ultravioletIndex'
