@@ -7,8 +7,8 @@ from pysmartthings.room import Room
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
-    APP_ID, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID, ROOM_ID, SCENE_ID,
-    SUBSCRIPTION_ID)
+    APP_ID, CLIENT_ID, CLIENT_SECRET, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID,
+    REFRESH_TOKEN, ROOM_ID, SCENE_ID, SUBSCRIPTION_ID)
 from .utilities import get_json
 
 
@@ -214,6 +214,23 @@ class TestSmartThings:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_generate_app_oauth(smartthings):
+        """Tests generating new OAuth info."""
+        # Arrange
+        oauth = AppOAuth(APP_ID)
+        oauth.client_name = 'pysmartthings'
+        oauth.scope.append('r:devices:*')
+        # Act
+        entity = await smartthings.generate_app_oauth(oauth)
+        # Assert
+        assert entity.client_id == '0b6a77d4-2dff-4b00-ba33-35f660fbfb83'
+        assert entity.client_secret == '05a49aac-55d6-4092-96bf-7ca6ca3666d3'
+        assert entity.client_details.app_id == APP_ID
+        assert entity.client_details.client_name == 'pysmartthings'
+        assert entity.client_details.scope == ['r:devices:$', 'r:devices:*']
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_installed_apps(smartthings):
         """Tests the installedapps method."""
         # Act
@@ -309,3 +326,18 @@ class TestSmartThings:
         result = await smartthings.execute_scene(SCENE_ID)
         # Assert
         assert result
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_generate_tokens(smartthings):
+        """Tests the generate_tokens method."""
+        # Act
+        token = await smartthings.generate_tokens(
+            CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN)
+        # Assert
+        assert token.refresh_token == '3d1a8d0a-a312-45c2-a9f5-95e59dc0e879'
+        assert token.access_token == 'ad0fbf27-48d4-4ee9-ba47-7f5fedd7be35'
+        assert token.scope == ['r:devices:*']
+        assert token.token_type == 'bearer'
+        assert token.expires_in == 299
+        assert not token.is_expired

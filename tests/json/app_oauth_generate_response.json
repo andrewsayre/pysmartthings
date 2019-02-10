@@ -1,0 +1,14 @@
+{
+    "oauthClientDetails": {
+        "clientName": "pysmartthings",
+        "scope": [
+            "r:devices:$",
+            "r:devices:*"
+        ],
+        "redirectUris": [
+            "https://api.smartthings.com/installedapp"
+        ]
+    },
+    "oauthClientId": "0b6a77d4-2dff-4b00-ba33-35f660fbfb83",
+    "oauthClientSecret": "05a49aac-55d6-4092-96bf-7ca6ca3666d3"
+}

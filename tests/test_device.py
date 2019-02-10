@@ -2,8 +2,8 @@
 
 import pytest
 
-from pysmartthings.device import (
-    Attribute, Device, DeviceEntity, DeviceStatus, DeviceType)
+from pysmartthings.capability import Attribute, Capability
+from pysmartthings.device import Device, DeviceEntity, DeviceStatus, DeviceType
 
 from .conftest import DEVICE_ID, LOCATION_ID, ROOM_ID
 from .utilities import get_json
@@ -47,6 +47,19 @@ class TestDevice:
             "bottomButton": ['button'],
             "topButton": ['button']
         }
+
+    @staticmethod
+    def test_get_capability():
+        """Test the capability retrieval method."""
+        # Arrange
+        data = get_json('device.json')
+        device = Device()
+        # Act
+        device.apply_data(data)
+        # Assert
+        assert device.get_capability('switch', 'light') == 'switch'
+        assert device.get_capability('foo', 'switch') == 'switch'
+        assert device.get_capability('foo', 'bar') is None
 
 
 class TestDeviceEntity:
@@ -122,6 +135,54 @@ class TestDeviceEntity:
         # Assert
         assert result
         assert not device.status.switch
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_lock(api):
+        """Tests the lock method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.lock()
+        # Assert
+        assert result
+        assert not device.status.lock
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_lock_update(api):
+        """Tests the lock method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.lock(True)
+        # Assert
+        assert result
+        assert device.status.lock == 'locked'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_unlock(api):
+        """Tests the unlock method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.unlock()
+        # Assert
+        assert result
+        assert not device.status.lock
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_unlock_update(api):
+        """Tests the unlock method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.unlock(True)
+        # Assert
+        assert result
+        assert device.status.lock == 'unlocked'
 
     @staticmethod
     @pytest.mark.asyncio
@@ -400,6 +461,261 @@ class TestDeviceEntity:
         assert device.status.saturation == 50
         assert device.status.color == '#4B6432'
 
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_thermostat_fan_mode_legacy(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat)
+        device.status.thermostat_fan_mode = 'on'
+        # Act
+        result = await device.set_thermostat_fan_mode('auto')
+        # Assert
+        assert result
+        assert device.status.thermostat_fan_mode != 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_thermostat_fan_mode(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_fan_mode)
+        device.status.thermostat_fan_mode = 'on'
+        # Act
+        result = await device.set_thermostat_fan_mode('auto')
+        # Assert
+        assert result
+        assert device.status.thermostat_fan_mode != 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_thermostat_fan_mode_update(api):
+        """Tests the set_saturation method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_fan_mode)
+        device.status.thermostat_fan_mode = 'on'
+        # Act
+        result = await device.set_thermostat_fan_mode('auto', set_status=True)
+        # Assert
+        assert result
+        assert device.status.thermostat_fan_mode == 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_thermostat_mode_legacy(api):
+        """Tests the set_thermostat_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat)
+        device.status.thermostat_mode = 'heat'
+        # Act
+        result = await device.set_thermostat_mode('auto')
+        # Assert
+        assert result
+        assert device.status.thermostat_mode != 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_thermostat_mode(api):
+        """Tests the set_thermostat_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_mode)
+        device.status.thermostat_mode = 'heat'
+        # Act
+        result = await device.set_thermostat_mode('auto')
+        # Assert
+        assert result
+        assert device.status.thermostat_mode != 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_thermostat_mode_update(api):
+        """Tests the set_thermostat_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_mode)
+        device.status.thermostat_mode = 'heat'
+        # Act
+        result = await device.set_thermostat_mode('auto', set_status=True)
+        # Assert
+        assert result
+        assert device.status.thermostat_mode == 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_cooling_setpoint_legacy(api):
+        """Tests the set_cooling_setpoint method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat)
+        device.status.cooling_setpoint = 70
+        # Act
+        result = await device.set_cooling_setpoint(76)
+        # Assert
+        assert result
+        assert device.status.cooling_setpoint != 76
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_cooling_setpoint_mode(api):
+        """Tests the set_cooling_setpoint method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_cooling_setpoint)
+        device.status.cooling_setpoint = 70
+        # Act
+        result = await device.set_cooling_setpoint(76)
+        # Assert
+        assert result
+        assert device.status.cooling_setpoint != 76
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_cooling_setpoint_update(api):
+        """Tests the set_cooling_setpoint method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_cooling_setpoint)
+        device.status.cooling_setpoint = 70
+        # Act
+        result = await device.set_cooling_setpoint(76, set_status=True)
+        # Assert
+        assert result
+        assert device.status.cooling_setpoint == 76
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_heating_setpoint_legacy(api):
+        """Tests the set_heating_setpoint method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat)
+        device.status.heating_setpoint = 70
+        # Act
+        result = await device.set_heating_setpoint(76)
+        # Assert
+        assert result
+        assert device.status.heating_setpoint != 76
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_heating_setpoint_mode(api):
+        """Tests the set_heating_setpoint method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_heating_setpoint)
+        device.status.heating_setpoint = 70
+        # Act
+        result = await device.set_heating_setpoint(76)
+        # Assert
+        assert result
+        assert device.status.heating_setpoint != 76
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_heating_setpoint_update(api):
+        """Tests the set_heating_setpoint method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.thermostat_heating_setpoint)
+        device.status.heating_setpoint = 70
+        # Act
+        result = await device.set_heating_setpoint(76, set_status=True)
+        # Assert
+        assert result
+        assert device.status.heating_setpoint == 76
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_open(api):
+        """Tests the open method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.door_control)
+        # Act/Assert
+        assert await device.open()
+        assert device.status.door is None
+        assert await device.open(set_status=True)
+        assert device.status.door == 'opening'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_open_legacy(api):
+        """Tests the open method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.garage_door_control)
+        # Act/Assert
+        assert await device.open()
+        assert device.status.door is None
+        assert await device.open(set_status=True)
+        assert device.status.door == 'opening'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_close(api):
+        """Tests the close method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.door_control)
+        # Act/Assert
+        assert await device.close()
+        assert device.status.door is None
+        assert await device.close(set_status=True)
+        assert device.status.door == 'closing'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_close_legacy(api):
+        """Tests the close method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.garage_door_control)
+        # Act/Assert
+        assert await device.close()
+        assert device.status.door is None
+        assert await device.close(set_status=True)
+        assert device.status.door == 'closing'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_open_window_shade(api):
+        """Tests the open method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.window_shade)
+        # Act/Assert
+        assert await device.open()
+        assert device.status.window_shade is None
+        assert await device.open(set_status=True)
+        assert device.status.window_shade == 'opening'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_close_window_shade(api):
+        """Tests the close method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.capabilities.append(Capability.window_shade)
+        # Act/Assert
+        assert await device.close()
+        assert device.status.window_shade is None
+        assert await device.close(set_status=True)
+        assert device.status.window_shade == 'closing'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_preset_position(api):
+        """Tests the preset_position method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.preset_position()
+
 
 class TestDeviceStatus:
     """Tests for the DeviceStatus class."""
@@ -456,7 +772,7 @@ class TestDeviceStatus:
         assert status.components['bottomButton'].level == 50
 
     @staticmethod
-    async def test_values():
+    def test_values():
         """Test the values property."""
         # Arrange
         data = get_json('device_status.json')
@@ -475,7 +791,7 @@ class TestDeviceStatus:
         }
 
     @staticmethod
-    async def test_attributes():
+    def test_attributes():
         """Test the attributes property."""
         # Arrange
         data = get_json('device_status.json')
@@ -489,10 +805,19 @@ class TestDeviceStatus:
             'switch': ('on', None, None),
             'checkInterval': (1920, 's', {"protocol": "zwave",
                                           "hubHardwareId": "000F"}),
-            'healthStatus': (None, None, None),
-            'DeviceWatch-DeviceStatus': (None, None, None),
+            'healthStatus': (None, None, {}),
+            'DeviceWatch-DeviceStatus': (None, None, {}),
             'level': (100, '%', None)
         }
+
+    @staticmethod
+    def test_attributes_default():
+        """Test the attributes property."""
+        # Arrange
+        data = get_json('device_status.json')
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.attributes['thermostatSetpoint'] == (None, None, None)
 
     @staticmethod
     @pytest.mark.asyncio
@@ -610,3 +935,29 @@ class TestDeviceStatus:
         assert status.is_on(Attribute.acceleration)
         assert status.is_on(Attribute.level)
         assert not status.is_on(Attribute.switch)
+
+    @staticmethod
+    def test_well_known_attributes():
+        """Tests the humidity property."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        status.update_attribute_value(Attribute.humidity, 50)
+        status.update_attribute_value(Attribute.temperature, 55)
+        status.update_attribute_value(
+            Attribute.thermostat_operating_state, 'on')
+        status.update_attribute_value(
+            Attribute.supported_thermostat_fan_modes, ['on', 'off'])
+        status.update_attribute_value(
+            Attribute.supported_thermostat_modes, ['auto', 'off'])
+        status.update_attribute_value(Attribute.lock, 'locked')
+        status.update_attribute_value(Attribute.door, 'open')
+        status.update_attribute_value(Attribute.window_shade, 'closed')
+        # Act/Assert
+        assert status.humidity == 50
+        assert status.temperature == 55
+        assert status.thermostat_operating_state == 'on'
+        assert status.supported_thermostat_fan_modes == ['on', 'off']
+        assert status.supported_thermostat_modes == ['auto', 'off']
+        assert status.lock == 'locked'
+        assert status.door == 'open'
+        assert status.window_shade == 'closed'

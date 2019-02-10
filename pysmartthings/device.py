@@ -33,14 +33,23 @@ def hex_to_hs(color_hex: str) -> (int, int):
 class Command:
     """Define common commands."""
 
+    close = 'close'
     off = 'off'
+    lock = 'lock'
+    open = 'open'
     on = 'on'
+    preset_position = 'presetPosition'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
     set_fan_speed = 'setFanSpeed'
+    set_cooling_setpoint = 'setCoolingSetpoint'
+    set_heating_setpoint = 'setHeatingSetpoint'
     set_hue = 'setHue'
     set_level = 'setLevel'
+    set_thermostat_fan_mode = 'setThermostatFanMode'
+    set_thermostat_mode = 'setThermostatMode'
     set_saturation = 'setSaturation'
+    unlock = 'unlock'
 
 
 class DeviceType(Enum):
@@ -90,6 +99,13 @@ class Device:
             self._device_type_id = dth["deviceTypeId"]
             self._device_type_name = dth["deviceTypeName"]
             self._device_type_network = dth["deviceNetworkType"]
+
+    def get_capability(self, *capabilities) -> Optional[str]:
+        """Return the first capability held by the device."""
+        for capability in capabilities:
+            if capability in self._capabilities:
+                return capability
+        return None
 
     @property
     def device_id(self) -> str:
@@ -176,7 +192,8 @@ class DeviceStatusBase:
     @property
     def values(self) -> Dict[str, Any]:
         """Get the values of the attributes."""
-        return {k: v.value for k, v in self._attributes.items()}
+        return defaultdict(
+            lambda: None, {k: v.value for k, v in self._attributes.items()})
 
     @property
     def color(self) -> Optional[str]:
@@ -273,6 +290,87 @@ class DeviceStatusBase:
             if value else 'off'
         self.update_attribute_value(Attribute.switch, status_value)
 
+    @property
+    def thermostat_fan_mode(self):
+        """Get the thermostatFanMode attribute."""
+        return self._attributes[Attribute.thermostat_fan_mode].value
+
+    @thermostat_fan_mode.setter
+    def thermostat_fan_mode(self, value: str):
+        """Update the thermostatFanMode attribute."""
+        self.update_attribute_value(Attribute.thermostat_fan_mode, value)
+
+    @property
+    def humidity(self) -> Optional[int]:
+        """Get the humidity in percentage."""
+        return self._attributes[Attribute.humidity].value
+
+    @property
+    def thermostat_mode(self) -> Optional[str]:
+        """Get the thermostatMode attribute."""
+        return self._attributes[Attribute.thermostat_mode].value
+
+    @thermostat_mode.setter
+    def thermostat_mode(self, value: str):
+        """Set the thermostatMode attribute."""
+        self.update_attribute_value(Attribute.thermostat_mode, value)
+
+    @property
+    def temperature(self) -> Optional[int]:
+        """Get the temperature attribute."""
+        return self._attributes[Attribute.temperature].value
+
+    @property
+    def thermostat_operating_state(self) -> Optional[str]:
+        """Get the thermostatOperatingState attribute."""
+        return self._attributes[Attribute.thermostat_operating_state].value
+
+    @property
+    def supported_thermostat_fan_modes(self) -> Optional[str]:
+        """Get the supportedThermostatFanModes attribute."""
+        return self._attributes[
+            Attribute.supported_thermostat_fan_modes].value
+
+    @property
+    def supported_thermostat_modes(self) -> Optional[str]:
+        """Get the supportedThermostatModes attribute."""
+        return self._attributes[Attribute.supported_thermostat_modes].value
+
+    @property
+    def cooling_setpoint(self) -> Optional[int]:
+        """Get the coolingSetpoint attribute."""
+        return self._attributes[Attribute.cooling_setpoint].value
+
+    @cooling_setpoint.setter
+    def cooling_setpoint(self, value: int):
+        """Set the coolingSetpoint attribute."""
+        self.update_attribute_value(Attribute.cooling_setpoint, value)
+
+    @property
+    def heating_setpoint(self) -> Optional[int]:
+        """Get the heatingSetpoint attribute."""
+        return self._attributes[Attribute.heating_setpoint].value
+
+    @heating_setpoint.setter
+    def heating_setpoint(self, value):
+        """Set the heatingSetpoint attribute."""
+        self.update_attribute_value(Attribute.heating_setpoint, value)
+
+    @property
+    def lock(self):
+        """Get the lock attribute."""
+        return self._attributes[Attribute.lock].value
+
+    @property
+    def door(self):
+        """Get the door attribute."""
+        return self._attributes[Attribute.door].value
+
+    @property
+    def window_shade(self):
+        """Get the windowShade attribute."""
+        return self._attributes[Attribute.window_shade].value
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -307,7 +405,8 @@ class DeviceStatus(DeviceStatusBase):
                         value.get('value'), value.get('unit'),
                         value.get('data'))
             if component_id == 'main':
-                self._attributes = attributes
+                self._attributes.clear()
+                self._attributes.update(attributes)
             else:
                 self._components[component_id] = \
                     DeviceStatusBase(component_id, attributes)
@@ -472,6 +571,58 @@ class DeviceEntity(Entity, Device):
             self.status.saturation = saturation
         return result
 
+    async def set_thermostat_fan_mode(
+            self, mode: str, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatFanMode device command."""
+        capability = self.get_capability(
+            Capability.thermostat_fan_mode, Capability.thermostat)
+        result = await self.command(
+            component_id, capability, Command.set_thermostat_fan_mode,
+            [mode])
+        if result and set_status:
+            self.status.thermostat_fan_mode = mode
+        return result
+
+    async def set_thermostat_mode(
+            self, mode: str, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatMode deivce command."""
+        capability = self.get_capability(
+            Capability.thermostat_mode, Capability.thermostat)
+        result = await self.command(
+            component_id, capability, Command.set_thermostat_mode,
+            [mode])
+        if result and set_status:
+            self.status.thermostat_mode = mode
+        return result
+
+    async def set_cooling_setpoint(
+            self, temperature: int, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatMode deivce command."""
+        capability = self.get_capability(
+            Capability.thermostat_cooling_setpoint, Capability.thermostat)
+        result = await self.command(
+            component_id, capability, Command.set_cooling_setpoint,
+            [temperature])
+        if result and set_status:
+            self.status.cooling_setpoint = temperature
+        return result
+
+    async def set_heating_setpoint(
+            self, temperature: int, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatMode deivce command."""
+        capability = self.get_capability(
+            Capability.thermostat_heating_setpoint, Capability.thermostat)
+        result = await self.command(
+            component_id, capability, Command.set_heating_setpoint,
+            [temperature])
+        if result and set_status:
+            self.status.heating_setpoint = temperature
+        return result
+
     async def switch_off(self, set_status: bool = False,
                          *, component_id: str = 'main') -> bool:
         """Call the switch off device command."""
@@ -489,6 +640,55 @@ class DeviceEntity(Entity, Device):
         if result and set_status:
             self.status.switch = True
         return result
+
+    async def lock(self, set_status: bool = False,
+                   *, component_id: str = 'main') -> bool:
+        """Call the lock device command."""
+        result = await self.command(
+            component_id, Capability.lock, Command.lock)
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.lock, 'locked')
+        return result
+
+    async def unlock(self, set_status: bool = False,
+                     *, component_id: str = 'main') -> bool:
+        """Call the unlock device command."""
+        result = await self.command(
+            component_id, Capability.lock, Command.unlock)
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.lock, 'unlocked')
+        return result
+
+    async def open(self, set_status: bool = False,
+                   *, component_id: str = 'main') -> bool:
+        """Call the open device command."""
+        capability = self.get_capability(
+            Capability.door_control, Capability.window_shade,
+            Capability.garage_door_control)
+        result = await self.command(component_id, capability, Command.open)
+        if result and set_status:
+            attribute = Attribute.window_shade if \
+                capability == Capability.window_shade else Attribute.door
+            self.status.update_attribute_value(attribute, 'opening')
+        return result
+
+    async def close(self, set_status: bool = False,
+                    *, component_id: str = 'main') -> bool:
+        """Call the close device command."""
+        capability = self.get_capability(
+            Capability.door_control, Capability.window_shade,
+            Capability.garage_door_control)
+        result = await self.command(component_id, capability, Command.close)
+        if result and set_status:
+            attribute = Attribute.window_shade if \
+                capability == Capability.window_shade else Attribute.door
+            self.status.update_attribute_value(attribute, 'closing')
+        return result
+
+    async def preset_position(self, *, component_id: str = 'main') -> bool:
+        """Call the close device command."""
+        return await self.command(
+            component_id, Capability.window_shade, Command.close)
 
     @property
     def status(self):

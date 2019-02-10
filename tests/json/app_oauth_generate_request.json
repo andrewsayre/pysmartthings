@@ -1,0 +1,6 @@
+{
+    "clientName": "pysmartthings",
+    "scope": [
+        "r:devices:*"
+    ]
+}

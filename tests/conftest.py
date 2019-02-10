@@ -1,12 +1,15 @@
 """Define test configuration."""
+import glob
+import re
+
 import pytest
 
 from pysmartthings.api import (
-    API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
-    API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES, API_INSTALLEDAPP,
-    API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS, API_OAUTH_TOKEN, API_ROOM,
-    API_ROOMS, API_SCENE_EXECUTE, API_SCENES, API_SUBSCRIPTION,
-    API_SUBSCRIPTIONS, Api)
+    API_APP, API_APP_OAUTH, API_APP_OAUTH_GENERATE, API_APP_SETTINGS, API_APPS,
+    API_BASE, API_DEVICE, API_DEVICE_COMMAND, API_DEVICE_STATUS, API_DEVICES,
+    API_INSTALLEDAPP, API_INSTALLEDAPPS, API_LOCATION, API_LOCATIONS,
+    API_OAUTH_TOKEN, API_ROOM, API_ROOMS, API_SCENE_EXECUTE, API_SCENES,
+    API_SUBSCRIPTION, API_SUBSCRIPTIONS, Api)
 from pysmartthings.smartthings import SmartThings
 
 from .utilities import ClientMocker
@@ -22,6 +25,18 @@ ROOM_ID = '7715151d-0314-457a-a82c-5ce48900e065'
 REFRESH_TOKEN = 'a86a5c8e-0014-44a6-8980-5846633972dd'
 SUBSCRIPTION_ID = '7bdf5909-57c4-41f3-9089-e520513bd92a'
 SCENE_ID = '9b58411f-5d26-418d-b193-3434a77c484a'
+
+DEVICE_COMMAND_PATTERN = re.compile(r'(device_command_post_[a-z_]+)')
+
+
+def register_device_commands(mocker):
+    """Register all device commands."""
+    files = glob.glob('tests/json/device_command_post_*.json')
+    for file in files:
+        match = DEVICE_COMMAND_PATTERN.search(file)
+        if match:
+            mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
+                        request=match.group(), response={})
 
 
 def register_url_mocks(mocker):
@@ -55,25 +70,9 @@ def register_url_mocks(mocker):
     mocker.get(API_DEVICE.format(device_id=DEVICE_ID), response='device')
     mocker.get(API_DEVICE_STATUS.format(device_id=DEVICE_ID),
                response='device_status')
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_switch_on', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_switch_off', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_level', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_color_temperature',
-                response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_hue', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_saturation', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_color', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_color_hex', response={})
-    mocker.post(API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
-                request='device_command_post_set_fan_speed', response={})
+
+    # Device Commands
+    register_device_commands(mocker)
 
     # Apps
     mocker.get(API_APPS, response='apps')
@@ -92,6 +91,9 @@ def register_url_mocks(mocker):
     mocker.put(API_APP_OAUTH.format(app_id=APP_ID),
                request='app_oauth_put_request',
                response='app_oauth_put_response')
+    mocker.post(API_APP_OAUTH_GENERATE.format(app_id=APP_ID),
+                request='app_oauth_generate_request',
+                response='app_oauth_generate_response')
 
     # InstalledApps
     mocker.get(API_INSTALLEDAPPS, response='installedapps_get_response')

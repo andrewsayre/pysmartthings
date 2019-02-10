@@ -12,10 +12,11 @@ The package is still in beta, but the following features are available:
 1. Locations: List, Get
 1. Rooms: List, Get, Create, Update, Delete
 1. Devices: List, Get, Command, Status
-1. Apps: List, Get, Create, Update, Delete, Settings Get & Update, OAuth: Get & Update
+1. Apps: List, Get, Create, Update, Delete, Settings Get & Update, OAuth: Get, Update, & Generate
 1. InstalledApps: List, Get, Delete
 1. Subscriptions: List, Get, Create, Delete, Delete All
 1. Scenes: List, Execute
+1. OAuth: Generate refresh/access token pair
 ## Installation
 ```commandline
 pip install pysmartthings
