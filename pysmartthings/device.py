@@ -33,7 +33,10 @@ def hex_to_hs(color_hex: str) -> (int, int):
 class Command:
     """Define common commands."""
 
+    close = 'close'
     off = 'off'
+    lock = 'lock'
+    open = 'open'
     on = 'on'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
@@ -45,6 +48,7 @@ class Command:
     set_thermostat_fan_mode = 'setThermostatFanMode'
     set_thermostat_mode = 'setThermostatMode'
     set_saturation = 'setSaturation'
+    unlock = 'unlock'
 
 
 class DeviceType(Enum):
@@ -96,10 +100,10 @@ class Device:
             self._device_type_network = dth["deviceNetworkType"]
 
     def get_capability(self, *capabilities) -> Optional[str]:
-        """Returns the first capability held by the device."""
-        for c in capabilities:
-            if c in self._capabilities:
-                return c
+        """Return the first capability held by the device."""
+        for capability in capabilities:
+            if capability in self._capabilities:
+                return capability
         return None
 
     @property
@@ -307,12 +311,12 @@ class DeviceStatusBase:
 
     @thermostat_mode.setter
     def thermostat_mode(self, value: str):
-        """Set the thermostatMode attribute"""
+        """Set the thermostatMode attribute."""
         self.update_attribute_value(Attribute.thermostat_mode, value)
 
     @property
     def temperature(self) -> Optional[int]:
-        """Get the temperature attribute"""
+        """Get the temperature attribute."""
         return self._attributes[Attribute.temperature].value
 
     @property
@@ -350,6 +354,16 @@ class DeviceStatusBase:
     def heating_setpoint(self, value):
         """Set the heatingSetpoint attribute."""
         self.update_attribute_value(Attribute.heating_setpoint, value)
+
+    @property
+    def lock(self):
+        """Get the lock attribute."""
+        return self._attributes[Attribute.lock].value
+
+    @property
+    def door(self):
+        """Get the door attribute."""
+        return self._attributes[Attribute.door].value
 
 
 class DeviceStatus(DeviceStatusBase):
@@ -558,8 +572,8 @@ class DeviceEntity(Entity, Device):
         capability = self.get_capability(
             Capability.thermostat_fan_mode, Capability.thermostat)
         result = await self.command(
-             component_id, capability, Command.set_thermostat_fan_mode,
-             [mode])
+            component_id, capability, Command.set_thermostat_fan_mode,
+            [mode])
         if result and set_status:
             self.status.thermostat_fan_mode = mode
         return result
@@ -571,8 +585,8 @@ class DeviceEntity(Entity, Device):
         capability = self.get_capability(
             Capability.thermostat_mode, Capability.thermostat)
         result = await self.command(
-             component_id, capability, Command.set_thermostat_mode,
-             [mode])
+            component_id, capability, Command.set_thermostat_mode,
+            [mode])
         if result and set_status:
             self.status.thermostat_mode = mode
         return result
@@ -584,8 +598,8 @@ class DeviceEntity(Entity, Device):
         capability = self.get_capability(
             Capability.thermostat_cooling_setpoint, Capability.thermostat)
         result = await self.command(
-             component_id, capability, Command.set_cooling_setpoint,
-             [temperature])
+            component_id, capability, Command.set_cooling_setpoint,
+            [temperature])
         if result and set_status:
             self.status.cooling_setpoint = temperature
         return result
@@ -597,8 +611,8 @@ class DeviceEntity(Entity, Device):
         capability = self.get_capability(
             Capability.thermostat_heating_setpoint, Capability.thermostat)
         result = await self.command(
-             component_id, capability, Command.set_heating_setpoint,
-             [temperature])
+            component_id, capability, Command.set_heating_setpoint,
+            [temperature])
         if result and set_status:
             self.status.heating_setpoint = temperature
         return result
@@ -619,6 +633,44 @@ class DeviceEntity(Entity, Device):
             component_id, Capability.switch, Command.on)
         if result and set_status:
             self.status.switch = True
+        return result
+
+    async def lock(self, set_status: bool = False,
+                   *, component_id: str = 'main') -> bool:
+        """Call the lock device command."""
+        result = await self.command(
+            component_id, Capability.lock, Command.lock)
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.lock, 'locked')
+        return result
+
+    async def unlock(self, set_status: bool = False,
+                     *, component_id: str = 'main') -> bool:
+        """Call the unlock device command."""
+        result = await self.command(
+            component_id, Capability.lock, Command.unlock)
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.lock, 'unlocked')
+        return result
+
+    async def open(self, set_status: bool = False,
+                   *, component_id: str = 'main') -> bool:
+        """Call the open device command."""
+        capability = self.get_capability(
+            Capability.door_control, Capability.garage_door_control)
+        result = await self.command(component_id, capability, Command.open)
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.door, 'opening')
+        return result
+
+    async def close(self, set_status: bool = False,
+                    *, component_id: str = 'main') -> bool:
+        """Call the close device command."""
+        capability = self.get_capability(
+            Capability.door_control, Capability.garage_door_control)
+        result = await self.command(component_id, capability, Command.close)
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.door, 'closing')
         return result
 
     @property

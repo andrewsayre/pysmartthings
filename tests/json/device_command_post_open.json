@@ -1,0 +1,9 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "doorControl",
+      "command": "open"
+    }
+  ]
+}

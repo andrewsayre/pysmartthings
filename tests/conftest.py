@@ -1,7 +1,8 @@
 """Define test configuration."""
-import pytest
 import glob
 import re
+
+import pytest
 
 from pysmartthings.api import (
     API_APP, API_APP_OAUTH, API_APP_SETTINGS, API_APPS, API_BASE, API_DEVICE,
@@ -29,7 +30,7 @@ DEVICE_COMMAND_PATTERN = re.compile(r'(device_command_post_[a-z_]+)')
 
 
 def register_device_commands(mocker):
-    """Registers all device commands."""
+    """Register all device commands."""
     files = glob.glob('tests/json/device_command_post_*.json')
     for file in files:
         match = DEVICE_COMMAND_PATTERN.search(file)

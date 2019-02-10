@@ -1,0 +1,9 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "lock",
+      "command": "lock"
+    }
+  ]
+}
