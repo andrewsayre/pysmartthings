@@ -342,5 +342,4 @@ class TestSmartThings:
         assert token.scope == ['r:devices:*']
         assert token.token_type == 'bearer'
         assert token.expires_in == 299
-        assert token.expiration_date - datetime.now() == timedelta(0, 299)
         assert not token.is_expired
