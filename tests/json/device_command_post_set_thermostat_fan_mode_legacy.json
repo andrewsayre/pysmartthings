@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "thermostat",
+      "command": "setThermostatFanMode",
+      "arguments": ["auto"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "thermostat",
+      "command": "setCoolingSetpoint",
+      "arguments": [76]
+    }
+  ]
+}

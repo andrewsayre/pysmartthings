@@ -38,8 +38,12 @@ class Command:
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
     set_fan_speed = 'setFanSpeed'
+    set_cooling_setpoint = 'setCoolingSetpoint'
+    set_heating_setpoint = 'setHeatingSetpoint'
     set_hue = 'setHue'
     set_level = 'setLevel'
+    set_thermostat_fan_mode = 'setThermostatFanMode'
+    set_thermostat_mode = 'setThermostatMode'
     set_saturation = 'setSaturation'
 
 
@@ -90,6 +94,13 @@ class Device:
             self._device_type_id = dth["deviceTypeId"]
             self._device_type_name = dth["deviceTypeName"]
             self._device_type_network = dth["deviceNetworkType"]
+
+    def get_capability(self, *capabilities) -> Optional[str]:
+        """Returns the first capability held by the device."""
+        for c in capabilities:
+            if c in self._capabilities:
+                return c
+        return None
 
     @property
     def device_id(self) -> str:
@@ -176,7 +187,8 @@ class DeviceStatusBase:
     @property
     def values(self) -> Dict[str, Any]:
         """Get the values of the attributes."""
-        return {k: v.value for k, v in self._attributes.items()}
+        return defaultdict(
+            lambda: None, {k: v.value for k, v in self._attributes.items()})
 
     @property
     def color(self) -> Optional[str]:
@@ -273,6 +285,72 @@ class DeviceStatusBase:
             if value else 'off'
         self.update_attribute_value(Attribute.switch, status_value)
 
+    @property
+    def thermostat_fan_mode(self):
+        """Get the thermostatFanMode attribute."""
+        return self._attributes[Attribute.thermostat_fan_mode].value
+
+    @thermostat_fan_mode.setter
+    def thermostat_fan_mode(self, value: str):
+        """Update the thermostatFanMode attribute."""
+        self.update_attribute_value(Attribute.thermostat_fan_mode, value)
+
+    @property
+    def humidity(self) -> Optional[int]:
+        """Get the humidity in percentage."""
+        return self._attributes[Attribute.humidity].value
+
+    @property
+    def thermostat_mode(self) -> Optional[str]:
+        """Get the thermostatMode attribute."""
+        return self._attributes[Attribute.thermostat_mode].value
+
+    @thermostat_mode.setter
+    def thermostat_mode(self, value: str):
+        """Set the thermostatMode attribute"""
+        self.update_attribute_value(Attribute.thermostat_mode, value)
+
+    @property
+    def temperature(self) -> Optional[int]:
+        """Get the temperature attribute"""
+        return self._attributes[Attribute.temperature].value
+
+    @property
+    def thermostat_operating_state(self) -> Optional[str]:
+        """Get the thermostatOperatingState attribute."""
+        return self._attributes[Attribute.thermostat_operating_state].value
+
+    @property
+    def supported_thermostat_fan_modes(self) -> Optional[str]:
+        """Get the supportedThermostatFanModes attribute."""
+        return self._attributes[
+            Attribute.supported_thermostat_fan_modes].value
+
+    @property
+    def supported_thermostat_modes(self) -> Optional[str]:
+        """Get the supportedThermostatModes attribute."""
+        return self._attributes[Attribute.supported_thermostat_modes].value
+
+    @property
+    def cooling_setpoint(self) -> Optional[int]:
+        """Get the coolingSetpoint attribute."""
+        return self._attributes[Attribute.cooling_setpoint].value
+
+    @cooling_setpoint.setter
+    def cooling_setpoint(self, value: int):
+        """Set the coolingSetpoint attribute."""
+        self.update_attribute_value(Attribute.cooling_setpoint, value)
+
+    @property
+    def heating_setpoint(self) -> Optional[int]:
+        """Get the heatingSetpoint attribute."""
+        return self._attributes[Attribute.heating_setpoint].value
+
+    @heating_setpoint.setter
+    def heating_setpoint(self, value):
+        """Set the heatingSetpoint attribute."""
+        self.update_attribute_value(Attribute.heating_setpoint, value)
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -300,14 +378,15 @@ class DeviceStatus(DeviceStatusBase):
         """Apply the values from the given data structure."""
         self._components.clear()
         for component_id, component in data['components'].items():
-            attributes = defaultdict(lambda: STATUS_NONE)
+            attributes = {}
             for capabilities in component.values():
                 for attribute, value in capabilities.items():
                     attributes[attribute] = Status(
                         value.get('value'), value.get('unit'),
                         value.get('data'))
             if component_id == 'main':
-                self._attributes = attributes
+                self._attributes.clear()
+                self._attributes.update(attributes)
             else:
                 self._components[component_id] = \
                     DeviceStatusBase(component_id, attributes)
@@ -470,6 +549,58 @@ class DeviceEntity(Entity, Device):
             [saturation])
         if result and set_status:
             self.status.saturation = saturation
+        return result
+
+    async def set_thermostat_fan_mode(
+            self, mode: str, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatFanMode device command."""
+        capability = self.get_capability(
+            Capability.thermostat_fan_mode, Capability.thermostat)
+        result = await self.command(
+             component_id, capability, Command.set_thermostat_fan_mode,
+             [mode])
+        if result and set_status:
+            self.status.thermostat_fan_mode = mode
+        return result
+
+    async def set_thermostat_mode(
+            self, mode: str, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatMode deivce command."""
+        capability = self.get_capability(
+            Capability.thermostat_mode, Capability.thermostat)
+        result = await self.command(
+             component_id, capability, Command.set_thermostat_mode,
+             [mode])
+        if result and set_status:
+            self.status.thermostat_mode = mode
+        return result
+
+    async def set_cooling_setpoint(
+            self, temperature: int, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatMode deivce command."""
+        capability = self.get_capability(
+            Capability.thermostat_cooling_setpoint, Capability.thermostat)
+        result = await self.command(
+             component_id, capability, Command.set_cooling_setpoint,
+             [temperature])
+        if result and set_status:
+            self.status.cooling_setpoint = temperature
+        return result
+
+    async def set_heating_setpoint(
+            self, temperature: int, set_status: bool = False,
+            *, component_id: str = 'main') -> bool:
+        """Call the setThermostatMode deivce command."""
+        capability = self.get_capability(
+            Capability.thermostat_heating_setpoint, Capability.thermostat)
+        result = await self.command(
+             component_id, capability, Command.set_heating_setpoint,
+             [temperature])
+        if result and set_status:
+            self.status.heating_setpoint = temperature
         return result
 
     async def switch_off(self, set_status: bool = False,
