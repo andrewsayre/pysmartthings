@@ -1,7 +1,5 @@
 """Tests for the SmartThings file."""
 
-from datetime import datetime, timedelta
-
 import pytest
 
 from pysmartthings.app import App, AppOAuth, AppSettings
