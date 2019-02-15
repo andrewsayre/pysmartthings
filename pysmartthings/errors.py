@@ -55,8 +55,14 @@ class APIResponseError(ClientResponseError):
         """Create a new instance of the API Error."""
         super().__init__(request_info, history, status=status,
                          message=message, headers=headers)
+        self._raw_error_response = data
         self._request_id = data.get('requestId')
         self._error = APIErrorDetail(data['error'])
+
+    @property
+    def raw_error_response(self):
+        """Get the raw error response returned."""
+        return self._raw_error_response
 
     @property
     def request_id(self) -> Optional[str]:
@@ -67,6 +73,13 @@ class APIResponseError(ClientResponseError):
     def error(self) -> APIErrorDetail:
         """Get the API error document."""
         return self._error
+
+    def is_target_error(self):
+        """Determine if the error is due to an issue with the target."""
+        return self.error.code == 'ConstraintViolationError' \
+            and len(self.error.details) == 1 \
+            and self.error.details[0].code \
+            and self.error.details[0].code.startswith('Target')
 
 
 class APIInvalidGrant(Exception):
