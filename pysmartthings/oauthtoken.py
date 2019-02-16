@@ -39,8 +39,8 @@ class OAuthToken:
 
     async def refresh(self, client_id: str, client_secret: str):
         """Refresh the auth and refresh tokens."""
-        data = await self._api.generate_tokens(self._refresh_token, client_id,
-                                               client_secret)
+        data = await self._api.generate_tokens(client_id, client_secret,
+                                               self._refresh_token)
         if data:
             self.apply_data(data)
 
