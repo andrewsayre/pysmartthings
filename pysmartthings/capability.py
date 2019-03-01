@@ -22,6 +22,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'colorControl': ['color', 'hue', 'saturation'],
     'colorTemperature': ['colorTemperature'],
     'contactSensor': ['contact'],
+    'demandResponseLoadControl': ['drlcStatus'],
     'dishwasherMode': ['dishwasherMode'],
     'dishwasherOperatingState': ['machineState', 'supportedMachineStates',
                                  'dishwasherJobState', 'completionTime'],
@@ -33,6 +34,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'energyMeter': ['energy'],
     'equivalentCarbonDioxideMeasurement':
         ['equivalentCarbonDioxideMeasurement'],
+    'execute': ['data'],
     'fanSpeed': ['fanSpeed'],
     'filterStatus': ['filterStatus'],
     'formaldehydeMeasurement': ['formaldehydeLevel'],
@@ -45,12 +47,15 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'mediaPlaybackShuffle': ['playbackShuffle'],
     'mediaPlayback': ['playbackStatus', 'supportedPlaybackCommands'],
     'motionSensor': ['motion'],
+    'ocf': ['st', 'mnfv', 'mndt', 'mnhw', 'di', 'mnsl', 'dmv', 'n', 'vid',
+            'mnmo', 'mnmn', 'mnml', 'mnpv', 'mnos', 'pi', 'icv'],
     'odorSensor': ['odorLevel'],
     'ovenMode': ['ovenMode'],
     'ovenOperatingState': ['machineState', 'supportedMachineStates',
                            'ovenJobState', 'completionTime', 'operationTime',
                            'progress'],
     'ovenSetpoint': ['ovenSetpoint'],
+    'powerConsumptionReport': ['powerConsumption'],
     'powerMeter': ['power'],
     'powerSource': ['powerSource'],
     'presenceSensor': ['presence'],
@@ -116,6 +121,7 @@ class Capability:
     color_control = 'colorControl'
     color_temperature = 'colorTemperature'
     contact_sensor = 'contactSensor'
+    demand_response_load_control = 'demandResponseLoadControl'
     dishwasher_mode = 'dishwasherMode'
     dishwasher_operating_state = 'dishwasherOperatingState'
     door_control = 'doorControl'
@@ -125,6 +131,7 @@ class Capability:
     energy_meter = 'energyMeter'
     equivalent_carbon_dioxide_measurement = \
         'equivalentCarbonDioxideMeasurement'
+    execute = 'execute'
     fan_speed = 'fanSpeed'
     filter_status = 'filterStatus'
     formaldehyde_measurement = 'formaldehydeMeasurement'
@@ -137,10 +144,12 @@ class Capability:
     media_playback_repeat = 'mediaPlaybackRepeat'
     media_playback_shuffle = 'mediaPlaybackShuffle'
     motion_sensor = 'motionSensor'
+    ocf = 'ocf'
     odor_sensor = 'odorSensor'
     oven_mode = 'ovenMode'
     oven_operating_state = 'ovenOperatingState'
     oven_setpoint = 'ovenSetpoint'
+    power_consumption_report = 'powerConsumptionReport'
     power_meter = 'powerMeter'
     power_source = 'powerSource'
     presence_sensor = 'presenceSensor'
@@ -195,9 +204,13 @@ class Attribute:
     contact = 'contact'
     cooling_setpoint = 'coolingSetpoint'
     cooling_setpoint_range = 'coolingSetpointRange'
+    data = 'data'
+    di = 'di'
     dishwasher_job_state = 'dishwasherJobState'
     dishwasher_mode = 'dishwasherMode'
+    dmv = 'dmv'
     door = 'door'
+    drlc_status = 'drlcStatus'
     dryer_job_state = 'dryerJobState'
     dryer_mode = 'dryerMode'
     dust_level = 'dustLevel'
@@ -212,6 +225,7 @@ class Attribute:
     heating_setpoint_range = 'heatingSetpointRange'
     hue = 'hue'
     humidity = 'humidity'
+    icv = 'icv'
     illuminance = 'illuminance'
     infrared_level = 'infraredLevel'
     input_source = 'inputSource'
@@ -220,18 +234,30 @@ class Attribute:
     lock = 'lock'
     lqi = 'lqi'
     machine_state = 'machineState'
+    mndt = 'mndt'
+    mnfv = 'mnfv'
+    mnhw = 'mnhw'
+    mnml = 'mnml'
+    mnmn = 'mnmn'
+    mnmo = 'mnmo'
+    mnos = 'mnos'
+    mnpv = 'mnpv'
+    mnsl = 'mnsl'
     motion = 'motion'
     mute = 'mute'
+    n = 'n'
     number_of_buttons = 'numberOfButtons'
     odor_level = 'odorLevel'
     operation_time = 'operationTime'
     oven_job_state = 'ovenJobState'
     oven_mode = 'ovenMode'
     oven_setpoint = 'ovenSetpoint'
+    pi = 'pi'
     playback_repeat_mode = 'playbackRepeatMode'
     playback_shuffle = 'playbackShuffle'
     playback_status = 'playbackStatus'
     power = 'power'
+    power_consumption = 'powerConsumption'
     power_source = 'powerSource'
     presence = 'presence'
     progress = 'progress'
@@ -245,6 +271,7 @@ class Attribute:
     schedule = 'schedule'
     smoke = 'smoke'
     sound = 'sound'
+    st = 'st'
     supported_button_values = 'supportedButtonValues'
     supported_input_sources = 'supportedInputSources'
     supported_machine_states = 'supportedMachineStates'
@@ -263,6 +290,7 @@ class Attribute:
     tvoc_level = 'tvocLevel'
     ultraviolet_index = 'ultravioletIndex'
     valve = 'valve'
+    vid = 'vid'
     voltage = 'voltage'
     volume = 'volume'
     washer_job_state = 'washerJobState'

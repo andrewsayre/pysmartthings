@@ -34,21 +34,24 @@ class Command:
     """Define common commands."""
 
     close = 'close'
-    off = 'off'
+    execute = 'execute'
     lock = 'lock'
+    off = 'off'
     open = 'open'
     on = 'on'
+    override_drlc_action = 'overrideDrlcAction'
     preset_position = 'presetPosition'
+    request_drlc_action = 'requestDrlcAction'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
-    set_fan_speed = 'setFanSpeed'
     set_cooling_setpoint = 'setCoolingSetpoint'
+    set_fan_speed = 'setFanSpeed'
     set_heating_setpoint = 'setHeatingSetpoint'
     set_hue = 'setHue'
     set_level = 'setLevel'
+    set_saturation = 'setSaturation'
     set_thermostat_fan_mode = 'setThermostatFanMode'
     set_thermostat_mode = 'setThermostatMode'
-    set_saturation = 'setSaturation'
     unlock = 'unlock'
 
 
