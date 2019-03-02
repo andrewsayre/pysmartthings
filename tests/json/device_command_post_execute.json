@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "execute",
+      "command": "execute",
+      "arguments": ["Test", {"data": "Test"}]
+    }
+  ]
+}

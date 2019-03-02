@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "demandResponseLoadControl",
+      "command": "overrideDrlcAction",
+      "arguments": [true]
+    }
+  ]
+}

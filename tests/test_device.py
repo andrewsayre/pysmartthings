@@ -709,6 +709,48 @@ class TestDeviceEntity:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_request_drlc_action(api):
+        """Tests the request_drlc_action method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.request_drlc_action(
+            1, 2, '1970-01-01T00:00:00Z', 10, 1)
+        assert device.status.drlc_status is None
+        assert await device.request_drlc_action(
+            1, 2, '1970-01-01T00:00:00Z', 10, 1, set_status=True)
+        assert device.status.drlc_status == {
+            "duration": 10,
+            "drlcLevel": 2,
+            "start": '1970-01-01T00:00:00Z',
+            "override": False
+        }
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_override_drlc_action(api):
+        """Tests the override_drlc_action method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.override_drlc_action(True)
+        assert device.status.drlc_status is None
+        assert await device.override_drlc_action(True, set_status=True)
+        assert device.status.drlc_status == {
+            "override": True
+        }
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_execute(api):
+        """Tests the execute method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.execute('Test', {'data': 'Test'})
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_preset_position(api):
         """Tests the preset_position method."""
         # Arrange
@@ -952,6 +994,7 @@ class TestDeviceStatus:
         status.update_attribute_value(Attribute.lock, 'locked')
         status.update_attribute_value(Attribute.door, 'open')
         status.update_attribute_value(Attribute.window_shade, 'closed')
+        status.update_attribute_value(Attribute.data, {'test': 'test'})
         # Act/Assert
         assert status.humidity == 50
         assert status.temperature == 55
@@ -961,3 +1004,109 @@ class TestDeviceStatus:
         assert status.lock == 'locked'
         assert status.door == 'open'
         assert status.window_shade == 'closed'
+        assert status.data == {'test': 'test'}
+
+    @staticmethod
+    def test_well_known_ocf_attributes():
+        """Tests the OCF related attributes."""
+        # Arrange
+        data = get_json('device_samsungac_status.json')
+        status = DeviceStatus(None, device_id=DEVICE_ID, data=data)
+        # Act/Assert
+        assert status.ocf_data_model_version == 'res.1.1.0,sh.1.1.0'
+        assert status.ocf_date_of_manufacture == '2019-02-26T02:05:55Z'
+        assert status.ocf_device_id == DEVICE_ID
+        assert status.ocf_firmware_version == '0.1.0'
+        assert status.ocf_hardware_version == '1.0'
+        assert status.ocf_manufacturer_details_link == 'http://www.samsung.com'
+        assert status.ocf_manufacturer_name == 'Samsung Electronics'
+        assert status.ocf_model_number == \
+            'ARTIK051_KRAC_18K|10193441|60010123001111010200000000000000'
+        assert status.ocf_name == 'Air Conditioner'
+        assert status.ocf_os_version == 'TizenRT2.0'
+        assert status.ocf_platform_id == 'd5226d90-1b4f-e59d-5f3f-027ac3b18faf'
+        assert status.ocf_platform_version == '0.1.0'
+        assert status.ocf_spec_version == 'core.1.1.0'
+        assert status.ocf_support_link == 'http://www.samsung.com/support'
+        assert status.ocf_system_time == '02:05:55Z'
+        assert status.ocf_vendor_id == 'DA-AC-RAC-000001'
+
+    @staticmethod
+    def test_well_known_drlc_attributes():
+        """Tests the drlc related attributes."""
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # No attribute
+        assert status.drlc_status is None
+        assert status.drlc_status_duration is None
+        assert status.drlc_status_level is None
+        assert status.drlc_status_override is None
+        assert status.drlc_status_start is None
+        # Populated
+        drlc_status = {
+            "duration": 0,
+            "drlcLevel": -1,
+            "start": "1970-01-01T00:00:00Z",
+            "override": False
+        }
+        status.update_attribute_value(Attribute.drlc_status, drlc_status)
+        assert status.drlc_status == drlc_status
+        assert status.drlc_status_duration == 0
+        assert status.drlc_status_level == -1
+        assert not status.drlc_status_override
+        assert status.drlc_status_start == '1970-01-01T00:00:00Z'
+        # Missing
+        status.update_attribute_value(Attribute.drlc_status, {})
+        assert status.drlc_status == {}
+        assert status.drlc_status_duration is None
+        assert status.drlc_status_level is None
+        assert status.drlc_status_override is None
+        assert status.drlc_status_start is None
+        # Not valid
+        drlc_status = {
+            "duration": 'Foo',
+            "drlcLevel": 'Foo'
+        }
+        status.update_attribute_value(Attribute.drlc_status, drlc_status)
+        assert status.drlc_status == drlc_status
+        assert status.drlc_status_duration is None
+        assert status.drlc_status_level is None
+
+    @staticmethod
+    def test_well_known_power_consumption_attributes():
+        """Tests the power consumption related attributes."""
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # No attribute
+        assert status.power_consumption is None
+        assert status.power_consumption_end is None
+        assert status.power_consumption_energy is None
+        assert status.power_consumption_power is None
+        assert status.power_consumption_start is None
+        # Populated
+        data = {
+            "start": "2019-02-24T21:03:04Z",
+            "power": 0,
+            "energy": 500,
+            "end": "2019-02-26T02:05:55Z"
+        }
+        status.update_attribute_value(Attribute.power_consumption, data)
+        assert status.power_consumption == data
+        assert status.power_consumption_end == '2019-02-26T02:05:55Z'
+        assert status.power_consumption_energy == 500
+        assert status.power_consumption_power == 0
+        assert status.power_consumption_start == '2019-02-24T21:03:04Z'
+        # Missing
+        status.update_attribute_value(Attribute.power_consumption, {})
+        assert status.power_consumption == {}
+        assert status.power_consumption_end is None
+        assert status.power_consumption_energy is None
+        assert status.power_consumption_power is None
+        assert status.power_consumption_start is None
+        # Not valid
+        data = {
+            "power": "Foo",
+            "energy": "Bar"
+        }
+        status.update_attribute_value(Attribute.power_consumption, data)
+        assert status.power_consumption == data
+        assert status.power_consumption_energy is None
+        assert status.power_consumption_power is None

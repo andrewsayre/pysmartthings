@@ -1,0 +1,121 @@
+{
+  "components": {
+    "main": {
+      "demandResponseLoadControl": {
+        "drlcStatus": {
+          "value": {
+            "duration": 0,
+            "drlcLevel": -1,
+            "start": "1970-01-01T00:00:00Z",
+            "override": false
+          }
+        }
+      },
+      "powerConsumptionReport": {
+        "powerConsumption": {
+          "value": {
+            "start": "2019-02-24T21:03:04Z",
+            "power": 0,
+            "energy": 500,
+            "end": "2019-02-26T02:05:55Z"
+          }
+        }
+      },
+      "ocf": {
+        "st": {
+          "value": "02:05:55Z"
+        },
+        "mnfv": {
+          "value": "0.1.0"
+        },
+        "mndt": {
+          "value": "2019-02-26T02:05:55Z"
+        },
+        "mnhw": {
+          "value": "1.0"
+        },
+        "di": {
+          "value": "743de49f-036f-4e9c-839a-2f89d57607db"
+        },
+        "mnsl": {
+          "value": "http://www.samsung.com/support"
+        },
+        "dmv": {
+          "value": "res.1.1.0,sh.1.1.0"
+        },
+        "n": {
+          "value": "Air Conditioner"
+        },
+        "vid": {
+          "value": "DA-AC-RAC-000001"
+        },
+        "mnmo": {
+          "value": "ARTIK051_KRAC_18K|10193441|60010123001111010200000000000000"
+        },
+        "mnmn": {
+          "value": "Samsung Electronics"
+        },
+        "mnml": {
+          "value": "http://www.samsung.com"
+        },
+        "mnpv": {
+          "value": "0.1.0"
+        },
+        "mnos": {
+          "value": "TizenRT2.0"
+        },
+        "pi": {
+          "value": "d5226d90-1b4f-e59d-5f3f-027ac3b18faf"
+        },
+        "icv": {
+          "value": "core.1.1.0"
+        }
+      },
+      "refresh": {},
+      "temperatureMeasurement": {
+        "temperature": {
+          "value": 22.0,
+          "unit": "C"
+        }
+      },
+      "airConditionerMode": {
+        "airConditionerMode": {
+          "value": "heat"
+        }
+      },
+      "fanSpeed": {
+        "fanSpeed": {
+          "value": 2
+        }
+      },
+      "execute": {
+        "data": {
+          "value": {
+            "payload": {
+              "speed": 2,
+              "if": [
+                "oic.if.baseline",
+                "oic.if.a"
+              ],
+              "direction": "Fix",
+              "rt": [
+                "oic.r.airflow"
+              ]
+            }
+          }
+        }
+      },
+      "thermostatCoolingSetpoint": {
+        "coolingSetpoint": {
+          "value": 23.0,
+          "unit": "C"
+        }
+      },
+      "switch": {
+        "switch": {
+          "value": "on"
+        }
+      }
+    }
+  }
+}

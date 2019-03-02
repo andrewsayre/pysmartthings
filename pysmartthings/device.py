@@ -34,21 +34,24 @@ class Command:
     """Define common commands."""
 
     close = 'close'
-    off = 'off'
+    execute = 'execute'
     lock = 'lock'
+    off = 'off'
     open = 'open'
     on = 'on'
+    override_drlc_action = 'overrideDrlcAction'
     preset_position = 'presetPosition'
+    request_drlc_action = 'requestDrlcAction'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
-    set_fan_speed = 'setFanSpeed'
     set_cooling_setpoint = 'setCoolingSetpoint'
+    set_fan_speed = 'setFanSpeed'
     set_heating_setpoint = 'setHeatingSetpoint'
     set_hue = 'setHue'
     set_level = 'setLevel'
+    set_saturation = 'setSaturation'
     set_thermostat_fan_mode = 'setThermostatFanMode'
     set_thermostat_mode = 'setThermostatMode'
-    set_saturation = 'setSaturation'
     unlock = 'unlock'
 
 
@@ -371,6 +374,165 @@ class DeviceStatusBase:
         """Get the windowShade attribute."""
         return self._attributes[Attribute.window_shade].value
 
+    @property
+    def drlc_status(self) -> Optional[dict]:
+        """Get the demand response load control status."""
+        return self._attributes[Attribute.drlc_status].value
+
+    @property
+    def drlc_status_duration(self) -> Optional[int]:
+        """Get the duration component of the drlc status."""
+        try:
+            return int(self.drlc_status['duration'])
+        except (KeyError, ValueError, TypeError):
+            return None
+
+    @property
+    def drlc_status_level(self) -> Optional[int]:
+        """Get the level component of the drlc status."""
+        try:
+            return int(self.drlc_status['drlcLevel'])
+        except (KeyError, ValueError, TypeError):
+            return None
+
+    @property
+    def drlc_status_start(self) -> Optional[str]:
+        """Get the level component of the drlc status."""
+        try:
+            return self.drlc_status['start']
+        except (KeyError, TypeError):
+            return None
+
+    @property
+    def drlc_status_override(self) -> Optional[bool]:
+        """Get the override component of the drlc status."""
+        try:
+            return bool(self.drlc_status['override'])
+        except (KeyError, ValueError, TypeError):
+            return None
+
+    @property
+    def power_consumption(self) -> Optional[dict]:
+        """Get the power consumption report data."""
+        return self._attributes[Attribute.power_consumption].value
+
+    @property
+    def power_consumption_start(self) -> Optional[str]:
+        """Get the start component of power consumption data."""
+        try:
+            return self.power_consumption['start']
+        except (KeyError, TypeError):
+            return None
+
+    @property
+    def power_consumption_power(self) -> Optional[int]:
+        """Get the power component of power consumption data."""
+        try:
+            return int(self.power_consumption['power'])
+        except (KeyError, ValueError, TypeError):
+            return None
+
+    @property
+    def power_consumption_energy(self) -> Optional[int]:
+        """Get the energy component of power consumption data."""
+        try:
+            return int(self.power_consumption['energy'])
+        except (KeyError, ValueError, TypeError):
+            return None
+
+    @property
+    def power_consumption_end(self) -> Optional[str]:
+        """Get the end component of power consumption data."""
+        try:
+            return self.power_consumption['end']
+        except (KeyError, TypeError):
+            return None
+
+    @property
+    def ocf_system_time(self) -> Optional[str]:
+        """Get the OCF system time."""
+        return self._attributes[Attribute.st].value
+
+    @property
+    def ocf_firmware_version(self) -> Optional[str]:
+        """Get the OCF firmware version."""
+        return self._attributes[Attribute.mnfv].value
+
+    @property
+    def ocf_date_of_manufacture(self) -> Optional[str]:
+        """Get the OCF date of manufacture."""
+        return self._attributes[Attribute.mndt].value
+
+    @property
+    def ocf_hardware_version(self) -> Optional[str]:
+        """Get the OCF hardware version."""
+        return self._attributes[Attribute.mnhw].value
+
+    @property
+    def ocf_device_id(self) -> Optional[str]:
+        """Get the OCF device id."""
+        return self._attributes[Attribute.di].value
+
+    @property
+    def ocf_support_link(self) -> Optional[str]:
+        """Get the OCF support link."""
+        return self._attributes[Attribute.mnsl].value
+
+    @property
+    def ocf_data_model_version(self) -> Optional[str]:
+        """Get the OCF data model version."""
+        return self._attributes[Attribute.dmv].value
+
+    @property
+    def ocf_name(self) -> Optional[str]:
+        """Get the OCF name."""
+        return self._attributes[Attribute.n].value
+
+    @property
+    def ocf_vendor_id(self) -> Optional[str]:
+        """Get the OCF vendor id."""
+        return self._attributes[Attribute.vid].value
+
+    @property
+    def ocf_model_number(self):
+        """Get the OCF model number."""
+        return self._attributes[Attribute.mnmo].value
+
+    @property
+    def ocf_manufacturer_name(self) -> Optional[str]:
+        """Get the OCF manufacturer name."""
+        return self._attributes[Attribute.mnmn].value
+
+    @property
+    def ocf_manufacturer_details_link(self) -> Optional[str]:
+        """Get the OCF manufacturer details link."""
+        return self._attributes[Attribute.mnml].value
+
+    @property
+    def ocf_platform_version(self) -> Optional[str]:
+        """Get the OCF platform version."""
+        return self._attributes[Attribute.mnpv].value
+
+    @property
+    def ocf_os_version(self) -> Optional[str]:
+        """Get the OCF OS version."""
+        return self._attributes[Attribute.mnos].value
+
+    @property
+    def ocf_platform_id(self) -> Optional[str]:
+        """Get the OCF platform id."""
+        return self._attributes[Attribute.pi].value
+
+    @property
+    def ocf_spec_version(self) -> Optional[str]:
+        """Get the OCF spec version."""
+        return self._attributes[Attribute.icv].value
+
+    @property
+    def data(self) -> Optional[dict]:
+        """Get the data attribute."""
+        return self._attributes[Attribute.data].value
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -689,6 +851,60 @@ class DeviceEntity(Entity, Device):
         """Call the close device command."""
         return await self.command(
             component_id, Capability.window_shade, Command.close)
+
+    async def request_drlc_action(
+            self, drlc_type: int, drlc_level: int, start: str, duration: int,
+            reporting_period: int = None, *, set_status: bool = False,
+            component_id: str = 'main'):
+        """Call the drlc action command."""
+        args = [
+            drlc_type,
+            drlc_level,
+            start,
+            duration
+        ]
+        if reporting_period is not None:
+            args.append(reporting_period)
+        result = await self.command(
+            component_id, Capability.demand_response_load_control,
+            Command.request_drlc_action, args)
+        if result and set_status:
+            data = {
+                "duration": duration,
+                "drlcLevel": drlc_level,
+                "start": start,
+                "override": False
+            }
+            self.status.apply_attribute_update(
+                component_id, Capability.demand_response_load_control,
+                Attribute.drlc_status, data)
+        return result
+
+    async def override_drlc_action(
+            self, value: bool, *, set_status: bool = False,
+            component_id: str = 'main'):
+        """Call the drlc override command."""
+        result = await self.command(
+            component_id, Capability.demand_response_load_control,
+            Command.override_drlc_action, [value])
+        if result and set_status:
+            data = self.status.drlc_status
+            if not data:
+                data = {}
+                self.status.apply_attribute_update(
+                    component_id, Capability.demand_response_load_control,
+                    Attribute.drlc_status, data)
+            data['override'] = value
+        return result
+
+    async def execute(self, command: str, args: Dict = None, *,
+                      component_id: str = 'main'):
+        """Call the execute command."""
+        command_args = [command]
+        if args:
+            command_args.append(args)
+        return await self.command(component_id, Capability.execute,
+                                  Command.execute, command_args)
 
     @property
     def status(self):
