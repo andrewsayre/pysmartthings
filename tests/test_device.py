@@ -1021,7 +1021,7 @@ class TestDeviceStatus:
         assert status.ocf_manufacturer_details_link == 'http://www.samsung.com'
         assert status.ocf_manufacturer_name == 'Samsung Electronics'
         assert status.ocf_model_number == \
-               'ARTIK051_KRAC_18K|10193441|60010123001111010200000000000000'
+            'ARTIK051_KRAC_18K|10193441|60010123001111010200000000000000'
         assert status.ocf_name == 'Air Conditioner'
         assert status.ocf_os_version == 'TizenRT2.0'
         assert status.ocf_platform_id == 'd5226d90-1b4f-e59d-5f3f-027ac3b18faf'

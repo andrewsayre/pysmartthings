@@ -452,17 +452,17 @@ class DeviceStatusBase:
     def ocf_system_time(self) -> Optional[str]:
         """Get the OCF system time."""
         return self._attributes[Attribute.st].value
-    
+
     @property
     def ocf_firmware_version(self) -> Optional[str]:
         """Get the OCF firmware version."""
         return self._attributes[Attribute.mnfv].value
-    
+
     @property
     def ocf_date_of_manufacture(self) -> Optional[str]:
         """Get the OCF date of manufacture."""
         return self._attributes[Attribute.mndt].value
-    
+
     @property
     def ocf_hardware_version(self) -> Optional[str]:
         """Get the OCF hardware version."""
