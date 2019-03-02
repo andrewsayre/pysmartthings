@@ -709,6 +709,48 @@ class TestDeviceEntity:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_request_drlc_action(api):
+        """Tests the request_drlc_action method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.request_drlc_action(
+            1, 2, '1970-01-01T00:00:00Z', 10, 1)
+        assert device.status.drlc_status is None
+        assert await device.request_drlc_action(
+            1, 2, '1970-01-01T00:00:00Z', 10, 1, set_status=True)
+        assert device.status.drlc_status == {
+            "duration": 10,
+            "drlcLevel": 2,
+            "start": '1970-01-01T00:00:00Z',
+            "override": False
+        }
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_override_drlc_action(api):
+        """Tests the override_drlc_action method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.override_drlc_action(True)
+        assert device.status.drlc_status is None
+        assert await device.override_drlc_action(True, set_status=True)
+        assert device.status.drlc_status == {
+            "override": True
+        }
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_execute(api):
+        """Tests the execute method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.execute('Test', {'data': 'Test'})
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_preset_position(api):
         """Tests the preset_position method."""
         # Arrange

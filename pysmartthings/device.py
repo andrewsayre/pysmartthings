@@ -852,6 +852,60 @@ class DeviceEntity(Entity, Device):
         return await self.command(
             component_id, Capability.window_shade, Command.close)
 
+    async def request_drlc_action(
+            self, drlc_type: int, drlc_level: int, start: str, duration: int,
+            reporting_period: int = None, *, set_status: bool = False,
+            component_id: str = 'main'):
+        """Call the drlc action command."""
+        args = [
+            drlc_type,
+            drlc_level,
+            start,
+            duration
+        ]
+        if reporting_period is not None:
+            args.append(reporting_period)
+        result = await self.command(
+            component_id, Capability.demand_response_load_control,
+            Command.request_drlc_action, args)
+        if result and set_status:
+            data = {
+                "duration": duration,
+                "drlcLevel": drlc_level,
+                "start": start,
+                "override": False
+            }
+            self.status.apply_attribute_update(
+                component_id, Capability.demand_response_load_control,
+                Attribute.drlc_status, data)
+        return result
+
+    async def override_drlc_action(
+            self, value: bool, *, set_status: bool = False,
+            component_id: str = 'main'):
+        """Call the drlc override command."""
+        result = await self.command(
+            component_id, Capability.demand_response_load_control,
+            Command.override_drlc_action, [value])
+        if result and set_status:
+            data = self.status.drlc_status
+            if not data:
+                data = {}
+                self.status.apply_attribute_update(
+                    component_id, Capability.demand_response_load_control,
+                    Attribute.drlc_status, data)
+            data['override'] = value
+        return result
+
+    async def execute(self, command: str, args: Dict = None, *,
+                      component_id: str = 'main'):
+        """Call the execute command."""
+        command_args = [command]
+        if args:
+            command_args.append(args)
+        return await self.command(component_id, Capability.execute,
+                                  Command.execute, command_args)
+
     @property
     def status(self):
         """Get the status entity of the device."""
