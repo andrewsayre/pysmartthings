@@ -758,6 +758,18 @@ class TestDeviceEntity:
         # Act/Assert
         assert await device.preset_position()
 
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_air_conditioner_mode(api):
+        """Tests the set_air_conditioner_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.set_air_conditioner_mode('auto')
+        assert device.status.air_conditioner_mode is None
+        assert await device.set_air_conditioner_mode('auto', set_status=True)
+        assert device.status.air_conditioner_mode == 'auto'
+
 
 class TestDeviceStatus:
     """Tests for the DeviceStatus class."""

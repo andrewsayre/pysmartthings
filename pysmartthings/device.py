@@ -42,6 +42,7 @@ class Command:
     override_drlc_action = 'overrideDrlcAction'
     preset_position = 'presetPosition'
     request_drlc_action = 'requestDrlcAction'
+    set_air_conditioner_mode = 'setAirConditionerMode'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
     set_cooling_setpoint = 'setCoolingSetpoint'
@@ -533,6 +534,11 @@ class DeviceStatusBase:
         """Get the data attribute."""
         return self._attributes[Attribute.data].value
 
+    @property
+    def air_conditioner_mode(self) -> Optional[str]:
+        """Get the air conditioner mode attribute."""
+        return self._attributes[Attribute.air_conditioner_mode].value
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -905,6 +911,17 @@ class DeviceEntity(Entity, Device):
             command_args.append(args)
         return await self.command(component_id, Capability.execute,
                                   Command.execute, command_args)
+
+    async def set_air_conditioner_mode(
+            self, mode: str, *, set_status: bool = False,
+            component_id: str = 'main'):
+        """Call the set air conditioner mode command."""
+        result = self.command(component_id, Capability.air_conditioner_mode,
+                              Command.set_air_conditioner_mode, [mode])
+        if result and set_status:
+            self.status.update_attribute_value(
+                Attribute.air_conditioner_mode, mode)
+        return result
 
     @property
     def status(self):
