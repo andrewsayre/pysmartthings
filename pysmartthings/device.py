@@ -916,8 +916,9 @@ class DeviceEntity(Entity, Device):
             self, mode: str, *, set_status: bool = False,
             component_id: str = 'main'):
         """Call the set air conditioner mode command."""
-        result = self.command(component_id, Capability.air_conditioner_mode,
-                              Command.set_air_conditioner_mode, [mode])
+        result = await self.command(
+            component_id, Capability.air_conditioner_mode,
+            Command.set_air_conditioner_mode, [mode])
         if result and set_status:
             self.status.update_attribute_value(
                 Attribute.air_conditioner_mode, mode)
