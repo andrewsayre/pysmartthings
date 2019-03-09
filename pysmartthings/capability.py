@@ -84,6 +84,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'thermostatMode': ['thermostatMode', 'supportedThermostatModes'],
     'thermostatOperatingState': ['thermostatOperatingState'],
     'thermostatSetpoint': ['thermostatSetpoint'],
+    'threeAxis': ['threeAxis'],
     'tvChannel': ['tvChannel'],
     'tvocMeasurement': ['tvocLevel'],
     'ultravioletIndex': ['ultravioletIndex'],
@@ -173,6 +174,7 @@ class Capability:
     thermostat_mode = 'thermostatMode'
     thermostat_operating_state = 'thermostatOperatingState'
     thermostat_setpoint = 'thermostatSetpoint'
+    three_axis = 'threeAxis'
     tv_channel = 'tvChannel'
     tvoc_measurement = 'tvocMeasurement'
     ultraviolet_index = 'ultravioletIndex'
@@ -286,6 +288,7 @@ class Attribute:
     thermostat_operating_state = 'thermostatOperatingState'
     thermostat_setpoint = 'thermostatSetpoint'
     thermostat_setpoint_range = 'thermostatSetpointRange'
+    three_axis = 'threeAxis'
     tv_channel = 'tvChannel'
     tvoc_level = 'tvocLevel'
     ultraviolet_index = 'ultravioletIndex'
