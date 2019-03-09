@@ -3,7 +3,8 @@
 import pytest
 
 from pysmartthings.capability import Attribute, Capability
-from pysmartthings.device import Device, DeviceEntity, DeviceStatus, DeviceType
+from pysmartthings.device import (
+    Device, DeviceEntity, DeviceStatus, DeviceType, Status)
 
 from .conftest import DEVICE_ID, LOCATION_ID, ROOM_ID
 from .utilities import get_json
@@ -807,11 +808,30 @@ class TestDeviceStatus:
         """Tests the apply_attribute_update method."""
         # Arrange
         data = get_json('device_status.json')
-        status = DeviceStatus(None, DEVICE_ID, data)
+        device = DeviceStatus(None, DEVICE_ID, data)
         # Act
-        status.apply_attribute_update('main', 'switchLevel', 'level', 50)
+        device.apply_attribute_update(
+            'main', Capability.switch_level, Attribute.level, 50, '%',
+            {'test': 'test'})
         # Assert
-        assert status.level == 50
+        status = device.attributes[Attribute.level]
+        assert status.value == 50
+        assert status.unit == '%'
+        assert status.data == {'test': 'test'}
+
+    @staticmethod
+    def test_apply_attribute_update_preserve_unit():
+        """Tests the apply_attribute_update preserves the old unit."""
+        # Arrange
+        data = get_json('device_status.json')
+        device = DeviceStatus(None, DEVICE_ID, data)
+        device.attributes[Capability.switch_level] = Status(40, '%', None)
+        # Act
+        device.apply_attribute_update(
+            'main', Capability.switch_level, Attribute.level, 50)
+        # Assert
+        status = device.attributes[Attribute.level]
+        assert status.unit == '%'
 
     @staticmethod
     def test_apply_attribute_update_child_status():

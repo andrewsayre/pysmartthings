@@ -184,7 +184,7 @@ class DeviceStatusBase:
             ATTRIBUTE_ON_VALUES[attribute]
 
     def update_attribute_value(self, attribute: str, value):
-        """Update the value of an attribute while mantaining unit and data."""
+        """Update the value of an attribute while maintaining unit and data."""
         status = self._attributes[attribute]
         self._attributes[attribute] = Status(value, status.unit, status.data)
 
@@ -553,14 +553,18 @@ class DeviceStatus(DeviceStatusBase):
             self.apply_data(data)
 
     def apply_attribute_update(self, component_id: str, capability: str,
-                               attribute: str, value: Any):
+                               attribute: str, value: Any,
+                               unit: Optional[str] = None,
+                               data: Optional[Dict] = None):
         """Apply an update to a specific attribute."""
-        # capability future usage.
-        if component_id == 'main':
-            self.update_attribute_value(attribute, value)
-        elif component_id in self._components.keys():
-            self._components[component_id].update_attribute_value(
-                attribute, value)
+        component = self
+        if component_id != 'main' and component_id in self._components:
+            component = self._components[component_id]
+
+        # preserve unit until fixed in the API
+        old_status = component.attributes[attribute]
+        component.attributes[attribute] = Status(
+            value, unit or old_status.unit, data)
 
     def apply_data(self, data: dict):
         """Apply the values from the given data structure."""
