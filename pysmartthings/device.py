@@ -3,7 +3,7 @@ from collections import defaultdict, namedtuple
 import colorsys
 from enum import Enum
 import re
-from typing import Any, Dict, Mapping, Optional, Sequence
+from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 
 from .api import Api
 from .capability import ATTRIBUTE_ON_VALUES, Attribute, Capability
@@ -538,6 +538,11 @@ class DeviceStatusBase:
     def air_conditioner_mode(self) -> Optional[str]:
         """Get the air conditioner mode attribute."""
         return self._attributes[Attribute.air_conditioner_mode].value
+
+    @property
+    def three_axis(self) -> Optional[Tuple[int, int, int]]:
+        """Get the three axis attribute."""
+        return self._attributes[Attribute.three_axis].value
 
 
 class DeviceStatus(DeviceStatusBase):

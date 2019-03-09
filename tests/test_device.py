@@ -1027,6 +1027,7 @@ class TestDeviceStatus:
         status.update_attribute_value(Attribute.door, 'open')
         status.update_attribute_value(Attribute.window_shade, 'closed')
         status.update_attribute_value(Attribute.data, {'test': 'test'})
+        status.update_attribute_value(Attribute.three_axis, [0, 0, 0])
         # Act/Assert
         assert status.humidity == 50
         assert status.temperature == 55
@@ -1037,6 +1038,7 @@ class TestDeviceStatus:
         assert status.door == 'open'
         assert status.window_shade == 'closed'
         assert status.data == {'test': 'test'}
+        assert status.three_axis == [0, 0, 0]
 
     @staticmethod
     def test_well_known_ocf_attributes():
