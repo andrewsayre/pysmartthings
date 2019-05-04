@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "airConditionerFanMode",
+      "command": "setFanMode",
+      "arguments": ["auto"]
+    }
+  ]
+}

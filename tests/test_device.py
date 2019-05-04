@@ -771,6 +771,30 @@ class TestDeviceEntity:
         assert await device.set_air_conditioner_mode('auto', set_status=True)
         assert device.status.air_conditioner_mode == 'auto'
 
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_fan_mode(api):
+        """Tests the set_fan_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.set_fan_mode('auto')
+        assert device.status.fan_mode is None
+        assert await device.set_fan_mode('auto', set_status=True)
+        assert device.status.fan_mode == 'auto'
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_air_flow_direction(api):
+        """Tests the set_air_flow_direction method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.set_air_flow_direction('fixed')
+        assert device.status.air_flow_direction is None
+        assert await device.set_air_flow_direction('fixed', set_status=True)
+        assert device.status.air_flow_direction == 'fixed'
+
 
 class TestDeviceStatus:
     """Tests for the DeviceStatus class."""
@@ -1015,6 +1039,10 @@ class TestDeviceStatus:
         """Tests the humidity property."""
         # Arrange
         status = DeviceStatus(None, device_id=DEVICE_ID)
+
+        assert status.supported_ac_modes == []
+        assert status.supported_ac_fan_modes == []
+
         status.update_attribute_value(Attribute.humidity, 50)
         status.update_attribute_value(Attribute.temperature, 55)
         status.update_attribute_value(
@@ -1028,6 +1056,11 @@ class TestDeviceStatus:
         status.update_attribute_value(Attribute.window_shade, 'closed')
         status.update_attribute_value(Attribute.data, {'test': 'test'})
         status.update_attribute_value(Attribute.three_axis, [0, 0, 0])
+        status.update_attribute_value(
+            Attribute.supported_ac_modes, ['auto', 'cool'])
+        status.update_attribute_value(Attribute.fan_mode, 'low')
+        status.update_attribute_value(
+            Attribute.supported_ac_fan_modes, ['auto', 'low'])
         # Act/Assert
         assert status.humidity == 50
         assert status.temperature == 55
@@ -1039,6 +1072,8 @@ class TestDeviceStatus:
         assert status.window_shade == 'closed'
         assert status.data == {'test': 'test'}
         assert status.three_axis == [0, 0, 0]
+        assert status.supported_ac_modes == ['auto', 'cool']
+        assert status.supported_ac_fan_modes == ['auto', 'low']
 
     @staticmethod
     def test_well_known_ocf_attributes():

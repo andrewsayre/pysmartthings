@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "airFlowDirection",
+      "command": "setAirFlowDirection",
+      "arguments": ["fixed"]
+    }
+  ]
+}
