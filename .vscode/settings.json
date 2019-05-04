@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "[python]": {
+        "editor.rulers": [79]
+    }
+}
