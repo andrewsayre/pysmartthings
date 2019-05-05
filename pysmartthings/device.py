@@ -42,10 +42,12 @@ class Command:
     override_drlc_action = 'overrideDrlcAction'
     preset_position = 'presetPosition'
     request_drlc_action = 'requestDrlcAction'
+    set_air_flow_direction = 'setAirFlowDirection'
     set_air_conditioner_mode = 'setAirConditionerMode'
     set_color = 'setColor'
     set_color_temperature = 'setColorTemperature'
     set_cooling_setpoint = 'setCoolingSetpoint'
+    set_fan_mode = 'setFanMode'
     set_fan_speed = 'setFanSpeed'
     set_heating_setpoint = 'setHeatingSetpoint'
     set_hue = 'setHue'
@@ -540,6 +542,32 @@ class DeviceStatusBase:
         return self._attributes[Attribute.air_conditioner_mode].value
 
     @property
+    def supported_ac_modes(self) -> Sequence[str]:
+        """Get the supported AC modes attribute."""
+        value = self._attributes[Attribute.supported_ac_modes].value
+        if isinstance(value, Sequence):
+            return sorted(value)
+        return []
+
+    @property
+    def fan_mode(self) -> Optional[str]:
+        """Get the fan mode attribute."""
+        return self._attributes[Attribute.fan_mode].value
+
+    @property
+    def supported_ac_fan_modes(self) -> Sequence[str]:
+        """Get the supported AC fan modes attribute."""
+        value = self._attributes[Attribute.supported_ac_fan_modes].value
+        if isinstance(value, Sequence):
+            return sorted(value)
+        return []
+
+    @property
+    def air_flow_direction(self) -> str:
+        """Get the airFlowDirection attribute."""
+        return self._attributes[Attribute.air_flow_direction].value
+
+    @property
     def three_axis(self) -> Optional[Tuple[int, int, int]]:
         """Get the three axis attribute."""
         return self._attributes[Attribute.three_axis].value
@@ -931,6 +959,28 @@ class DeviceEntity(Entity, Device):
         if result and set_status:
             self.status.update_attribute_value(
                 Attribute.air_conditioner_mode, mode)
+        return result
+
+    async def set_fan_mode(self, mode: str, *, set_status: bool = False,
+                           component_id: str = 'main'):
+        """Call the setFanMode command."""
+        result = await self.command(
+            component_id, Capability.air_conditioner_fan_mode,
+            Command.set_fan_mode, [mode])
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.fan_mode, mode)
+        return result
+
+    async def set_air_flow_direction(
+            self, direction: str, *, set_status: bool = False,
+            component_id: str = 'main'):
+        """Call the setAirFlowDirection command."""
+        result = await self.command(
+            component_id, Capability.air_flow_direction,
+            Command.set_air_flow_direction, [direction])
+        if result and set_status:
+            self.status.update_attribute_value(
+                Attribute.air_flow_direction, direction)
         return result
 
     @property

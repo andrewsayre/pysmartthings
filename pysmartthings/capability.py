@@ -7,7 +7,9 @@ https://smartthings.developer.samsung.com/docs/api-ref/capabilities.html
 CAPABILITIES_TO_ATTRIBUTES = {
     'accelerationSensor': ['acceleration'],
     'activityLightingMode': ['lightingMode'],
-    'airConditionerMode': ['airConditionerMode'],
+    'airConditionerFanMode': ['fanMode', 'supportedAcFanModes'],
+    'airConditionerMode': ['airConditionerMode', 'supportedAcModes'],
+    'airFlowDirection': ['airFlowDirection'],
     'airQualitySensor': ['airQuality'],
     'alarm': ['alarm'],
     'audioMute': ['mute'],
@@ -107,7 +109,9 @@ class Capability:
 
     acceleration_sensor = 'accelerationSensor'
     activity_lighting_mode = 'activityLightingMode'
+    air_conditioner_fan_mode = 'airConditionerFanMode'
     air_conditioner_mode = 'airConditionerMode'
+    air_flow_direction = 'airFlowDirection'
     air_quality_sensor = 'airQualitySensor'
     alarm = 'alarm'
     audio_mute = 'audioMute'
@@ -191,6 +195,7 @@ class Attribute:
 
     acceleration = 'acceleration'
     air_conditioner_mode = 'airConditionerMode'
+    air_flow_direction = 'airFlowDirection'
     air_quality = 'airQuality'
     alarm = 'alarm'
     battery = 'battery'
@@ -219,6 +224,7 @@ class Attribute:
     energy = 'energy'
     equivalent_carbon_dioxide_measurement = \
         'equivalentCarbonDioxideMeasurement'
+    fan_mode = 'fanMode'
     fan_speed = 'fanSpeed'
     filter_status = 'filterStatus'
     fine_dust_level = 'fineDustLevel'
@@ -274,6 +280,8 @@ class Attribute:
     smoke = 'smoke'
     sound = 'sound'
     st = 'st'
+    supported_ac_fan_modes = 'supportedAcFanModes'
+    supported_ac_modes = 'supportedAcModes'
     supported_button_values = 'supportedButtonValues'
     supported_input_sources = 'supportedInputSources'
     supported_machine_states = 'supportedMachineStates'
