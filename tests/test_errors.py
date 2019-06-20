@@ -44,12 +44,10 @@ class TestAPIResponseError:
         """Tests the initialization."""
         # Arrange/Act
         data = {
-            "requestId": "8B66A345-03B0-477F-A8A6-1A1CF0277040",
-            "error": {}
+            "requestId": "8B66A345-03B0-477F-A8A6-1A1CF0277040"
         }
         error = APIResponseError(None, None, status=422,
                                  message="Unprocessable Entity", data=data)
         # Assert
         assert str(error) == 'Unprocessable Entity (422): ' \
-            '{"requestId": "8B66A345-03B0-477F-A8A6-1A1CF0277040", ' \
-            '"error": {}}'
+            '{"requestId": "8B66A345-03B0-477F-A8A6-1A1CF0277040"}'
