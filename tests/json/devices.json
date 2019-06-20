@@ -231,7 +231,50 @@
                 "networkSecurityLevel": "UNKNOWN"
             },
             "type": "DTH"
-        }
+        },
+        {
+            "deviceId": "0473c5c0-fdae-4a62-9000-b57af9218a 65",
+            "name": "c2c-rgbw-color-bulb",
+            "label": "Desk Lamp",
+            "locationId": "c6358051-231c-49f3-90f0-d09f9cc 884d2",
+            "roomId": "902ca7f6-ff9a-42af-9432-55399b9582fc",
+            "components": [
+              {
+                "id": "main",
+                "capabilities": [
+                  {
+                    "id": "switch",
+                    "version": 1
+                  },
+                  {
+                    "id": "switchLevel",
+                    "version": 1
+                  },
+                  {
+                    "id": "colorControl",
+                    "version": 1
+                  },
+                  {
+                    "id": "colorTemperature",
+                    "version": 1
+                  },
+                  {
+                    "id": "refresh",
+                    "version": 1
+                  },
+                  {
+                    "id": "healthCheck",
+                    "version": 1
+                  }
+                ]
+              }
+            ],
+            "profile": {
+              "id": "4d24a797-e0c0-45ad-8725-04aa6eb2eeb1"
+            },
+            "viper": {},
+            "type": "VIPER"
+          }
     ],
     "_links": {}
 }
