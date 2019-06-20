@@ -1,4 +1,5 @@
 """Define errors that can be returned from the SmartThings API."""
+import json
 from typing import Optional, Sequence
 
 from aiohttp import ClientResponseError
@@ -57,7 +58,12 @@ class APIResponseError(ClientResponseError):
                          message=message, headers=headers)
         self._raw_error_response = data
         self._request_id = data.get('requestId')
-        self._error = APIErrorDetail(data['error'])
+        self._error = APIErrorDetail(data.get('error', {}))
+
+    def __str__(self):
+        """Return a string represenation of the error."""
+        return "{} ({}): {}".format(
+            self.message, self.status, json.dumps(self._raw_error_response))
 
     @property
     def raw_error_response(self):

@@ -22,7 +22,7 @@ class TestSmartThings:
         # Act
         devices = await smartthings.devices()
         # Assert
-        assert len(devices) == 4
+        assert len(devices) == 5
 
     @staticmethod
     @pytest.mark.asyncio

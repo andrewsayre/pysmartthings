@@ -64,6 +64,7 @@ class DeviceType(Enum):
     UNKNOWN = 'UNKNOWN'
     DTH = 'DTH'
     ENDPOINT_APP = 'ENDPOINT_APP'
+    VIPER = 'VIPER'
 
 
 class Device:
