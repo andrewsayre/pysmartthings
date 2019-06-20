@@ -1,8 +1,8 @@
 """Define errors that can be returned from the SmartThings API."""
-from aiohttp import ClientResponseError
 import json
 from typing import Optional, Sequence
 
+from aiohttp import ClientResponseError
 
 UNAUTHORIZED_ERROR = \
     "Authorization for the API is required, but the request has not been " \
