@@ -98,7 +98,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     'waterSensor': ['water'],
     'windowShade': ['windowShade']
 }
-CAPABILITIES = [c for c in CAPABILITIES_TO_ATTRIBUTES]
+CAPABILITIES = list(CAPABILITIES_TO_ATTRIBUTES)
 ATTRIBUTES = {attrib
               for attributes in CAPABILITIES_TO_ATTRIBUTES.values()
               for attrib in attributes}
