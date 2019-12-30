@@ -1,6 +1,8 @@
 {
-    "python.pythonPath": ".venv\\Scripts\\python.exe",
+    "python.pythonPath": "/Users/andrewsayre/repos/pysmartthings/.venv/bin/python3",
     "[python]": {
-        "editor.rulers": [79]
+        "editor.rulers": [
+            79
+        ]
     }
 }
