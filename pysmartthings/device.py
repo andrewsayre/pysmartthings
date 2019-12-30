@@ -1,7 +1,6 @@
 """Defines a SmartThings device."""
 from collections import defaultdict, namedtuple
 import colorsys
-from enum import Enum
 import re
 from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 
