@@ -9,7 +9,9 @@ from .capability import (
     Capability)
 from .const import __title__, __version__  # noqa
 from .device import (
-    Command, Device, DeviceEntity, DeviceStatus, DeviceStatusBase, DeviceType)
+    DEVICE_TYPE_DTH, DEVICE_TYPE_ENDPOINT_APP, DEVICE_TYPE_OCF,
+    DEVICE_TYPE_UNKNOWN, DEVICE_TYPE_VIPER, Command, Device, DeviceEntity,
+    DeviceStatus, DeviceStatusBase)
 from .errors import APIErrorDetail, APIInvalidGrant, APIResponseError
 from .installedapp import (
     InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
@@ -40,12 +42,16 @@ __all__ = [
     'Attribute',
     'Capability',
     # device
+    'DEVICE_TYPE_DTH',
+    'DEVICE_TYPE_ENDPOINT_APP',
+    'DEVICE_TYPE_OCF',
+    'DEVICE_TYPE_UNKNOWN',
+    'DEVICE_TYPE_VIPER',
     'Command',
     'Device',
     'DeviceEntity',
     'DeviceStatus',
     'DeviceStatusBase',
-    'DeviceType',
     # error
     'APIErrorDetail',
     'APIInvalidGrant',

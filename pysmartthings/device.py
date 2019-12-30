@@ -9,6 +9,12 @@ from .api import Api
 from .capability import ATTRIBUTE_ON_VALUES, Attribute, Capability
 from .entity import Entity
 
+DEVICE_TYPE_OCF = 'OCF'
+DEVICE_TYPE_DTH = 'DTH'
+DEVICE_TYPE_UNKNOWN = 'UNKNOWN'
+DEVICE_TYPE_ENDPOINT_APP = 'ENDPOINT_APP'
+DEVICE_TYPE_VIPER = 'VIPER'
+
 COLOR_HEX_MATCHER = re.compile('^#[A-Fa-f0-9]{6}$')
 Status = namedtuple('status', 'value unit data')
 STATUS_NONE = Status(None, None, None)
@@ -58,15 +64,6 @@ class Command:
     unlock = 'unlock'
 
 
-class DeviceType(Enum):
-    """Define the device type."""
-
-    UNKNOWN = 'UNKNOWN'
-    DTH = 'DTH'
-    ENDPOINT_APP = 'ENDPOINT_APP'
-    VIPER = 'VIPER'
-
-
 class Device:
     """Represents a SmartThings device."""
 
@@ -77,7 +74,7 @@ class Device:
         self._label = None
         self._location_id = None
         self._room_id = None
-        self._type = DeviceType.UNKNOWN
+        self._type = DEVICE_TYPE_UNKNOWN
         self._device_type_id = None
         self._device_type_name = None
         self._device_type_network = None
@@ -91,7 +88,7 @@ class Device:
         self._label = data['label']
         self._location_id = data['locationId']
         self._room_id = data.get('roomId')
-        self._type = DeviceType(data['type'])
+        self._type = data['type']
         self._components.clear()
         self._capabilities.clear()
         for component in data['components']:
@@ -101,7 +98,7 @@ class Device:
                 self._capabilities.extend(capabilities)
             else:
                 self._components[component_id] = capabilities
-        if self._type is DeviceType.DTH:
+        if self._type == DEVICE_TYPE_DTH:
             dth = data['dth']
             self._device_type_id = dth["deviceTypeId"]
             self._device_type_name = dth["deviceTypeName"]
@@ -140,7 +137,7 @@ class Device:
         return self._room_id
 
     @property
-    def type(self) -> DeviceType:
+    def type(self) -> str:
         """Get the SmartThings device type."""
         return self._type
 
