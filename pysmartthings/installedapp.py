@@ -8,6 +8,11 @@ from .entity import Entity
 from .subscription import SubscriptionEntity
 
 
+def format_install_url(app_id: str, location_id: str) -> str:
+    """Returns a web-based URL to auth and install a SmartApp."""
+    return f"https://account.smartthings.com/login?redirect=https%3A%2F%2Fstrongman-regional.api.smartthings.com%2F%3FappId%3D{app_id}%26locationId%3D{location_id}%26appType%3DENDPOINTAPP%26language%3Den%26clientOS%3Dweb%26theme%3Dsmartthings"
+
+
 class InstalledAppType(Enum):
     """Define the type of installed app."""
 
