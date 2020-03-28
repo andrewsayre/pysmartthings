@@ -14,14 +14,14 @@ class TestRoom:
     def test_apply_data():
         """Test the init method."""
         # Arrange
-        data = get_json('room.json')
+        data = get_json("room.json")
         room = Room()
         room.apply_data(data)
         # Assert
         assert room.room_id == ROOM_ID
         assert room.location_id == LOCATION_ID
-        assert room.name == 'Theater'
-        assert room.background_image == 'Test'
+        assert room.name == "Theater"
+        assert room.background_image == "Test"
 
 
 class TestRoomEntity:
@@ -36,7 +36,7 @@ class TestRoomEntity:
         # Act
         await entity.refresh()
         # Assert
-        assert entity.name == 'Theater'
+        assert entity.name == "Theater"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -44,10 +44,10 @@ class TestRoomEntity:
         """Tests the save method."""
         # Arrange
         entity = RoomEntity(api, location_id=LOCATION_ID, room_id=ROOM_ID)
-        entity.name = 'Theater'
-        entity.background_image = 'Test'
+        entity.name = "Theater"
+        entity.background_image = "Test"
         # Act
         await entity.save()
         # Assert
-        assert entity.name == 'Theater'
-        assert entity.background_image == 'Test'
+        assert entity.name == "Theater"
+        assert entity.background_image == "Test"

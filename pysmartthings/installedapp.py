@@ -12,9 +12,9 @@ class InstalledAppType(Enum):
     """Define the type of installed app."""
 
     UNKNOWN = "UNKNOWN"
-    LAMBDA_SMART_APP = 'LAMBDA_SMART_APP'
-    WEBHOOK_SMART_APP = 'WEBHOOK_SMART_APP'
-    BEHAVIOR = 'BEHAVIOR'
+    LAMBDA_SMART_APP = "LAMBDA_SMART_APP"
+    WEBHOOK_SMART_APP = "WEBHOOK_SMART_APP"
+    BEHAVIOR = "BEHAVIOR"
 
 
 class InstalledAppStatus(Enum):
@@ -45,17 +45,16 @@ class InstalledApp:
 
     def apply_data(self, data: dict):
         """Apply the data structure to the properties."""
-        self._installed_app_id = data['installedAppId']
-        self._installed_app_type = InstalledAppType(data['installedAppType'])
-        self._installed_app_status = \
-            InstalledAppStatus(data['installedAppStatus'])
-        self._display_name = data['displayName']
-        self._app_id = data['appId']
-        self._reference_id = data['referenceId']
-        self._location_id = data['locationId']
-        self._created_date = data['createdDate']
-        self._last_updated_date = data['lastUpdatedDate']
-        self._classifications = data['classifications']
+        self._installed_app_id = data["installedAppId"]
+        self._installed_app_type = InstalledAppType(data["installedAppType"])
+        self._installed_app_status = InstalledAppStatus(data["installedAppStatus"])
+        self._display_name = data["displayName"]
+        self._app_id = data["appId"]
+        self._reference_id = data["referenceId"]
+        self._location_id = data["locationId"]
+        self._created_date = data["createdDate"]
+        self._last_updated_date = data["lastUpdatedDate"]
+        self._classifications = data["classifications"]
 
     @property
     def installed_app_id(self) -> str:

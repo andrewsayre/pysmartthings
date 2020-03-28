@@ -10,9 +10,9 @@ from .entity import Entity
 class SourceType(Enum):
     """Define the source type of a subscription."""
 
-    UNKNOWN = 'UNKNOWN'
-    DEVICE = 'DEVICE'
-    CAPABILITY = 'CAPABILITY'
+    UNKNOWN = "UNKNOWN"
+    DEVICE = "DEVICE"
+    CAPABILITY = "CAPABILITY"
 
 
 class Subscription:
@@ -23,9 +23,9 @@ class Subscription:
         self._subscription_id = None
         self._installed_app_id = None
         self._source_type = SourceType.UNKNOWN
-        self._capability = '*'
-        self._attribute = '*'
-        self._value = '*'
+        self._capability = "*"
+        self._attribute = "*"
+        self._value = "*"
         self._state_change_only = True
         self._subscription_name = None
         # Capability-specific attributes
@@ -36,64 +36,60 @@ class Subscription:
 
     def apply_data(self, data: dict):
         """Set the states of the app with the supplied data."""
-        self._subscription_id = data['id']
-        self._installed_app_id = data['installedAppId']
-        self._source_type = SourceType(data['sourceType'])
+        self._subscription_id = data["id"]
+        self._installed_app_id = data["installedAppId"]
+        self._source_type = SourceType(data["sourceType"])
         if self._source_type is SourceType.CAPABILITY:
-            capability = data['capability']
-            self._location_id = capability['locationId']
-            self._capability = capability['capability']
-            self._attribute = capability.get('attribute', '*')
-            self._value = capability.get('value', '*')
-            self._state_change_only = capability.get(
-                'stateChangeOnly', True)
-            self._subscription_name = capability.get(
-                'subscriptionName', None)
+            capability = data["capability"]
+            self._location_id = capability["locationId"]
+            self._capability = capability["capability"]
+            self._attribute = capability.get("attribute", "*")
+            self._value = capability.get("value", "*")
+            self._state_change_only = capability.get("stateChangeOnly", True)
+            self._subscription_name = capability.get("subscriptionName", None)
         if self._source_type is SourceType.DEVICE:
-            device = data['device']
-            self._device_id = device['deviceId']
-            self._component_id = device.get('componentId', '*')
-            self._capability = device.get('capability', '*')
-            self._attribute = device.get('attribute', '*')
-            self._value = device.get('value', '*')
-            self._state_change_only = device.get('stateChangeOnly', True)
-            self._subscription_name = device.get('subscriptionName', None)
+            device = data["device"]
+            self._device_id = device["deviceId"]
+            self._component_id = device.get("componentId", "*")
+            self._capability = device.get("capability", "*")
+            self._attribute = device.get("attribute", "*")
+            self._value = device.get("value", "*")
+            self._state_change_only = device.get("stateChangeOnly", True)
+            self._subscription_name = device.get("subscriptionName", None)
 
     def to_data(self) -> dict:
         """Get a data structure representing this entity."""
-        data = {
-            'sourceType': self._source_type.value
-        }
+        data = {"sourceType": self._source_type.value}
         if self._source_type is SourceType.CAPABILITY:
             capability = {
-                'locationId': self._location_id,
-                'capability': self._capability
+                "locationId": self._location_id,
+                "capability": self._capability,
             }
-            if self._attribute and self._attribute != '*':
-                capability['attribute'] = self._attribute
-            if self._value and self._value != '*':
-                capability['value'] = self._value
+            if self._attribute and self._attribute != "*":
+                capability["attribute"] = self._attribute
+            if self._value and self._value != "*":
+                capability["value"] = self._value
             if not self._state_change_only:
-                capability['stateChangeOnly'] = False
+                capability["stateChangeOnly"] = False
             if self._subscription_name:
-                capability['subscriptionName'] = self._subscription_name
-            data['capability'] = capability
+                capability["subscriptionName"] = self._subscription_name
+            data["capability"] = capability
         if self._source_type is SourceType.DEVICE:
             device = {
-                'deviceId': self._device_id,
-                'stateChangeOnly': self._state_change_only
+                "deviceId": self._device_id,
+                "stateChangeOnly": self._state_change_only,
             }
-            if self._component_id and self._component_id != '*':
-                device['componentId'] = self._component_id
-            if self._capability and self._capability != '*':
-                device['capability'] = self._capability
-            if self._attribute and self._attribute != '*':
-                device['attribute'] = self._attribute
-            if self._value and self._value != '*':
-                device['value'] = self._value
+            if self._component_id and self._component_id != "*":
+                device["componentId"] = self._component_id
+            if self._capability and self._capability != "*":
+                device["capability"] = self._capability
+            if self._attribute and self._attribute != "*":
+                device["attribute"] = self._attribute
+            if self._value and self._value != "*":
+                device["value"] = self._value
             if self._subscription_name:
-                device['subscriptionName'] = self._subscription_name
-            data['device'] = device
+                device["subscriptionName"] = self._subscription_name
+            data["device"] = device
         return data
 
     @property
@@ -215,7 +211,8 @@ class SubscriptionEntity(Entity, Subscription):
     async def refresh(self):
         """Refresh the subscription information using the API."""
         data = await self._api.get_subscription(
-            self._installed_app_id, self._subscription_id)
+            self._installed_app_id, self._subscription_id
+        )
         self.apply_data(data)
 
     async def save(self):

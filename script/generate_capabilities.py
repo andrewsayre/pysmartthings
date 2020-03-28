@@ -12,8 +12,8 @@ def main():
     capabilities = CAPABILITIES.copy()
     capabilities.sort()
     for c in capabilities:
-        print("{} = '{}'".format(re.sub(r'([A-Z])', r'_\1', c).lower(), c))
+        print("{} = '{}'".format(re.sub(r"([A-Z])", r"_\1", c).lower(), c))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

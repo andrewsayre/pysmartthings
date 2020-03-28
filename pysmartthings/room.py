@@ -17,16 +17,16 @@ class Room:
 
     def apply_data(self, data: dict):
         """Apply the data structure to the class."""
-        self._room_id = data['roomId']
-        self._location_id = data['locationId']
-        self._name = data['name']
-        self._background_image = data['backgroundImage']
+        self._room_id = data["roomId"]
+        self._location_id = data["locationId"]
+        self._name = data["name"]
+        self._background_image = data["backgroundImage"]
 
     def to_data(self) -> dict:
         """Get a data structure representing this entity."""
         data = {
-            'name': self._name,
-            'backgroundImage': self._background_image,
+            "name": self._name,
+            "backgroundImage": self._background_image,
         }
         return data
 
@@ -74,8 +74,14 @@ class Room:
 class RoomEntity(Room, Entity):
     """Defines a SmartThings room entity."""
 
-    def __init__(self, api: Api, data: Optional[Dict] = None, *,
-                 location_id: str = None, room_id: str = None):
+    def __init__(
+        self,
+        api: Api,
+        data: Optional[Dict] = None,
+        *,
+        location_id: str = None,
+        room_id: str = None
+    ):
         """Initialize the room."""
         Entity.__init__(self, api)
         Room.__init__(self)
@@ -95,6 +101,7 @@ class RoomEntity(Room, Entity):
     async def save(self):
         """Save changes to the room."""
         data = await self._api.update_room(
-            self._location_id, self._room_id, self.to_data())
+            self._location_id, self._room_id, self.to_data()
+        )
         if data:
             self.apply_data(data)

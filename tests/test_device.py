@@ -4,8 +4,13 @@ import pytest
 
 from pysmartthings.capability import Attribute, Capability
 from pysmartthings.device import (
-    DEVICE_TYPE_DTH, DEVICE_TYPE_UNKNOWN, Device, DeviceEntity, DeviceStatus,
-    Status)
+    DEVICE_TYPE_DTH,
+    DEVICE_TYPE_UNKNOWN,
+    Device,
+    DeviceEntity,
+    DeviceStatus,
+    Status,
+)
 
 from .conftest import DEVICE_ID, LOCATION_ID, ROOM_ID
 from .utilities import get_json
@@ -28,40 +33,47 @@ class TestDevice:
     def test_apply_data():
         """Tests the apply data method."""
         # Arrange
-        data = get_json('device.json')
+        data = get_json("device.json")
         device = Device()
         # Act
         device.apply_data(data)
         # Assert
         assert device.device_id == DEVICE_ID
-        assert device.name == 'GE In-Wall Smart Dimmer'
-        assert device.label == 'Front Porch Lights'
+        assert device.name == "GE In-Wall Smart Dimmer"
+        assert device.label == "Front Porch Lights"
         assert device.location_id == LOCATION_ID
         assert device.room_id == ROOM_ID
         assert device.type == DEVICE_TYPE_DTH
-        assert device.device_type_id == '8a9d4b1e3b9b1fe3013b9b206a7f000d'
-        assert device.device_type_name == 'Dimmer Switch'
-        assert device.device_type_network == 'ZWAVE'
+        assert device.device_type_id == "8a9d4b1e3b9b1fe3013b9b206a7f000d"
+        assert device.device_type_name == "Dimmer Switch"
+        assert device.device_type_network == "ZWAVE"
         assert device.capabilities == [
-            'switch', 'switchLevel', 'refresh', 'indicator', 'sensor',
-            'actuator', 'healthCheck', 'light']
+            "switch",
+            "switchLevel",
+            "refresh",
+            "indicator",
+            "sensor",
+            "actuator",
+            "healthCheck",
+            "light",
+        ]
         assert device.components == {
-            "bottomButton": ['button'],
-            "topButton": ['button']
+            "bottomButton": ["button"],
+            "topButton": ["button"],
         }
 
     @staticmethod
     def test_get_capability():
         """Test the capability retrieval method."""
         # Arrange
-        data = get_json('device.json')
+        data = get_json("device.json")
         device = Device()
         # Act
         device.apply_data(data)
         # Assert
-        assert device.get_capability('switch', 'light') == 'switch'
-        assert device.get_capability('foo', 'switch') == 'switch'
-        assert device.get_capability('foo', 'bar') is None
+        assert device.get_capability("switch", "light") == "switch"
+        assert device.get_capability("foo", "switch") == "switch"
+        assert device.get_capability("foo", "bar") is None
 
 
 class TestDeviceEntity:
@@ -76,7 +88,7 @@ class TestDeviceEntity:
         # Act
         await device.refresh()
         # Assert
-        assert device.label == 'Front Porch Lights'
+        assert device.label == "Front Porch Lights"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -160,7 +172,7 @@ class TestDeviceEntity:
         result = await device.lock(True)
         # Assert
         assert result
-        assert device.status.lock == 'locked'
+        assert device.status.lock == "locked"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -184,7 +196,7 @@ class TestDeviceEntity:
         result = await device.unlock(True)
         # Assert
         assert result
-        assert device.status.lock == 'unlocked'
+        assert device.status.lock == "unlocked"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -421,7 +433,7 @@ class TestDeviceEntity:
         assert result
         assert device.status.hue == 25
         assert device.status.saturation == 50
-        assert device.status.color == '#4B6432'
+        assert device.status.color == "#4B6432"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -430,7 +442,7 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        result = await device.set_color(color_hex='#4B6432')
+        result = await device.set_color(color_hex="#4B6432")
         # Assert
         assert result
         assert device.status.hue == 0
@@ -444,7 +456,7 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Assert
-        values = ['000000', '#00000', '#G00000']
+        values = ["000000", "#00000", "#G00000"]
         for value in values:
             with pytest.raises(ValueError):
                 await device.set_color(color_hex=value)
@@ -456,12 +468,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act
-        result = await device.set_color(color_hex='#4B6432', set_status=True)
+        result = await device.set_color(color_hex="#4B6432", set_status=True)
         # Assert
         assert result
         assert device.status.hue == 25
         assert device.status.saturation == 50
-        assert device.status.color == '#4B6432'
+        assert device.status.color == "#4B6432"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -470,12 +482,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         device.capabilities.append(Capability.thermostat)
-        device.status.thermostat_fan_mode = 'on'
+        device.status.thermostat_fan_mode = "on"
         # Act
-        result = await device.set_thermostat_fan_mode('auto')
+        result = await device.set_thermostat_fan_mode("auto")
         # Assert
         assert result
-        assert device.status.thermostat_fan_mode != 'auto'
+        assert device.status.thermostat_fan_mode != "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -484,12 +496,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         device.capabilities.append(Capability.thermostat_fan_mode)
-        device.status.thermostat_fan_mode = 'on'
+        device.status.thermostat_fan_mode = "on"
         # Act
-        result = await device.set_thermostat_fan_mode('auto')
+        result = await device.set_thermostat_fan_mode("auto")
         # Assert
         assert result
-        assert device.status.thermostat_fan_mode != 'auto'
+        assert device.status.thermostat_fan_mode != "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -498,12 +510,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         device.capabilities.append(Capability.thermostat_fan_mode)
-        device.status.thermostat_fan_mode = 'on'
+        device.status.thermostat_fan_mode = "on"
         # Act
-        result = await device.set_thermostat_fan_mode('auto', set_status=True)
+        result = await device.set_thermostat_fan_mode("auto", set_status=True)
         # Assert
         assert result
-        assert device.status.thermostat_fan_mode == 'auto'
+        assert device.status.thermostat_fan_mode == "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -512,12 +524,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         device.capabilities.append(Capability.thermostat)
-        device.status.thermostat_mode = 'heat'
+        device.status.thermostat_mode = "heat"
         # Act
-        result = await device.set_thermostat_mode('auto')
+        result = await device.set_thermostat_mode("auto")
         # Assert
         assert result
-        assert device.status.thermostat_mode != 'auto'
+        assert device.status.thermostat_mode != "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -526,12 +538,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         device.capabilities.append(Capability.thermostat_mode)
-        device.status.thermostat_mode = 'heat'
+        device.status.thermostat_mode = "heat"
         # Act
-        result = await device.set_thermostat_mode('auto')
+        result = await device.set_thermostat_mode("auto")
         # Assert
         assert result
-        assert device.status.thermostat_mode != 'auto'
+        assert device.status.thermostat_mode != "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -540,12 +552,12 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         device.capabilities.append(Capability.thermostat_mode)
-        device.status.thermostat_mode = 'heat'
+        device.status.thermostat_mode = "heat"
         # Act
-        result = await device.set_thermostat_mode('auto', set_status=True)
+        result = await device.set_thermostat_mode("auto", set_status=True)
         # Assert
         assert result
-        assert device.status.thermostat_mode == 'auto'
+        assert device.status.thermostat_mode == "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -642,7 +654,7 @@ class TestDeviceEntity:
         assert await device.open()
         assert device.status.door is None
         assert await device.open(set_status=True)
-        assert device.status.door == 'opening'
+        assert device.status.door == "opening"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -655,7 +667,7 @@ class TestDeviceEntity:
         assert await device.open()
         assert device.status.door is None
         assert await device.open(set_status=True)
-        assert device.status.door == 'opening'
+        assert device.status.door == "opening"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -668,7 +680,7 @@ class TestDeviceEntity:
         assert await device.close()
         assert device.status.door is None
         assert await device.close(set_status=True)
-        assert device.status.door == 'closing'
+        assert device.status.door == "closing"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -681,7 +693,7 @@ class TestDeviceEntity:
         assert await device.close()
         assert device.status.door is None
         assert await device.close(set_status=True)
-        assert device.status.door == 'closing'
+        assert device.status.door == "closing"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -694,7 +706,7 @@ class TestDeviceEntity:
         assert await device.open()
         assert device.status.window_shade is None
         assert await device.open(set_status=True)
-        assert device.status.window_shade == 'opening'
+        assert device.status.window_shade == "opening"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -707,7 +719,7 @@ class TestDeviceEntity:
         assert await device.close()
         assert device.status.window_shade is None
         assert await device.close(set_status=True)
-        assert device.status.window_shade == 'closing'
+        assert device.status.window_shade == "closing"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -716,16 +728,16 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act/Assert
-        assert await device.request_drlc_action(
-            1, 2, '1970-01-01T00:00:00Z', 10, 1)
+        assert await device.request_drlc_action(1, 2, "1970-01-01T00:00:00Z", 10, 1)
         assert device.status.drlc_status is None
         assert await device.request_drlc_action(
-            1, 2, '1970-01-01T00:00:00Z', 10, 1, set_status=True)
+            1, 2, "1970-01-01T00:00:00Z", 10, 1, set_status=True
+        )
         assert device.status.drlc_status == {
             "duration": 10,
             "drlcLevel": 2,
-            "start": '1970-01-01T00:00:00Z',
-            "override": False
+            "start": "1970-01-01T00:00:00Z",
+            "override": False,
         }
 
     @staticmethod
@@ -738,9 +750,7 @@ class TestDeviceEntity:
         assert await device.override_drlc_action(True)
         assert device.status.drlc_status is None
         assert await device.override_drlc_action(True, set_status=True)
-        assert device.status.drlc_status == {
-            "override": True
-        }
+        assert device.status.drlc_status == {"override": True}
 
     @staticmethod
     @pytest.mark.asyncio
@@ -749,7 +759,7 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act/Assert
-        assert await device.execute('Test', {'data': 'Test'})
+        assert await device.execute("Test", {"data": "Test"})
 
     @staticmethod
     @pytest.mark.asyncio
@@ -767,10 +777,10 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act/Assert
-        assert await device.set_air_conditioner_mode('auto')
+        assert await device.set_air_conditioner_mode("auto")
         assert device.status.air_conditioner_mode is None
-        assert await device.set_air_conditioner_mode('auto', set_status=True)
-        assert device.status.air_conditioner_mode == 'auto'
+        assert await device.set_air_conditioner_mode("auto", set_status=True)
+        assert device.status.air_conditioner_mode == "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -779,10 +789,10 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act/Assert
-        assert await device.set_fan_mode('auto')
+        assert await device.set_fan_mode("auto")
         assert device.status.fan_mode is None
-        assert await device.set_fan_mode('auto', set_status=True)
-        assert device.status.fan_mode == 'auto'
+        assert await device.set_fan_mode("auto", set_status=True)
+        assert device.status.fan_mode == "auto"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -791,10 +801,10 @@ class TestDeviceEntity:
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
         # Act/Assert
-        assert await device.set_air_flow_direction('fixed')
+        assert await device.set_air_flow_direction("fixed")
         assert device.status.air_flow_direction is None
-        assert await device.set_air_flow_direction('fixed', set_status=True)
-        assert device.status.air_flow_direction == 'fixed'
+        assert await device.set_air_flow_direction("fixed", set_status=True)
+        assert device.status.air_flow_direction == "fixed"
 
 
 class TestDeviceStatus:
@@ -811,13 +821,13 @@ class TestDeviceStatus:
         assert not status.switch
         assert not status.motion
         assert status.level == 0
-        assert status.component_id == 'main'
+        assert status.component_id == "main"
 
     @staticmethod
     def test_apply_data():
         """Tests the apply_data method."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         # Act
         status = DeviceStatus(None, DEVICE_ID, data)
         # Assert
@@ -825,98 +835,101 @@ class TestDeviceStatus:
         assert status.switch
         assert status.level == 100
         assert len(status.components) == 2
-        assert len(status.components['topButton'].attributes) == 3
-        assert len(status.components['bottomButton'].attributes) == 3
+        assert len(status.components["topButton"].attributes) == 3
+        assert len(status.components["bottomButton"].attributes) == 3
 
     @staticmethod
     def test_apply_attribute_update():
         """Tests the apply_attribute_update method."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         device = DeviceStatus(None, DEVICE_ID, data)
         # Act
         device.apply_attribute_update(
-            'main', Capability.switch_level, Attribute.level, 50, '%',
-            {'test': 'test'})
+            "main", Capability.switch_level, Attribute.level, 50, "%", {"test": "test"}
+        )
         # Assert
         status = device.attributes[Attribute.level]
         assert status.value == 50
-        assert status.unit == '%'
-        assert status.data == {'test': 'test'}
+        assert status.unit == "%"
+        assert status.data == {"test": "test"}
 
     @staticmethod
     def test_apply_attribute_update_preserve_unit():
         """Tests the apply_attribute_update preserves the old unit."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         device = DeviceStatus(None, DEVICE_ID, data)
-        device.attributes[Capability.switch_level] = Status(40, '%', None)
+        device.attributes[Capability.switch_level] = Status(40, "%", None)
         # Act
         device.apply_attribute_update(
-            'main', Capability.switch_level, Attribute.level, 50)
+            "main", Capability.switch_level, Attribute.level, 50
+        )
         # Assert
         status = device.attributes[Attribute.level]
-        assert status.unit == '%'
+        assert status.unit == "%"
 
     @staticmethod
     def test_apply_attribute_update_child_status():
         """Tests the apply_attribute_update method to a child status."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         status = DeviceStatus(None, DEVICE_ID, data)
         # Act
-        status.apply_attribute_update(
-            'bottomButton', 'switchLevel', 'level', 50)
+        status.apply_attribute_update("bottomButton", "switchLevel", "level", 50)
         # Assert
-        assert status.components['bottomButton'].level == 50
+        assert status.components["bottomButton"].level == 50
 
     @staticmethod
     def test_values():
         """Test the values property."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         status = DeviceStatus(None, DEVICE_ID, data)
         # Act/Assert
         assert status.values == {
-            'button': None,
-            'numberOfButtons': None,
-            'supportedButtonValues': None,
-            'indicatorStatus': 'when off',
-            'switch': 'on',
-            'checkInterval': 1920,
-            'healthStatus': None,
-            'DeviceWatch-DeviceStatus': None,
-            'level': 100
+            "button": None,
+            "numberOfButtons": None,
+            "supportedButtonValues": None,
+            "indicatorStatus": "when off",
+            "switch": "on",
+            "checkInterval": 1920,
+            "healthStatus": None,
+            "DeviceWatch-DeviceStatus": None,
+            "level": 100,
         }
 
     @staticmethod
     def test_attributes():
         """Test the attributes property."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         status = DeviceStatus(None, DEVICE_ID, data)
         # Act/Assert
         assert status.attributes == {
-            'button': (None, None, None),
-            'numberOfButtons': (None, None, None),
-            'supportedButtonValues': (None, None, None),
-            'indicatorStatus': ('when off', None, None),
-            'switch': ('on', None, None),
-            'checkInterval': (1920, 's', {"protocol": "zwave",
-                                          "hubHardwareId": "000F"}),
-            'healthStatus': (None, None, {}),
-            'DeviceWatch-DeviceStatus': (None, None, {}),
-            'level': (100, '%', None)
+            "button": (None, None, None),
+            "numberOfButtons": (None, None, None),
+            "supportedButtonValues": (None, None, None),
+            "indicatorStatus": ("when off", None, None),
+            "switch": ("on", None, None),
+            "checkInterval": (
+                1920,
+                "s",
+                {"protocol": "zwave", "hubHardwareId": "000F"},
+            ),
+            "healthStatus": (None, None, {}),
+            "DeviceWatch-DeviceStatus": (None, None, {}),
+            "level": (100, "%", None),
         }
 
     @staticmethod
     def test_attributes_default():
         """Test the attributes property."""
         # Arrange
-        data = get_json('device_status.json')
+        data = get_json("device_status.json")
         status = DeviceStatus(None, DEVICE_ID, data)
         # Act/Assert
-        assert status.attributes['thermostatSetpoint'] == (None, None, None)
+        assert status.attributes["thermostatSetpoint"] == (None, None, None)
 
     @staticmethod
     @pytest.mark.asyncio
@@ -1018,7 +1031,7 @@ class TestDeviceStatus:
         # Arrange
         status = DeviceStatus(None, device_id=DEVICE_ID)
         # Act/Assert
-        values = ['000000', '#00000', '#HH2000']
+        values = ["000000", "#00000", "#HH2000"]
         for value in values:
             with pytest.raises(ValueError):
                 status.color = value
@@ -1028,7 +1041,7 @@ class TestDeviceStatus:
         """Tests the is_on method."""
         # Arrange
         status = DeviceStatus(None, device_id=DEVICE_ID)
-        status.update_attribute_value(Attribute.acceleration, 'active')
+        status.update_attribute_value(Attribute.acceleration, "active")
         status.level = 100
         # Act/Assert
         assert status.is_on(Attribute.acceleration)
@@ -1046,60 +1059,61 @@ class TestDeviceStatus:
 
         status.update_attribute_value(Attribute.humidity, 50)
         status.update_attribute_value(Attribute.temperature, 55)
+        status.update_attribute_value(Attribute.thermostat_operating_state, "on")
         status.update_attribute_value(
-            Attribute.thermostat_operating_state, 'on')
+            Attribute.supported_thermostat_fan_modes, ["on", "off"]
+        )
         status.update_attribute_value(
-            Attribute.supported_thermostat_fan_modes, ['on', 'off'])
-        status.update_attribute_value(
-            Attribute.supported_thermostat_modes, ['auto', 'off'])
-        status.update_attribute_value(Attribute.lock, 'locked')
-        status.update_attribute_value(Attribute.door, 'open')
-        status.update_attribute_value(Attribute.window_shade, 'closed')
-        status.update_attribute_value(Attribute.data, {'test': 'test'})
+            Attribute.supported_thermostat_modes, ["auto", "off"]
+        )
+        status.update_attribute_value(Attribute.lock, "locked")
+        status.update_attribute_value(Attribute.door, "open")
+        status.update_attribute_value(Attribute.window_shade, "closed")
+        status.update_attribute_value(Attribute.data, {"test": "test"})
         status.update_attribute_value(Attribute.three_axis, [0, 0, 0])
-        status.update_attribute_value(
-            Attribute.supported_ac_modes, ['auto', 'cool'])
-        status.update_attribute_value(Attribute.fan_mode, 'low')
-        status.update_attribute_value(
-            Attribute.supported_ac_fan_modes, ['auto', 'low'])
+        status.update_attribute_value(Attribute.supported_ac_modes, ["auto", "cool"])
+        status.update_attribute_value(Attribute.fan_mode, "low")
+        status.update_attribute_value(Attribute.supported_ac_fan_modes, ["auto", "low"])
         # Act/Assert
         assert status.humidity == 50
         assert status.temperature == 55
-        assert status.thermostat_operating_state == 'on'
-        assert status.supported_thermostat_fan_modes == ['on', 'off']
-        assert status.supported_thermostat_modes == ['auto', 'off']
-        assert status.lock == 'locked'
-        assert status.door == 'open'
-        assert status.window_shade == 'closed'
-        assert status.data == {'test': 'test'}
+        assert status.thermostat_operating_state == "on"
+        assert status.supported_thermostat_fan_modes == ["on", "off"]
+        assert status.supported_thermostat_modes == ["auto", "off"]
+        assert status.lock == "locked"
+        assert status.door == "open"
+        assert status.window_shade == "closed"
+        assert status.data == {"test": "test"}
         assert status.three_axis == [0, 0, 0]
-        assert status.supported_ac_modes == ['auto', 'cool']
-        assert status.supported_ac_fan_modes == ['auto', 'low']
+        assert status.supported_ac_modes == ["auto", "cool"]
+        assert status.supported_ac_fan_modes == ["auto", "low"]
 
     @staticmethod
     def test_well_known_ocf_attributes():
         """Tests the OCF related attributes."""
         # Arrange
-        data = get_json('device_samsungac_status.json')
+        data = get_json("device_samsungac_status.json")
         status = DeviceStatus(None, device_id=DEVICE_ID, data=data)
         # Act/Assert
-        assert status.ocf_data_model_version == 'res.1.1.0,sh.1.1.0'
-        assert status.ocf_date_of_manufacture == '2019-02-26T02:05:55Z'
+        assert status.ocf_data_model_version == "res.1.1.0,sh.1.1.0"
+        assert status.ocf_date_of_manufacture == "2019-02-26T02:05:55Z"
         assert status.ocf_device_id == DEVICE_ID
-        assert status.ocf_firmware_version == '0.1.0'
-        assert status.ocf_hardware_version == '1.0'
-        assert status.ocf_manufacturer_details_link == 'http://www.samsung.com'
-        assert status.ocf_manufacturer_name == 'Samsung Electronics'
-        assert status.ocf_model_number == \
-            'ARTIK051_KRAC_18K|10193441|60010123001111010200000000000000'
-        assert status.ocf_name == 'Air Conditioner'
-        assert status.ocf_os_version == 'TizenRT2.0'
-        assert status.ocf_platform_id == 'd5226d90-1b4f-e59d-5f3f-027ac3b18faf'
-        assert status.ocf_platform_version == '0.1.0'
-        assert status.ocf_spec_version == 'core.1.1.0'
-        assert status.ocf_support_link == 'http://www.samsung.com/support'
-        assert status.ocf_system_time == '02:05:55Z'
-        assert status.ocf_vendor_id == 'DA-AC-RAC-000001'
+        assert status.ocf_firmware_version == "0.1.0"
+        assert status.ocf_hardware_version == "1.0"
+        assert status.ocf_manufacturer_details_link == "http://www.samsung.com"
+        assert status.ocf_manufacturer_name == "Samsung Electronics"
+        assert (
+            status.ocf_model_number
+            == "ARTIK051_KRAC_18K|10193441|60010123001111010200000000000000"
+        )
+        assert status.ocf_name == "Air Conditioner"
+        assert status.ocf_os_version == "TizenRT2.0"
+        assert status.ocf_platform_id == "d5226d90-1b4f-e59d-5f3f-027ac3b18faf"
+        assert status.ocf_platform_version == "0.1.0"
+        assert status.ocf_spec_version == "core.1.1.0"
+        assert status.ocf_support_link == "http://www.samsung.com/support"
+        assert status.ocf_system_time == "02:05:55Z"
+        assert status.ocf_vendor_id == "DA-AC-RAC-000001"
 
     @staticmethod
     def test_well_known_drlc_attributes():
@@ -1116,14 +1130,14 @@ class TestDeviceStatus:
             "duration": 0,
             "drlcLevel": -1,
             "start": "1970-01-01T00:00:00Z",
-            "override": False
+            "override": False,
         }
         status.update_attribute_value(Attribute.drlc_status, drlc_status)
         assert status.drlc_status == drlc_status
         assert status.drlc_status_duration == 0
         assert status.drlc_status_level == -1
         assert not status.drlc_status_override
-        assert status.drlc_status_start == '1970-01-01T00:00:00Z'
+        assert status.drlc_status_start == "1970-01-01T00:00:00Z"
         # Missing
         status.update_attribute_value(Attribute.drlc_status, {})
         assert status.drlc_status == {}
@@ -1132,10 +1146,7 @@ class TestDeviceStatus:
         assert status.drlc_status_override is None
         assert status.drlc_status_start is None
         # Not valid
-        drlc_status = {
-            "duration": 'Foo',
-            "drlcLevel": 'Foo'
-        }
+        drlc_status = {"duration": "Foo", "drlcLevel": "Foo"}
         status.update_attribute_value(Attribute.drlc_status, drlc_status)
         assert status.drlc_status == drlc_status
         assert status.drlc_status_duration is None
@@ -1156,14 +1167,14 @@ class TestDeviceStatus:
             "start": "2019-02-24T21:03:04Z",
             "power": 0,
             "energy": 500,
-            "end": "2019-02-26T02:05:55Z"
+            "end": "2019-02-26T02:05:55Z",
         }
         status.update_attribute_value(Attribute.power_consumption, data)
         assert status.power_consumption == data
-        assert status.power_consumption_end == '2019-02-26T02:05:55Z'
+        assert status.power_consumption_end == "2019-02-26T02:05:55Z"
         assert status.power_consumption_energy == 500
         assert status.power_consumption_power == 0
-        assert status.power_consumption_start == '2019-02-24T21:03:04Z'
+        assert status.power_consumption_start == "2019-02-24T21:03:04Z"
         # Missing
         status.update_attribute_value(Attribute.power_consumption, {})
         assert status.power_consumption == {}
@@ -1172,10 +1183,7 @@ class TestDeviceStatus:
         assert status.power_consumption_power is None
         assert status.power_consumption_start is None
         # Not valid
-        data = {
-            "power": "Foo",
-            "energy": "Bar"
-        }
+        data = {"power": "Foo", "energy": "Bar"}
         status.update_attribute_value(Attribute.power_consumption, data)
         assert status.power_consumption == data
         assert status.power_consumption_energy is None
