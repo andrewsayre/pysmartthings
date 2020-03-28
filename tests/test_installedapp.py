@@ -1,13 +1,12 @@
 """Tests for the installedapp module."""
 
-import pytest
-
 from pysmartthings.installedapp import (
     InstalledApp,
     InstalledAppEntity,
     InstalledAppStatus,
     InstalledAppType,
 )
+import pytest
 
 from .conftest import APP_ID, INSTALLED_APP_ID
 from .utilities import get_json

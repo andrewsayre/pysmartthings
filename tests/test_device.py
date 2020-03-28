@@ -1,7 +1,5 @@
 """Tests for the Device file."""
 
-import pytest
-
 from pysmartthings.capability import Attribute, Capability
 from pysmartthings.device import (
     DEVICE_TYPE_DTH,
@@ -11,6 +9,7 @@ from pysmartthings.device import (
     DeviceStatus,
     Status,
 )
+import pytest
 
 from .conftest import DEVICE_ID, LOCATION_ID, ROOM_ID
 from .utilities import get_json

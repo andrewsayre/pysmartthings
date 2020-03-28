@@ -1,7 +1,5 @@
 """Define tests for the app module."""
 
-import pytest
-
 from pysmartthings.app import (
     APP_TYPE_LAMBDA,
     APP_TYPE_WEBHOOK,
@@ -13,6 +11,7 @@ from pysmartthings.app import (
     AppSettings,
     AppSettingsEntity,
 )
+import pytest
 
 from .conftest import APP_ID
 from .utilities import get_json

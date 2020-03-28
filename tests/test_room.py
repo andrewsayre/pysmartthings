@@ -1,7 +1,6 @@
 """Tests for the room module."""
-import pytest
-
 from pysmartthings.room import Room, RoomEntity
+import pytest
 
 from .conftest import LOCATION_ID, ROOM_ID
 from .utilities import get_json

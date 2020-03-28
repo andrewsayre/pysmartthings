@@ -2,8 +2,6 @@
 import glob
 import re
 
-import pytest
-
 from pysmartthings.api import (
     API_APP,
     API_APP_OAUTH,
@@ -29,6 +27,7 @@ from pysmartthings.api import (
     Api,
 )
 from pysmartthings.smartthings import SmartThings
+import pytest
 
 from .utilities import ClientMocker
 

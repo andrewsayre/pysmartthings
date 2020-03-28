@@ -1,7 +1,6 @@
 """Tests for the scene module."""
-import pytest
-
 from pysmartthings.scene import Scene, SceneEntity
+import pytest
 
 from .utilities import get_json
 

@@ -1,8 +1,7 @@
 """Tests for the Location module."""
 
-import pytest
-
 from pysmartthings.location import Location, LocationEntity
+import pytest
 
 from .conftest import LOCATION_ID
 from .utilities import get_json
