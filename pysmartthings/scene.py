@@ -18,11 +18,11 @@ class Scene:
 
     def apply_data(self, data: dict):
         """Apply the data structure to the class."""
-        self._color = data['sceneColor']
-        self._icon = data['sceneIcon']
-        self._location_id = data['locationId']
-        self._name = data['sceneName']
-        self._scene_id = data['sceneId']
+        self._color = data["sceneColor"]
+        self._icon = data["sceneIcon"]
+        self._location_id = data["locationId"]
+        self._name = data["sceneName"]
+        self._scene_id = data["sceneId"]
 
     @property
     def color(self) -> str:
@@ -63,7 +63,7 @@ class SceneEntity(Entity, Scene):
     async def execute(self):
         """Execute the scene."""
         result = await self._api.execute_scene(self._scene_id)
-        return result == {'status': 'success'}
+        return result == {"status": "success"}
 
     async def refresh(self):
         """Refresh is not implemented."""

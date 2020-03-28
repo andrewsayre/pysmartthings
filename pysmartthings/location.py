@@ -24,15 +24,15 @@ class Location:
 
     def apply_data(self, data: dict):
         """Apply the given data structure to the location."""
-        self._name = data['name']
-        self._location_id = data['locationId']
-        self._latitude = data.get('latitude', None)
-        self._longitude = data.get('longitude', None)
-        self._region_radius = data.get('regionRadius', None)
-        self._temperature_scale = data.get('temperatureScale', None)
-        self._locale = data.get('locale', None)
-        self._country_code = data.get('countryCode', None)
-        self._timezone_id = data.get('timeZoneId', None)
+        self._name = data["name"]
+        self._location_id = data["locationId"]
+        self._latitude = data.get("latitude", None)
+        self._longitude = data.get("longitude", None)
+        self._region_radius = data.get("regionRadius", None)
+        self._temperature_scale = data.get("temperatureScale", None)
+        self._locale = data.get("locale", None)
+        self._country_code = data.get("countryCode", None)
+        self._timezone_id = data.get("timeZoneId", None)
 
     @property
     def name(self) -> str:
@@ -83,8 +83,9 @@ class Location:
 class LocationEntity(Entity, Location):
     """Define a location entity."""
 
-    def __init__(self, api: Api, data: Optional[dict] = None,
-                 location_id: Optional[str] = None):
+    def __init__(
+        self, api: Api, data: Optional[dict] = None, location_id: Optional[str] = None
+    ):
         """Create a new instance of the LocationEntity."""
         Entity.__init__(self, api)
         Location.__init__(self)
@@ -101,8 +102,7 @@ class LocationEntity(Entity, Location):
 
     async def save(self):
         """Location does not support updating at this time."""
-        raise NotImplementedError(
-            'Location does not support updating at this time.')
+        raise NotImplementedError("Location does not support updating at this time.")
 
     async def rooms(self) -> List[RoomEntity]:
         """Get the rooms contained within the location."""

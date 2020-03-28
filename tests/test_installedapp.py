@@ -1,9 +1,12 @@
 """Tests for the installedapp module."""
 
-import pytest
-
 from pysmartthings.installedapp import (
-    InstalledApp, InstalledAppEntity, InstalledAppStatus, InstalledAppType)
+    InstalledApp,
+    InstalledAppEntity,
+    InstalledAppStatus,
+    InstalledAppType,
+)
+import pytest
 
 from .conftest import APP_ID, INSTALLED_APP_ID
 from .utilities import get_json
@@ -27,20 +30,20 @@ class TestInstalledApp:
         """Tests the apply_data function."""
         # Arrange
         app = InstalledApp()
-        data = get_json('installedapp_get_response.json')
+        data = get_json("installedapp_get_response.json")
         # Act
         app.apply_data(data)
         # Assert
         assert app.installed_app_id == INSTALLED_APP_ID
         assert app.installed_app_type == InstalledAppType.WEBHOOK_SMART_APP
         assert app.installed_app_status == InstalledAppStatus.PENDING
-        assert app.display_name == 'pysmartthings'
+        assert app.display_name == "pysmartthings"
         assert app.app_id == APP_ID
         assert app.reference_id is None
-        assert app.location_id == '397678e5-9995-4a39-9d9f-ae6ba310236b'
-        assert app.created_date == '2018-12-19T02:49:58Z'
-        assert app.last_updated_date == '2018-12-19T02:49:58Z'
-        assert app.classifications == ['AUTOMATION']
+        assert app.location_id == "397678e5-9995-4a39-9d9f-ae6ba310236b"
+        assert app.created_date == "2018-12-19T02:49:58Z"
+        assert app.last_updated_date == "2018-12-19T02:49:58Z"
+        assert app.classifications == ["AUTOMATION"]
 
 
 class TestInstalledAppEntity:
@@ -51,8 +54,7 @@ class TestInstalledAppEntity:
     async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        app = InstalledAppEntity(
-            api, installed_app_id=INSTALLED_APP_ID)
+        app = InstalledAppEntity(api, installed_app_id=INSTALLED_APP_ID)
         # Act
         await app.refresh()
         # Assert
@@ -73,8 +75,7 @@ class TestInstalledAppEntity:
     async def test_subscriptions(api):
         """Tests the subscriptions method."""
         # Arrange
-        app = InstalledAppEntity(
-            api, installed_app_id=INSTALLED_APP_ID)
+        app = InstalledAppEntity(api, installed_app_id=INSTALLED_APP_ID)
         await app.refresh()
         # Act
         subscriptions = await app.subscriptions()

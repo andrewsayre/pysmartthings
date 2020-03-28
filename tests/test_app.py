@@ -1,10 +1,17 @@
 """Define tests for the app module."""
 
-import pytest
-
 from pysmartthings.app import (
-    APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK, CLASSIFICATION_AUTOMATION, App,
-    AppEntity, AppOAuth, AppOAuthEntity, AppSettings, AppSettingsEntity)
+    APP_TYPE_LAMBDA,
+    APP_TYPE_WEBHOOK,
+    CLASSIFICATION_AUTOMATION,
+    App,
+    AppEntity,
+    AppOAuth,
+    AppOAuthEntity,
+    AppSettings,
+    AppSettingsEntity,
+)
+import pytest
 
 from .conftest import APP_ID
 from .utilities import get_json
@@ -27,7 +34,7 @@ class TestApp:
         """Tests the apply_data function."""
         # Arrange
         app = App()
-        data = get_json('app_get.json')
+        data = get_json("app_get.json")
         # Act
         app.apply_data(data)
         # Assert
@@ -36,11 +43,12 @@ class TestApp:
         assert app.app_type == "WEBHOOK_SMART_APP"
         assert app.classifications == [CLASSIFICATION_AUTOMATION]
         assert app.display_name == "Test"
-        assert app.description == \
-            "A SmartApp that relays events to the pysmartthings library"
+        assert (
+            app.description
+            == "A SmartApp that relays events to the pysmartthings library"
+        )
         assert app.single_instance
-        assert app.webhook_target_url == \
-            "https://homeassistant.sayre.net:8321/"
+        assert app.webhook_target_url == "https://homeassistant.sayre.net:8321/"
         assert app.webhook_public_key
         assert app.created_date == "2018-12-15T17:07:41Z"
         assert app.last_updated_date == "2018-12-15T17:07:42Z"
@@ -64,7 +72,7 @@ class TestApp:
         app = App()
         # Act/Assert
         with pytest.raises(ValueError):
-            app.app_name = ''
+            app.app_name = ""
         with pytest.raises(ValueError):
             app.app_name = None
         with pytest.raises(ValueError):
@@ -89,11 +97,11 @@ class TestApp:
         app = App()
         # Act/Assert
         with pytest.raises(ValueError):
-            app.display_name = ''
+            app.display_name = ""
         with pytest.raises(ValueError):
             app.display_name = None
         with pytest.raises(ValueError):
-            app.display_name = 'x' * 76
+            app.display_name = "x" * 76
 
     @staticmethod
     def test_description():
@@ -114,11 +122,11 @@ class TestApp:
         app = App()
         # Act/Assert
         with pytest.raises(ValueError):
-            app.description = ''
+            app.description = ""
         with pytest.raises(ValueError):
             app.description = None
         with pytest.raises(ValueError):
-            app.description = 'x' * 251
+            app.description = "x" * 251
 
     @staticmethod
     def test_single_instance():
@@ -163,11 +171,11 @@ class TestApp:
         app = App()
         # Act/Assert
         with pytest.raises(ValueError):
-            app.app_type = ''
+            app.app_type = ""
         with pytest.raises(ValueError):
             app.app_type = None
         with pytest.raises(ValueError):
-            app.app_type = 'Some type'
+            app.app_type = "Some type"
 
     @staticmethod
     def test_lambda_functions():
@@ -177,7 +185,8 @@ class TestApp:
         # Act
         app.lambda_functions.append(
             "arn:aws:lambda:eu-central-1:account-id:"
-            "function:function-name:alias-name")
+            "function:function-name:alias-name"
+        )
         # Assert
         assert app.lambda_functions
 
@@ -209,23 +218,23 @@ class TestAppSettings:
     def test_apply_data():
         """Tests the apply_data method."""
         # Arrange
-        data = get_json('app_settings.json')
+        data = get_json("app_settings.json")
         settings = AppSettings(APP_ID)
         # Act
         settings.apply_data(data)
         # Assert
-        assert settings.settings['test'] == 'test'
+        assert settings.settings["test"] == "test"
 
     @staticmethod
     def test_to_data():
         """Tests the to_data method."""
         # Arrange
         settings = AppSettings(APP_ID)
-        settings.settings = {'test': 'test'}
+        settings.settings = {"test": "test"}
         # Act
         data = settings.to_data()
         # Assert
-        assert data == {'settings': {'test': 'test'}}
+        assert data == {"settings": {"test": "test"}}
 
 
 class TestAppSettingsEntity:
@@ -236,12 +245,12 @@ class TestAppSettingsEntity:
     async def test_refresh(api):
         """Tests data is refreshed."""
         # Arrange
-        data = {'settings': {'test2': 'test'}}
+        data = {"settings": {"test2": "test"}}
         settings = AppSettingsEntity(api, APP_ID, data)
         # Act
         await settings.refresh()
         # Assert
-        assert settings.settings == {'test': 'test'}
+        assert settings.settings == {"test": "test"}
 
     @staticmethod
     @pytest.mark.asyncio
@@ -258,12 +267,12 @@ class TestAppSettingsEntity:
     async def test_save(api):
         """Tests the save function."""
         # Arrange
-        data = {'settings': {'test': 'test'}}
+        data = {"settings": {"test": "test"}}
         settings = AppSettingsEntity(api, APP_ID, data)
         # Act
         await settings.save()
         # Assert
-        assert settings.settings == {'test': 'test'}
+        assert settings.settings == {"test": "test"}
 
     @staticmethod
     @pytest.mark.asyncio
@@ -284,14 +293,13 @@ class TestAppEntity:
     async def test_refresh(api):
         """Tests data is refreshed."""
         # Arrange
-        data = get_json('apps.json')['items'][0]
+        data = get_json("apps.json")["items"][0]
         app = AppEntity(api, data)
         # Act
         await app.refresh()
         # Assert
         assert app.single_instance
-        assert app.webhook_target_url == \
-            "https://homeassistant.sayre.net:8321/"
+        assert app.webhook_target_url == "https://homeassistant.sayre.net:8321/"
         assert app.webhook_public_key
 
     @staticmethod
@@ -299,7 +307,7 @@ class TestAppEntity:
     async def test_save(api):
         """Tests updating an entity."""
         # Arrange
-        data = get_json('app_get.json')
+        data = get_json("app_get.json")
         app = AppEntity(api, data)
         before = app.last_updated_date
         # Act
@@ -312,13 +320,13 @@ class TestAppEntity:
     async def test_oauth(api):
         """Tests the oauth method."""
         # Arrange
-        data = get_json('app_get.json')
+        data = get_json("app_get.json")
         app = AppEntity(api, data)
         # Act
         oauth = await app.oauth()
         # Assert
         assert oauth.app_id == app.app_id
-        assert oauth.client_name == 'pysmartthings-test'
+        assert oauth.client_name == "pysmartthings-test"
         assert oauth.scope == ["r:devices"]
 
     @staticmethod
@@ -326,12 +334,12 @@ class TestAppEntity:
     async def test_settings(api):
         """Tests the settings method."""
         # Arrange
-        data = get_json('app_get.json')
+        data = get_json("app_get.json")
         app = AppEntity(api, data)
         # Act
         settings = await app.settings()
         # Assert
-        assert settings.settings == {'test': 'test'}
+        assert settings.settings == {"test": "test"}
 
 
 class TestOAuth:
@@ -341,7 +349,7 @@ class TestOAuth:
     def test_init():
         """Tests the initialization."""
         # Arrange
-        app_id = '5c03e518-118a-44cb-85ad-7877d0b302e4'
+        app_id = "5c03e518-118a-44cb-85ad-7877d0b302e4"
         # Act
         oauth = AppOAuth(app_id)
         # Assert
@@ -352,7 +360,7 @@ class TestOAuth:
     def test_client_name():
         """Tests get/set of client name."""
         # Arrange
-        oauth = AppOAuth('5c03e518-118a-44cb-85ad-7877d0b302e4')
+        oauth = AppOAuth("5c03e518-118a-44cb-85ad-7877d0b302e4")
         # Act
         expected = "my_app"
         oauth.client_name = expected
@@ -364,10 +372,10 @@ class TestOAuth:
     def test_client_name_invalid():
         """Tests setting an invalid client name."""
         # Arrange
-        oauth = AppOAuth('5c03e518-118a-44cb-85ad-7877d0b302e4')
+        oauth = AppOAuth("5c03e518-118a-44cb-85ad-7877d0b302e4")
         # Act/Assert
         with pytest.raises(ValueError):
-            oauth.client_name = ''
+            oauth.client_name = ""
 
 
 class TestOAuthEntity:
@@ -378,22 +386,20 @@ class TestOAuthEntity:
     async def test_refresh(api):
         """Tests the refresh method."""
         # Arrange
-        entity = AppOAuthEntity(
-            api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
+        entity = AppOAuthEntity(api, "c6cde2b0-203e-44cf-a510-3b3ed4706996", None)
         # Act
         await entity.refresh()
         # Assert
-        assert entity.client_name == 'pysmartthings-test'
-        assert 'r:devices' in entity.scope
+        assert entity.client_name == "pysmartthings-test"
+        assert "r:devices" in entity.scope
 
     @staticmethod
     @pytest.mark.asyncio
     async def test_save(api):
         """Tests the refresh method."""
         # Arrange
-        entity = AppOAuthEntity(
-            api, 'c6cde2b0-203e-44cf-a510-3b3ed4706996', None)
-        entity.client_name = 'pysmartthings-test'
-        entity.scope.append('r:devices')
+        entity = AppOAuthEntity(api, "c6cde2b0-203e-44cf-a510-3b3ed4706996", None)
+        entity.client_name = "pysmartthings-test"
+        entity.scope.append("r:devices")
         # Act/Assert
         await entity.save()

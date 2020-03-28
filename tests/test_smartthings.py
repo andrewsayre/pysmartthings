@@ -1,14 +1,22 @@
 """Tests for the SmartThings file."""
 
-import pytest
-
 from pysmartthings.app import App, AppOAuth, AppSettings
 from pysmartthings.room import Room
 from pysmartthings.subscription import Subscription
+import pytest
 
 from .conftest import (
-    APP_ID, CLIENT_ID, CLIENT_SECRET, DEVICE_ID, INSTALLED_APP_ID, LOCATION_ID,
-    REFRESH_TOKEN, ROOM_ID, SCENE_ID, SUBSCRIPTION_ID)
+    APP_ID,
+    CLIENT_ID,
+    CLIENT_SECRET,
+    DEVICE_ID,
+    INSTALLED_APP_ID,
+    LOCATION_ID,
+    REFRESH_TOKEN,
+    ROOM_ID,
+    SCENE_ID,
+    SUBSCRIPTION_ID,
+)
 from .utilities import get_json
 
 
@@ -31,9 +39,12 @@ class TestSmartThings:
         # Act
         devices = await smartthings.devices(
             location_ids=[LOCATION_ID],
-            capabilities=['switch'],
-            device_ids=['edd26ac6-d156-4505-9647-3b20118ae4d1',
-                        'be1a61ce-c2a4-4b32-bf8c-31de6d3fa7dd'])
+            capabilities=["switch"],
+            device_ids=[
+                "edd26ac6-d156-4505-9647-3b20118ae4d1",
+                "be1a61ce-c2a4-4b32-bf8c-31de6d3fa7dd",
+            ],
+        )
         # Assert
         assert len(devices) == 2
 
@@ -79,8 +90,8 @@ class TestSmartThings:
         """Tests the create room method."""
         # Arrange
         room = Room()
-        room.name = 'Theater'
-        room.background_image = 'Test'
+        room.name = "Theater"
+        room.background_image = "Test"
         room.location_id = LOCATION_ID
         # Act
         room = await smartthings.create_room(room)
@@ -93,8 +104,8 @@ class TestSmartThings:
         """Tests the create room method."""
         # Arrange
         room = Room()
-        room.name = 'Theater'
-        room.background_image = 'Test'
+        room.name = "Theater"
+        room.background_image = "Test"
         room.location_id = LOCATION_ID
         room.room_id = ROOM_ID
         # Act
@@ -144,15 +155,15 @@ class TestSmartThings:
         """Tests the create app method."""
         # Arrange
         app = App()
-        data = get_json('app_post_request.json')
-        data['appId'] = APP_ID
+        data = get_json("app_post_request.json")
+        data["appId"] = APP_ID
         app.apply_data(data)
         # Act
         app, oauth = await smartthings.create_app(app)
         # Assert
         assert app.app_id == APP_ID
-        assert oauth.client_id == '7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be'
-        assert oauth.client_secret == '9b3fd445-42d6-441b-b386-99ea51e13cb0'
+        assert oauth.client_id == "7cd4d474-7b36-4e03-bbdb-4cd4ae45a2be"
+        assert oauth.client_secret == "9b3fd445-42d6-441b-b386-99ea51e13cb0"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -171,7 +182,7 @@ class TestSmartThings:
         settings = await smartthings.app_settings(APP_ID)
         # Assert
         assert settings.app_id == APP_ID
-        assert settings.settings == {'test': 'test'}
+        assert settings.settings == {"test": "test"}
 
     @staticmethod
     @pytest.mark.asyncio
@@ -179,12 +190,12 @@ class TestSmartThings:
         """Tests updating app settings."""
         # Arrange
         settings = AppSettings(APP_ID)
-        settings.settings['test'] = 'test'
+        settings.settings["test"] = "test"
         # Act
         entity = await smartthings.update_app_settings(settings)
         # Assert
         assert entity.app_id == settings.app_id
-        assert entity.settings == {'test': 'test'}
+        assert entity.settings == {"test": "test"}
 
     @staticmethod
     @pytest.mark.asyncio
@@ -194,8 +205,8 @@ class TestSmartThings:
         oauth = await smartthings.app_oauth(APP_ID)
         # Assert
         assert oauth.app_id == APP_ID
-        assert oauth.client_name == 'pysmartthings-test'
-        assert oauth.scope == ['r:devices']
+        assert oauth.client_name == "pysmartthings-test"
+        assert oauth.scope == ["r:devices"]
 
     @staticmethod
     @pytest.mark.asyncio
@@ -203,8 +214,8 @@ class TestSmartThings:
         """Tests updating OAuth settings."""
         # Arrange
         oauth = AppOAuth(APP_ID)
-        oauth.client_name = 'pysmartthings-test'
-        oauth.scope.append('r:devices')
+        oauth.client_name = "pysmartthings-test"
+        oauth.scope.append("r:devices")
         # Act
         oauth_entity = await smartthings.update_app_oauth(oauth)
         # Assert
@@ -218,16 +229,16 @@ class TestSmartThings:
         """Tests generating new OAuth info."""
         # Arrange
         oauth = AppOAuth(APP_ID)
-        oauth.client_name = 'pysmartthings'
-        oauth.scope.append('r:devices:*')
+        oauth.client_name = "pysmartthings"
+        oauth.scope.append("r:devices:*")
         # Act
         entity = await smartthings.generate_app_oauth(oauth)
         # Assert
-        assert entity.client_id == '0b6a77d4-2dff-4b00-ba33-35f660fbfb83'
-        assert entity.client_secret == '05a49aac-55d6-4092-96bf-7ca6ca3666d3'
+        assert entity.client_id == "0b6a77d4-2dff-4b00-ba33-35f660fbfb83"
+        assert entity.client_secret == "05a49aac-55d6-4092-96bf-7ca6ca3666d3"
         assert entity.client_details.app_id == APP_ID
-        assert entity.client_details.client_name == 'pysmartthings'
-        assert entity.client_details.scope == ['r:devices:$', 'r:devices:*']
+        assert entity.client_details.client_name == "pysmartthings"
+        assert entity.client_details.scope == ["r:devices:$", "r:devices:*"]
 
     @staticmethod
     @pytest.mark.asyncio
@@ -252,8 +263,7 @@ class TestSmartThings:
     async def test_delete_installed_app(smartthings):
         """Tests the delete app method."""
         # Act/Assert
-        result = await smartthings.delete_installed_app(
-            INSTALLED_APP_ID)
+        result = await smartthings.delete_installed_app(INSTALLED_APP_ID)
         # Assert
         assert result
 
@@ -281,7 +291,8 @@ class TestSmartThings:
         """Tests the delete subscription method."""
         # Act
         deleted = await smartthings.delete_subscription(
-            INSTALLED_APP_ID, SUBSCRIPTION_ID)
+            INSTALLED_APP_ID, SUBSCRIPTION_ID
+        )
         # Assert
         assert deleted
 
@@ -291,9 +302,9 @@ class TestSmartThings:
         """Tests the create subscription method."""
         # Arrange
         sub = Subscription()
-        sub.source_type = 'CAPABILITY'
+        sub.source_type = "CAPABILITY"
         sub.location_id = LOCATION_ID
-        sub.capability = 'switch'
+        sub.capability = "switch"
         sub.installed_app_id = INSTALLED_APP_ID
         # Act
         entity = await smartthings.create_subscription(sub)
@@ -333,11 +344,12 @@ class TestSmartThings:
         """Tests the generate_tokens method."""
         # Act
         token = await smartthings.generate_tokens(
-            CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN)
+            CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN
+        )
         # Assert
-        assert token.refresh_token == '3d1a8d0a-a312-45c2-a9f5-95e59dc0e879'
-        assert token.access_token == 'ad0fbf27-48d4-4ee9-ba47-7f5fedd7be35'
-        assert token.scope == ['r:devices:*']
-        assert token.token_type == 'bearer'
+        assert token.refresh_token == "3d1a8d0a-a312-45c2-a9f5-95e59dc0e879"
+        assert token.access_token == "ad0fbf27-48d4-4ee9-ba47-7f5fedd7be35"
+        assert token.scope == ["r:devices:*"]
+        assert token.token_type == "bearer"
         assert token.expires_in == 299
         assert not token.is_expired

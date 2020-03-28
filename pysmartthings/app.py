@@ -10,7 +10,7 @@ APP_TYPE_LAMBDA = "LAMBDA_SMART_APP"
 APP_TYPE_WEBHOOK = "WEBHOOK_SMART_APP"
 CLASSIFICATION_AUTOMATION = "AUTOMATION"
 
-_APP_NAME_PATTERN = re.compile('^[a-z0-9._-]{1,250}$', re.IGNORECASE)
+_APP_NAME_PATTERN = re.compile("^[a-z0-9._-]{1,250}$", re.IGNORECASE)
 
 
 class App:
@@ -33,42 +33,35 @@ class App:
 
     def apply_data(self, data: dict):
         """Set the states of the app with the supplied data."""
-        self._app_name = data['appName']
-        self._app_id = data['appId']
-        self._app_type = data['appType']
-        self._classifications = data['classifications']
-        self._display_name = data['displayName']
-        self._description = data['description']
-        self._created_date = \
-            data.get('createdDate', self._created_date)
-        self._last_updated_date = \
-            data.get('lastUpdatedDate', self._last_updated_date)
-        self._single_instance = \
-            data.get('singleInstance', self._single_instance)
-        if self.app_type == APP_TYPE_WEBHOOK and 'webhookSmartApp' in data:
-            self._webhook_target_url = data['webhookSmartApp']['targetUrl']
-            self._webhook_public_key = data['webhookSmartApp']['publicKey']
-        if self.app_type == APP_TYPE_LAMBDA and 'lambdaSmartApp' in data:
-            self._lambda_functions = data['lambdaSmartApp']['functions']
+        self._app_name = data["appName"]
+        self._app_id = data["appId"]
+        self._app_type = data["appType"]
+        self._classifications = data["classifications"]
+        self._display_name = data["displayName"]
+        self._description = data["description"]
+        self._created_date = data.get("createdDate", self._created_date)
+        self._last_updated_date = data.get("lastUpdatedDate", self._last_updated_date)
+        self._single_instance = data.get("singleInstance", self._single_instance)
+        if self.app_type == APP_TYPE_WEBHOOK and "webhookSmartApp" in data:
+            self._webhook_target_url = data["webhookSmartApp"]["targetUrl"]
+            self._webhook_public_key = data["webhookSmartApp"]["publicKey"]
+        if self.app_type == APP_TYPE_LAMBDA and "lambdaSmartApp" in data:
+            self._lambda_functions = data["lambdaSmartApp"]["functions"]
 
     def to_data(self) -> dict:
         """Get a data structure representing this entity."""
         data = {
-            'appName': self._app_name,
-            'displayName': self._display_name,
-            'description': self._description,
-            'singleInstance': self._single_instance,
-            'classifications': self._classifications,
-            'appType': self._app_type
+            "appName": self._app_name,
+            "displayName": self._display_name,
+            "description": self._description,
+            "singleInstance": self._single_instance,
+            "classifications": self._classifications,
+            "appType": self._app_type,
         }
         if self._app_type == APP_TYPE_WEBHOOK:
-            data['webhookSmartApp'] = {
-                'targetUrl': self._webhook_target_url
-            }
+            data["webhookSmartApp"] = {"targetUrl": self._webhook_target_url}
         if self._app_type == APP_TYPE_LAMBDA:
-            data['lambdaSmartApp'] = {
-                'functions': self._lambda_functions
-            }
+            data["lambdaSmartApp"] = {"functions": self._lambda_functions}
         return data
 
     @property
@@ -103,9 +96,11 @@ class App:
         if not value:
             raise ValueError("value cannot be None or zero length.")
         if not _APP_NAME_PATTERN.match(value):
-            raise ValueError("value must be alpha-numeric, may contain dashes "
-                             "underscores, periods, and must be less then 250 "
-                             "characters long.")
+            raise ValueError(
+                "value must be alpha-numeric, may contain dashes "
+                "underscores, periods, and must be less then 250 "
+                "characters long."
+            )
         self._app_name = value
 
     @property
@@ -182,8 +177,9 @@ class App:
     def app_type(self, value: str):
         """Set the app type."""
         if value not in (APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK):
-            raise ValueError("value must be 'LAMBDA_SMART_APP' "
-                             "or 'WEBHOOK_SMART_APP'")
+            raise ValueError(
+                "value must be 'LAMBDA_SMART_APP' " "or 'WEBHOOK_SMART_APP'"
+            )
         self._app_type = value
 
     @property
@@ -222,13 +218,11 @@ class AppSettings:
 
     def apply_data(self, data: dict):
         """Set the states of the app with the supplied data."""
-        self._settings = data.get('settings', {})
+        self._settings = data.get("settings", {})
 
     def to_data(self) -> dict:
         """Get a data structure representing the entity."""
-        return {
-            'settings': self._settings
-        }
+        return {"settings": self._settings}
 
     @property
     def app_id(self):
@@ -267,8 +261,7 @@ class AppSettingsEntity(Entity, AppSettings):
         """Save the value of the entity."""
         if not self._app_id:
             raise ValueError("Cannot save without an app_id")
-        data = await self._api.update_app_settings(
-            self._app_id, self.to_data())
+        data = await self._api.update_app_settings(self._app_id, self.to_data())
         self.apply_data(data)
 
 
@@ -283,15 +276,12 @@ class AppOAuth:
 
     def to_data(self) -> dict:
         """Get a data representation of the instance."""
-        return {
-            'clientName': self._client_name,
-            'scope': self._scope
-        }
+        return {"clientName": self._client_name, "scope": self._scope}
 
     def apply_data(self, data: dict):
         """Load the data of the instance."""
-        self._client_name = data['clientName']
-        self._scope = data.get('scope', self._scope)
+        self._client_name = data["clientName"]
+        self._scope = data.get("scope", self._scope)
 
     @property
     def app_id(self) -> str:
@@ -334,8 +324,7 @@ class AppOAuthEntity(Entity, AppOAuth):
 
     async def save(self):
         """Save changes to the app OAuth Client settings."""
-        response = await self._api.update_app_oauth(
-            self._app_id, self.to_data())
+        response = await self._api.update_app_oauth(self._app_id, self.to_data())
         if response:
             self.apply_data(response)
 
@@ -383,8 +372,8 @@ class AppOAuthClient:
 
     def apply_data(self, data: dict):
         """Apply the given data to the entity."""
-        self._client_id = data['oauthClientId']
-        self._client_secret = data['oauthClientSecret']
+        self._client_id = data["oauthClientId"]
+        self._client_secret = data["oauthClientSecret"]
 
     @property
     def client_id(self):
@@ -408,7 +397,7 @@ class AppOAuthClientEntity(AppOAuthClient):
     def apply_data(self, data: dict):
         """Apply the given data to the entity."""
         super().apply_data(data)
-        self._client_details.apply_data(data['oauthClientDetails'])
+        self._client_details.apply_data(data["oauthClientDetails"])
 
     @property
     def client_details(self) -> AppOAuthEntity:

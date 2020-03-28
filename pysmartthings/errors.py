@@ -4,12 +4,14 @@ from typing import Optional, Sequence
 
 from aiohttp import ClientResponseError
 
-UNAUTHORIZED_ERROR = \
-    "Authorization for the API is required, but the request has not been " \
+UNAUTHORIZED_ERROR = (
+    "Authorization for the API is required, but the request has not been "
     "authenticated."
-FORBIDDEN_ERROR = \
-    "The request has been authenticated but does not have appropriate" \
+)
+FORBIDDEN_ERROR = (
+    "The request has been authenticated but does not have appropriate"
     "permissions, or a requested resource is not found."
+)
 UNKNOWN_ERROR = "An unknown API error occurred."
 
 
@@ -18,14 +20,13 @@ class APIErrorDetail:
 
     def __init__(self, data):
         """Create a new instance of the error detail."""
-        self._code = data.get('code')
-        self._message = data.get('message')
-        self._target = data.get('target')
+        self._code = data.get("code")
+        self._message = data.get("message")
+        self._target = data.get("target")
         self._details = []
-        details = data.get('details')
+        details = data.get("details")
         if isinstance(details, list):
-            self._details.extend(
-                [APIErrorDetail(detail) for detail in details])
+            self._details.extend([APIErrorDetail(detail) for detail in details])
 
     @property
     def code(self) -> Optional[str]:
@@ -51,19 +52,22 @@ class APIErrorDetail:
 class APIResponseError(ClientResponseError):
     """Define an error from the API."""
 
-    def __init__(self, request_info, history, *, status=None, message='',
-                 headers=None, data=None):
+    def __init__(
+        self, request_info, history, *, status=None, message="", headers=None, data=None
+    ):
         """Create a new instance of the API Error."""
-        super().__init__(request_info, history, status=status,
-                         message=message, headers=headers)
+        super().__init__(
+            request_info, history, status=status, message=message, headers=headers
+        )
         self._raw_error_response = data
-        self._request_id = data.get('requestId')
-        self._error = APIErrorDetail(data.get('error', {}))
+        self._request_id = data.get("requestId")
+        self._error = APIErrorDetail(data.get("error", {}))
 
     def __str__(self):
         """Return a string represenation of the error."""
         return "{} ({}): {}".format(
-            self.message, self.status, json.dumps(self._raw_error_response))
+            self.message, self.status, json.dumps(self._raw_error_response)
+        )
 
     @property
     def raw_error_response(self):
@@ -82,10 +86,12 @@ class APIResponseError(ClientResponseError):
 
     def is_target_error(self):
         """Determine if the error is due to an issue with the target."""
-        return self.error.code == 'ConstraintViolationError' \
-            and len(self.error.details) == 1 \
-            and self.error.details[0].code \
-            and self.error.details[0].code.startswith('Target')
+        return (
+            self.error.code == "ConstraintViolationError"
+            and len(self.error.details) == 1
+            and self.error.details[0].code
+            and self.error.details[0].code.startswith("Target")
+        )
 
 
 class APIInvalidGrant(Exception):
