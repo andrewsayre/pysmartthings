@@ -124,8 +124,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "thermostatOperatingState": ["thermostatOperatingState"],
     "thermostatSetpoint": ["thermostatSetpoint"],
     "threeAxis": ["threeAxis"],
-    "tvChannel": ["tvChannel"],
-    "tvChannelName": ["tvChannelName"],
+    "tvChannel": ["tvChannel", "tvChannelName"],
     "tvocMeasurement": ["tvocLevel"],
     "ultravioletIndex": ["ultravioletIndex"],
     "valve": ["valve"],
@@ -223,7 +222,6 @@ class Capability:
     thermostat_setpoint = "thermostatSetpoint"
     three_axis = "threeAxis"
     tv_channel = "tvChannel"
-    tv_channel_name = "tvChannelName"
     tvoc_measurement = "tvocMeasurement"
     ultraviolet_index = "ultravioletIndex"
     valve = "valve"
