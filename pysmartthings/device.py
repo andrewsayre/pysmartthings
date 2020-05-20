@@ -217,6 +217,7 @@ class DeviceStatusBase:
 
     @staticmethod
     def bool_to_value(attribute: str, value: bool) -> str:
+        """Convert bool value to ON/OFF value of given attribute."""
         return ATTRIBUTE_ON_VALUES[attribute] if value else ATTRIBUTE_OFF_VALUES[attribute]
 
     def update_attribute_value(self, attribute: str, value):
@@ -648,7 +649,7 @@ class DeviceStatusBase:
 
     @input_source.setter
     def input_source(self, value: str):
-        """Set the volume attribute"""
+        """Set the volume attribute."""
         if value not in self.supported_input_sources:
             raise ValueError("value must be supported.")
         self.update_attribute_value(Attribute.input_source, value)
@@ -1175,6 +1176,7 @@ class DeviceEntity(Entity, Device):
     async def mute(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the mute command."""
         result = await self.command(component_id, Capability.audio_mute, Command.mute)
         if result and set_status:
             self.status.mute = True
@@ -1183,6 +1185,7 @@ class DeviceEntity(Entity, Device):
     async def unmute(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the unmute command."""
         result = await self.command(component_id, Capability.audio_mute, Command.unmute)
         if result and set_status:
             self.status.mute = False
@@ -1191,6 +1194,7 @@ class DeviceEntity(Entity, Device):
     async def set_volume(
         self, volume: int, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the setVolume command."""
         result = await self.command(component_id, Capability.audio_volume, Command.set_volume, [volume])
         if result and set_status:
             self.status.volume = volume
@@ -1199,6 +1203,7 @@ class DeviceEntity(Entity, Device):
     async def volume_up(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the volumeUp command."""
         result = await self.command(component_id, Capability.audio_volume, Command.volume_up)
         if result and set_status:
             self.status.volume = min(self.status.volume + 1, 100)
@@ -1207,6 +1212,7 @@ class DeviceEntity(Entity, Device):
     async def volume_down(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the volumeDown command."""
         result = await self.command(component_id, Capability.audio_volume, Command.volume_down)
         if result and set_status:
             self.status.volume = max(self.status.volume - 1, 100)
@@ -1215,6 +1221,7 @@ class DeviceEntity(Entity, Device):
     async def play(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the play command."""
         result = await self.command(component_id, Capability.media_playback, Command.play)
         if result and set_status:
             self.status.playback_status = 'play'
@@ -1223,6 +1230,7 @@ class DeviceEntity(Entity, Device):
     async def pause(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the pause command."""
         result = await self.command(component_id, Capability.media_playback, Command.pause)
         if result and set_status:
             self.status.playback_status = 'pause'
@@ -1231,6 +1239,7 @@ class DeviceEntity(Entity, Device):
     async def stop(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the stop command."""
         result = await self.command(component_id, Capability.media_playback, Command.stop)
         if result and set_status:
             self.status.playback_status = 'stop'
@@ -1239,6 +1248,7 @@ class DeviceEntity(Entity, Device):
     async def fast_forward(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the fastForward command."""
         result = await self.command(component_id, Capability.media_playback, Command.fast_forward)
         if result and set_status:
             self.status.playback_status = 'fast forward'
@@ -1247,6 +1257,7 @@ class DeviceEntity(Entity, Device):
     async def rewind(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the rewind command."""
         result = await self.command(component_id, Capability.media_playback, Command.rewind)
         if result and set_status:
             self.status.playback_status = 'rewind'
@@ -1255,6 +1266,7 @@ class DeviceEntity(Entity, Device):
     async def set_input_source(
         self, source: str, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the setInputSource command."""
         result = await self.command(component_id, Capability.media_input_source,
                                     Command.set_input_source, [source])
         if result and set_status:
@@ -1264,6 +1276,7 @@ class DeviceEntity(Entity, Device):
     async def set_playback_shuffle(
         self, shuffle: bool, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the setPlaybackShuffle command."""
         shuffle_value = DeviceStatusBase.bool_to_value(Attribute.playback_shuffle, shuffle)
         result = await self.command(component_id, Capability.media_playback_shuffle,
                                     Command.set_playback_shuffle, [shuffle_value])
@@ -1274,6 +1287,7 @@ class DeviceEntity(Entity, Device):
     async def set_repeat(
         self, repeat: str, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the setPlaybackRepeatMode command."""
         result = await self.command(component_id, Capability.media_playback_repeat,
                                     Command.set_playback_repeat_mode, [repeat])
         if result and set_status:
@@ -1283,6 +1297,7 @@ class DeviceEntity(Entity, Device):
     async def set_tv_channel(
         self, channel: str, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
+        """Call the setTvChannel command."""
         result = await self.command(component_id, Capability.tv_channel,
                                     Command.set_tv_channel, [channel])
         if result and set_status:
@@ -1292,12 +1307,14 @@ class DeviceEntity(Entity, Device):
     async def channel_up(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
-        return  await self.command(component_id, Capability.tv_channel, Command.channel_down)
+        """Call the channelUp command."""
+        return await self.command(component_id, Capability.tv_channel, Command.channel_up)
 
     async def channel_down(
         self, set_status: bool = False, *, component_id: str = 'main'
     ) -> bool:
-        return  await self.command(component_id, Capability.tv_channel, Command.channel_down)
+        """Call the channelDown command."""
+        return await self.command(component_id, Capability.tv_channel, Command.channel_down)
 
     @property
     def status(self):
