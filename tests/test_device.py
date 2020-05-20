@@ -1078,7 +1078,9 @@ class TestDeviceEntity:
         """Test the set_input_source method."""
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
-        device.status.update_attribute_value(Attribute.supported_input_sources, ["Source", "OtherSource"])
+        device.status.update_attribute_value(
+            Attribute.supported_input_sources, ["Source", "OtherSource"]
+        )
         device.status.input_source = "OtherSource"
         # Act
         result = await device.set_input_source("Source")
@@ -1092,7 +1094,9 @@ class TestDeviceEntity:
         """Test the set_input_source method."""
         # Arrange
         device = DeviceEntity(api, device_id=DEVICE_ID)
-        device.status.update_attribute_value(Attribute.supported_input_sources, ["Source", "OtherSource"])
+        device.status.update_attribute_value(
+            Attribute.supported_input_sources, ["Source", "OtherSource"]
+        )
         device.status.input_source = "OtherSource"
         # Act
         result = await device.set_input_source("Source", set_status=True)
