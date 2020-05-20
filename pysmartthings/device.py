@@ -79,22 +79,22 @@ class Command:
     set_thermostat_fan_mode = "setThermostatFanMode"
     set_thermostat_mode = "setThermostatMode"
     unlock = "unlock"
-    mute = 'mute'
-    unmute = 'unmute'
-    set_volume = 'setVolume'
-    volume_up = 'volumeUp'
-    volume_down = 'volumeDown'
-    play = 'play'
-    pause = 'pause'
-    stop = 'stop'
-    fast_forward = 'fastForward'
-    rewind = 'rewind'
-    set_input_source = 'setInputSource'
-    set_playback_shuffle = 'setPlaybackShuffle'
-    set_playback_repeat_mode = 'setPlaybackRepeatMode'
-    set_tv_channel = 'setTvChannel'
-    channel_up = 'channelUp'
-    channel_down = 'channelDown'
+    mute = "mute"
+    unmute = "unmute"
+    set_volume = "setVolume"
+    volume_up = "volumeUp"
+    volume_down = "volumeDown"
+    play = "play"
+    pause = "pause"
+    stop = "stop"
+    fast_forward = "fastForward"
+    rewind = "rewind"
+    set_input_source = "setInputSource"
+    set_playback_shuffle = "setPlaybackShuffle"
+    set_playback_repeat_mode = "setPlaybackRepeatMode"
+    set_tv_channel = "setTvChannel"
+    channel_up = "channelUp"
+    channel_down = "channelDown"
 
 
 class Device:
@@ -699,7 +699,7 @@ class DeviceStatusBase:
     @property
     def media_title(self) -> bool:
         """Get the trackDescription attribute."""
-        return self._attributes['trackDescription'].value
+        return self._attributes["trackDescription"].value
 
 
 class DeviceStatus(DeviceStatusBase):
@@ -1175,7 +1175,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def mute(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the mute command."""
         result = await self.command(component_id, Capability.audio_mute, Command.mute)
@@ -1184,7 +1184,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def unmute(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the unmute command."""
         result = await self.command(component_id, Capability.audio_mute, Command.unmute)
@@ -1193,7 +1193,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def set_volume(
-        self, volume: int, set_status: bool = False, *, component_id: str = 'main'
+        self, volume: int, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the setVolume command."""
         result = await self.command(component_id, Capability.audio_volume, Command.set_volume, [volume])
@@ -1202,7 +1202,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def volume_up(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the volumeUp command."""
         result = await self.command(component_id, Capability.audio_volume, Command.volume_up)
@@ -1211,7 +1211,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def volume_down(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the volumeDown command."""
         result = await self.command(component_id, Capability.audio_volume, Command.volume_down)
@@ -1220,52 +1220,52 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def play(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the play command."""
         result = await self.command(component_id, Capability.media_playback, Command.play)
         if result and set_status:
-            self.status.playback_status = 'play'
+            self.status.playback_status = "play"
         return result
 
     async def pause(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the pause command."""
         result = await self.command(component_id, Capability.media_playback, Command.pause)
         if result and set_status:
-            self.status.playback_status = 'pause'
+            self.status.playback_status = "pause"
         return result
 
     async def stop(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the stop command."""
         result = await self.command(component_id, Capability.media_playback, Command.stop)
         if result and set_status:
-            self.status.playback_status = 'stop'
+            self.status.playback_status = "stop"
         return result
 
     async def fast_forward(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the fastForward command."""
         result = await self.command(component_id, Capability.media_playback, Command.fast_forward)
         if result and set_status:
-            self.status.playback_status = 'fast forward'
+            self.status.playback_status = "fast forward"
         return result
 
     async def rewind(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the rewind command."""
         result = await self.command(component_id, Capability.media_playback, Command.rewind)
         if result and set_status:
-            self.status.playback_status = 'rewind'
+            self.status.playback_status = "rewind"
         return result
 
     async def set_input_source(
-        self, source: str, set_status: bool = False, *, component_id: str = 'main'
+        self, source: str, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the setInputSource command."""
         result = await self.command(component_id, Capability.media_input_source,
@@ -1275,7 +1275,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def set_playback_shuffle(
-        self, shuffle: bool, set_status: bool = False, *, component_id: str = 'main'
+        self, shuffle: bool, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the setPlaybackShuffle command."""
         shuffle_value = DeviceStatusBase.bool_to_value(Attribute.playback_shuffle, shuffle)
@@ -1286,7 +1286,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def set_repeat(
-        self, repeat: str, set_status: bool = False, *, component_id: str = 'main'
+        self, repeat: str, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the setPlaybackRepeatMode command."""
         result = await self.command(component_id, Capability.media_playback_repeat,
@@ -1296,7 +1296,7 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def set_tv_channel(
-        self, channel: str, set_status: bool = False, *, component_id: str = 'main'
+        self, channel: str, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the setTvChannel command."""
         result = await self.command(component_id, Capability.tv_channel,
@@ -1306,13 +1306,13 @@ class DeviceEntity(Entity, Device):
         return result
 
     async def channel_up(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the channelUp command."""
         return await self.command(component_id, Capability.tv_channel, Command.channel_up)
 
     async def channel_down(
-        self, set_status: bool = False, *, component_id: str = 'main'
+        self, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the channelDown command."""
         return await self.command(component_id, Capability.tv_channel, Command.channel_down)
