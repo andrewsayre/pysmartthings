@@ -1084,7 +1084,7 @@ class TestDeviceEntity:
         result = await device.set_input_source("Source")
         # Assert
         assert result
-        assert device.status.input_source is "OtherSource"
+        assert device.status.input_source == "OtherSource"
 
     @staticmethod
     @pytest.mark.asyncio
