@@ -16,6 +16,7 @@ from typing import (
 
 from .api import Api
 from .capability import (
+    ATTRIBUTE_OFF_VALUES,
     ATTRIBUTE_ON_VALUES,
     Attribute,
     Capability,
