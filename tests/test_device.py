@@ -966,7 +966,7 @@ class TestDeviceEntity:
         result = await device.play(set_status=True)
         # Assert
         assert result
-        assert device.status.playback_status == 'play'
+        assert device.status.playback_status == "play"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -992,7 +992,7 @@ class TestDeviceEntity:
         result = await device.pause(set_status=True)
         # Assert
         assert result
-        assert device.status.playback_status == 'pause'
+        assert device.status.playback_status == "pause"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -1018,7 +1018,7 @@ class TestDeviceEntity:
         result = await device.stop(set_status=True)
         # Assert
         assert result
-        assert device.status.playback_status == 'stop'
+        assert device.status.playback_status == "stop"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -1044,7 +1044,7 @@ class TestDeviceEntity:
         result = await device.fast_forward(set_status=True)
         # Assert
         assert result
-        assert device.status.playback_status == 'fast forward'
+        assert device.status.playback_status == "fast forward"
 
     @staticmethod
     @pytest.mark.asyncio
@@ -1070,7 +1070,7 @@ class TestDeviceEntity:
         result = await device.rewind(set_status=True)
         # Assert
         assert result
-        assert device.status.playback_status == 'rewind'
+        assert device.status.playback_status == "rewind"
 
     @staticmethod
     @pytest.mark.asyncio
