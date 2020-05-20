@@ -1216,7 +1216,7 @@ class DeviceEntity(Entity, Device):
         """Call the volumeDown command."""
         result = await self.command(component_id, Capability.audio_volume, Command.volume_down)
         if result and set_status:
-            self.status.volume = max(self.status.volume - 1, 100)
+            self.status.volume = max(self.status.volume - 1, 0)
         return result
 
     async def play(
