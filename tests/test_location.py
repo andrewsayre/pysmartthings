@@ -1,6 +1,9 @@
 """Tests for the Location module."""
 
-from pysmartthings.location import Location, LocationEntity
+from pysmartthings.location import (
+    Location,
+    LocationEntity,
+)
 import pytest
 
 from .conftest import LOCATION_ID

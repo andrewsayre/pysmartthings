@@ -1,11 +1,26 @@
 """Defines a SmartThings device."""
-from collections import defaultdict, namedtuple
+from collections import (
+    defaultdict,
+    namedtuple,
+)
 import colorsys
 import re
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
+from typing import (
+    Any,
+    Dict,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+)
 
 from .api import Api
-from .capability import ATTRIBUTE_ON_VALUES, Attribute, Capability
+from .capability import (
+    ATTRIBUTE_OFF_VALUES,
+    ATTRIBUTE_ON_VALUES,
+    Attribute,
+    Capability,
+)
 from .entity import Entity
 
 DEVICE_TYPE_OCF = "OCF"
@@ -38,6 +53,11 @@ def hex_to_hs(color_hex: str) -> (int, int):
     return round(hsv[0] * 100, 3), round(hsv[1] * 100, 3)
 
 
+def bool_to_value(attribute: str, value: bool) -> str:
+    """Convert bool value to ON/OFF value of given attribute."""
+    return ATTRIBUTE_ON_VALUES[attribute] if value else ATTRIBUTE_OFF_VALUES[attribute]
+
+
 class Command:
     """Define common commands."""
 
@@ -64,6 +84,22 @@ class Command:
     set_thermostat_fan_mode = "setThermostatFanMode"
     set_thermostat_mode = "setThermostatMode"
     unlock = "unlock"
+    mute = "mute"
+    unmute = "unmute"
+    set_volume = "setVolume"
+    volume_up = "volumeUp"
+    volume_down = "volumeDown"
+    play = "play"
+    pause = "pause"
+    stop = "stop"
+    fast_forward = "fastForward"
+    rewind = "rewind"
+    set_input_source = "setInputSource"
+    set_playback_shuffle = "setPlaybackShuffle"
+    set_playback_repeat_mode = "setPlaybackRepeatMode"
+    set_tv_channel = "setTvChannel"
+    channel_up = "channelUp"
+    channel_down = "channelDown"
 
 
 class Device:
@@ -294,7 +330,7 @@ class DeviceStatusBase:
     @switch.setter
     def switch(self, value: bool):
         """Set the value of the switch attribute."""
-        status_value = ATTRIBUTE_ON_VALUES[Attribute.switch] if value else "off"
+        status_value = bool_to_value(Attribute.switch, value)
         self.update_attribute_value(Attribute.switch, status_value)
 
     @property
@@ -545,6 +581,7 @@ class DeviceStatusBase:
     def supported_ac_modes(self) -> Sequence[str]:
         """Get the supported AC modes attribute."""
         value = self._attributes[Attribute.supported_ac_modes].value
+        # pylint: disable=isinstance-second-argument-not-valid-type
         if isinstance(value, Sequence):
             return sorted(value)
         return []
@@ -558,6 +595,7 @@ class DeviceStatusBase:
     def supported_ac_fan_modes(self) -> Sequence[str]:
         """Get the supported AC fan modes attribute."""
         value = self._attributes[Attribute.supported_ac_fan_modes].value
+        # pylint: disable=isinstance-second-argument-not-valid-type
         if isinstance(value, Sequence):
             return sorted(value)
         return []
@@ -571,6 +609,97 @@ class DeviceStatusBase:
     def three_axis(self) -> Optional[Tuple[int, int, int]]:
         """Get the three axis attribute."""
         return self._attributes[Attribute.three_axis].value
+
+    @property
+    def mute(self) -> bool:
+        """Get the mute attribute."""
+        return self.is_on(Attribute.mute)
+
+    @mute.setter
+    def mute(self, value: bool):
+        """Set the mute attribute."""
+        status_value = bool_to_value(Attribute.mute, value)
+        self.update_attribute_value(Attribute.mute, status_value)
+
+    @property
+    def volume(self) -> int:
+        """Get the volume attribute."""
+        return self._attributes[Attribute.volume].value
+
+    @volume.setter
+    def volume(self, value: float):
+        """Set the volume attribute, scaled 0-100."""
+        if not 0 <= value <= 100:
+            raise ValueError("value must be scaled between 0-100.")
+        self.update_attribute_value(Attribute.volume, value)
+
+    @property
+    def playback_status(self) -> str:
+        """Get the playbackStatus attribute."""
+        return self._attributes[Attribute.playback_status].value
+
+    @playback_status.setter
+    def playback_status(self, value: str):
+        """Set the playbackStatus attribute."""
+        self.update_attribute_value(Attribute.playback_status, value)
+
+    @property
+    def input_source(self) -> str:
+        """Get the inputSource attribute."""
+        return self._attributes[Attribute.input_source].value
+
+    @input_source.setter
+    def input_source(self, value: str):
+        """Set the volume attribute."""
+        if value not in self.supported_input_sources:
+            raise ValueError("value must be supported.")
+        self.update_attribute_value(Attribute.input_source, value)
+
+    @property
+    def supported_input_sources(self) -> Sequence[str]:
+        """Get the supportedInputSources attribute."""
+        value = self._attributes[Attribute.supported_input_sources].value
+        if "value" in value:
+            return value["value"]
+        return value
+
+    @property
+    def playback_shuffle(self) -> bool:
+        """Get the playbackShuffle attribute."""
+        return self.is_on(Attribute.playback_shuffle)
+
+    @playback_shuffle.setter
+    def playback_shuffle(self, value: bool):
+        """Set the playbackShuffle attribute."""
+        status_value = bool_to_value(Attribute.playback_shuffle, value)
+        self.update_attribute_value(Attribute.playback_shuffle, status_value)
+
+    @property
+    def playback_repeat_mode(self) -> str:
+        """Get the playbackRepeatMode attribute."""
+        return self._attributes[Attribute.playback_repeat_mode].value
+
+    @playback_repeat_mode.setter
+    def playback_repeat_mode(self, value: str):
+        """Set the playbackRepeatMode attribute."""
+        if value not in ["all", "off", "one"]:
+            raise ValueError("value must be one of: all, off, one")
+        self.update_attribute_value(Attribute.playback_repeat_mode, value)
+
+    @property
+    def tv_channel(self) -> str:
+        """Get the tvChannel attribute."""
+        return self._attributes[Attribute.tv_channel].value
+
+    @tv_channel.setter
+    def tv_channel(self, value: str):
+        """Set the tvChannel attribute."""
+        self.update_attribute_value(Attribute.tv_channel, value)
+
+    @property
+    def media_title(self) -> bool:
+        """Get the trackDescription attribute."""
+        return self._attributes["trackDescription"].value
 
 
 class DeviceStatus(DeviceStatusBase):
@@ -674,7 +803,10 @@ class DeviceEntity(Entity, Device):
         response = await self._api.post_device_command(
             self._device_id, component_id, capability, command, args
         )
-        return response == {}
+        try:
+            return response["results"][0]["status"] in ("ACCEPTED", "COMPLETED")
+        except (KeyError, IndexError):
+            return False
 
     async def set_color(
         self,
@@ -1041,6 +1173,182 @@ class DeviceEntity(Entity, Device):
         if result and set_status:
             self.status.update_attribute_value(Attribute.air_flow_direction, direction)
         return result
+
+    async def mute(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the mute command."""
+        result = await self.command(component_id, Capability.audio_mute, Command.mute)
+        if result and set_status:
+            self.status.mute = True
+        return result
+
+    async def unmute(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the unmute command."""
+        result = await self.command(component_id, Capability.audio_mute, Command.unmute)
+        if result and set_status:
+            self.status.mute = False
+        return result
+
+    async def set_volume(
+        self, volume: int, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the setVolume command."""
+        result = await self.command(
+            component_id, Capability.audio_volume, Command.set_volume, [volume]
+        )
+        if result and set_status:
+            self.status.volume = volume
+        return result
+
+    async def volume_up(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the volumeUp command."""
+        result = await self.command(
+            component_id, Capability.audio_volume, Command.volume_up
+        )
+        if result and set_status:
+            self.status.volume = min(self.status.volume + 1, 100)
+        return result
+
+    async def volume_down(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the volumeDown command."""
+        result = await self.command(
+            component_id, Capability.audio_volume, Command.volume_down
+        )
+        if result and set_status:
+            self.status.volume = max(self.status.volume - 1, 0)
+        return result
+
+    async def play(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the play command."""
+        result = await self.command(
+            component_id, Capability.media_playback, Command.play
+        )
+        if result and set_status:
+            self.status.playback_status = "play"
+        return result
+
+    async def pause(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the pause command."""
+        result = await self.command(
+            component_id, Capability.media_playback, Command.pause
+        )
+        if result and set_status:
+            self.status.playback_status = "pause"
+        return result
+
+    async def stop(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the stop command."""
+        result = await self.command(
+            component_id, Capability.media_playback, Command.stop
+        )
+        if result and set_status:
+            self.status.playback_status = "stop"
+        return result
+
+    async def fast_forward(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the fastForward command."""
+        result = await self.command(
+            component_id, Capability.media_playback, Command.fast_forward
+        )
+        if result and set_status:
+            self.status.playback_status = "fast forward"
+        return result
+
+    async def rewind(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the rewind command."""
+        result = await self.command(
+            component_id, Capability.media_playback, Command.rewind
+        )
+        if result and set_status:
+            self.status.playback_status = "rewind"
+        return result
+
+    async def set_input_source(
+        self, source: str, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the setInputSource command."""
+        result = await self.command(
+            component_id,
+            Capability.media_input_source,
+            Command.set_input_source,
+            [source],
+        )
+        if result and set_status:
+            self.status.input_source = source
+        return result
+
+    async def set_playback_shuffle(
+        self, shuffle: bool, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the setPlaybackShuffle command."""
+        shuffle_value = bool_to_value(Attribute.playback_shuffle, shuffle)
+        result = await self.command(
+            component_id,
+            Capability.media_playback_shuffle,
+            Command.set_playback_shuffle,
+            [shuffle_value],
+        )
+        if result and set_status:
+            self.status.playback_shuffle = shuffle
+        return result
+
+    async def set_repeat(
+        self, repeat: str, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the setPlaybackRepeatMode command."""
+        result = await self.command(
+            component_id,
+            Capability.media_playback_repeat,
+            Command.set_playback_repeat_mode,
+            [repeat],
+        )
+        if result and set_status:
+            self.status.playback_repeat_mode = repeat
+        return result
+
+    async def set_tv_channel(
+        self, channel: str, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the setTvChannel command."""
+        result = await self.command(
+            component_id, Capability.tv_channel, Command.set_tv_channel, [channel]
+        )
+        if result and set_status:
+            self.status.tv_channel = channel
+        return result
+
+    async def channel_up(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the channelUp command."""
+        return await self.command(
+            component_id, Capability.tv_channel, Command.channel_up
+        )
+
+    async def channel_down(
+        self, set_status: bool = False, *, component_id: str = "main"
+    ) -> bool:
+        """Call the channelDown command."""
+        return await self.command(
+            component_id, Capability.tv_channel, Command.channel_down
+        )
 
     @property
     def status(self):

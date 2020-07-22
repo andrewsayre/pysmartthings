@@ -1,7 +1,10 @@
 """Define the subscription module."""
 
 from enum import Enum
-from typing import Any, Optional
+from typing import (
+    Any,
+    Optional,
+)
 
 from .api import Api
 from .entity import Entity

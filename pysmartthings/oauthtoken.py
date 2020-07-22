@@ -1,7 +1,13 @@
 """Define the oauth module."""
 
-from datetime import datetime, timedelta
-from typing import List, Optional
+from datetime import (
+    datetime,
+    timedelta,
+)
+from typing import (
+    List,
+    Optional,
+)
 
 from .api import Api
 
