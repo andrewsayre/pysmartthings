@@ -1,11 +1,25 @@
 """Defines a SmartThings device."""
-from collections import defaultdict, namedtuple
+from collections import (
+    defaultdict,
+    namedtuple,
+)
 import colorsys
 import re
-from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
+from typing import (
+    Any,
+    Dict,
+    Mapping,
+    Optional,
+    Sequence,
+    Tuple,
+)
 
 from .api import Api
-from .capability import ATTRIBUTE_ON_VALUES, Attribute, Capability
+from .capability import (
+    ATTRIBUTE_ON_VALUES,
+    Attribute,
+    Capability,
+)
 from .entity import Entity
 
 DEVICE_TYPE_OCF = "OCF"
@@ -545,6 +559,7 @@ class DeviceStatusBase:
     def supported_ac_modes(self) -> Sequence[str]:
         """Get the supported AC modes attribute."""
         value = self._attributes[Attribute.supported_ac_modes].value
+        # pylint: disable=isinstance-second-argument-not-valid-type
         if isinstance(value, Sequence):
             return sorted(value)
         return []
@@ -558,6 +573,7 @@ class DeviceStatusBase:
     def supported_ac_fan_modes(self) -> Sequence[str]:
         """Get the supported AC fan modes attribute."""
         value = self._attributes[Attribute.supported_ac_fan_modes].value
+        # pylint: disable=isinstance-second-argument-not-valid-type
         if isinstance(value, Sequence):
             return sorted(value)
         return []

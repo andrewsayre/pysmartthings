@@ -3,7 +3,11 @@
 from pysmartthings.oauthtoken import OAuthToken
 import pytest
 
-from .conftest import CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN
+from .conftest import (
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REFRESH_TOKEN,
+)
 from .utilities import get_json
 
 

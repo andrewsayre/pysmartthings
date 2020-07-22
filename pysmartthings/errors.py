@@ -1,6 +1,9 @@
 """Define errors that can be returned from the SmartThings API."""
 import json
-from typing import Optional, Sequence
+from typing import (
+    Optional,
+    Sequence,
+)
 
 from aiohttp import ClientResponseError
 

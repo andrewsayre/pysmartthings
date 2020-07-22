@@ -8,7 +8,10 @@ from pysmartthings.installedapp import (
 )
 import pytest
 
-from .conftest import APP_ID, INSTALLED_APP_ID
+from .conftest import (
+    APP_ID,
+    INSTALLED_APP_ID,
+)
 from .utilities import get_json
 
 

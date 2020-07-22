@@ -1,10 +1,19 @@
 """Utility for invoking the SmartThings Cloud API."""
 
-from typing import Optional, Sequence
+from typing import (
+    Optional,
+    Sequence,
+)
 
-from aiohttp import BasicAuth, ClientSession
+from aiohttp import (
+    BasicAuth,
+    ClientSession,
+)
 
-from .errors import APIInvalidGrant, APIResponseError
+from .errors import (
+    APIInvalidGrant,
+    APIResponseError,
+)
 
 API_OAUTH_TOKEN = "https://auth-global.api.smartthings.com/oauth/token"
 API_BASE = "https://api.smartthings.com/v1/"
