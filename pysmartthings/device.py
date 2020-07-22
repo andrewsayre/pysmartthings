@@ -53,6 +53,11 @@ def hex_to_hs(color_hex: str) -> (int, int):
     return round(hsv[0] * 100, 3), round(hsv[1] * 100, 3)
 
 
+def bool_to_value(attribute: str, value: bool) -> str:
+    """Convert bool value to ON/OFF value of given attribute."""
+    return ATTRIBUTE_ON_VALUES[attribute] if value else ATTRIBUTE_OFF_VALUES[attribute]
+
+
 class Command:
     """Define common commands."""
 
@@ -216,13 +221,6 @@ class DeviceStatusBase:
             return bool(self._attributes[attribute].value)
         return self._attributes[attribute].value == ATTRIBUTE_ON_VALUES[attribute]
 
-    @staticmethod
-    def bool_to_value(attribute: str, value: bool) -> str:
-        """Convert bool value to ON/OFF value of given attribute."""
-        return (
-            ATTRIBUTE_ON_VALUES[attribute] if value else ATTRIBUTE_OFF_VALUES[attribute]
-        )
-
     def update_attribute_value(self, attribute: str, value):
         """Update the value of an attribute while maintaining unit and data."""
         status = self._attributes[attribute]
@@ -332,7 +330,7 @@ class DeviceStatusBase:
     @switch.setter
     def switch(self, value: bool):
         """Set the value of the switch attribute."""
-        status_value = DeviceStatusBase.bool_to_value(Attribute.switch, value)
+        status_value = bool_to_value(Attribute.switch, value)
         self.update_attribute_value(Attribute.switch, status_value)
 
     @property
@@ -620,7 +618,7 @@ class DeviceStatusBase:
     @mute.setter
     def mute(self, value: bool):
         """Set the mute attribute."""
-        status_value = DeviceStatusBase.bool_to_value(Attribute.mute, value)
+        status_value = bool_to_value(Attribute.mute, value)
         self.update_attribute_value(Attribute.mute, status_value)
 
     @property
@@ -673,7 +671,7 @@ class DeviceStatusBase:
     @playback_shuffle.setter
     def playback_shuffle(self, value: bool):
         """Set the playbackShuffle attribute."""
-        status_value = DeviceStatusBase.bool_to_value(Attribute.playback_shuffle, value)
+        status_value = bool_to_value(Attribute.playback_shuffle, value)
         self.update_attribute_value(Attribute.playback_shuffle, status_value)
 
     @property
@@ -1300,9 +1298,7 @@ class DeviceEntity(Entity, Device):
         self, shuffle: bool, set_status: bool = False, *, component_id: str = "main"
     ) -> bool:
         """Call the setPlaybackShuffle command."""
-        shuffle_value = DeviceStatusBase.bool_to_value(
-            Attribute.playback_shuffle, shuffle
-        )
+        shuffle_value = bool_to_value(Attribute.playback_shuffle, shuffle)
         result = await self.command(
             component_id,
             Capability.media_playback_shuffle,
