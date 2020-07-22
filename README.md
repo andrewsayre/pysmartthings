@@ -6,7 +6,7 @@
 [![image](https://img.shields.io/pypi/l/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
-A python library for interacting with the SmartThings cloud API build with [asyncio](https://docs.python.org/3/library/asyncio.html) and [aiohttp](https://aiohttp.readthedocs.io/en/stable/). 
+A python library for interacting with the SmartThings cloud API build with [asyncio](https://docs.python.org/3/library/asyncio.html) and [aiohttp](https://aiohttp.readthedocs.io/en/stable/).
 ## Features
 The package is still in beta, but the following features are available:
 1. Locations: List, Get
@@ -43,10 +43,10 @@ A list of locations in SmartThings can be retrieved by invoking the coroutine `l
 ```pythonstub
     locations = await api.locations()
     print(len(locations))
-    
+
     location = locations[0]
     print(location.name)
-    print(location.location_id) 
+    print(location.location_id)
 ```
 Outputs:
 ```pythonstub
@@ -55,11 +55,11 @@ Outputs:
 '5c03e518-118a-44cb-85ad-7877d0b302e4'
 ```
 ### Devices
-A list of devices can be retrieved by invoking the coroutine `devices(location_ids=None, capabilities=None, device_ids=None)`.  The optional parameters allow filtering the returned list.  
+A list of devices can be retrieved by invoking the coroutine `devices(location_ids=None, capabilities=None, device_ids=None)`.  The optional parameters allow filtering the returned list.
 ```pythonstub
     devices = await api.devices()
     print(len(devices))
-    
+
     device = devices[0]
     print(device.device_id)
     print(device.name)
@@ -76,7 +76,7 @@ Outputs:
 ```
 The current status of the device is populated when the coroutine `status.refresh()` is called.  The DeviceStatus class represents the current values of the capabilities and provides several normalized property accessors.
 ```pythonstub
-    await device.status.refresh()    
+    await device.status.refresh()
     print(device.status.values)
     print(device.status.switch)
     print(device.status.level)
@@ -88,19 +88,19 @@ True
 100
 ```
 #### Device Commands
-You can execute a command on a device by calling the coroutine `command(capability, command, args=None)` function.  The `capability` parameter corresponds to one of the capabilities detected and `command` is one of the define commands. `args` is an array of parameters to pass to the command (optional).  See the [SmartThings Capability Reference](https://smartthings.developer.samsung.com/develop/api-ref/capabilities.html) for more information.
+You can execute a command on a device by calling the coroutine `command(component_id, capability, command, args=None)` function.  The `component_id` parameter is the identifier of the component within the device (`main` is the device itself); `capability` is the name of the capability implemented by the device; and `command` is one of the defined operations within the capability.  `args` is an array of parameters to pass to the command when it accepts parameters (optional).  See the [SmartThings Capability Reference](https://smartthings.developer.samsung.com/develop/api-ref/capabilities.html) for more information.
 ```pythonstub
-    result = await device.command("switch", "on")
+    result = await device.command("main", "switch", "on")
     assert result == True
-    
-    result = await device.command("switchLevel", "setLevel", [75, 2])
+
+    result = await device.command("main", "switchLevel", "setLevel", [75, 2])
     assert result == True
 ```
 Devices with the `switch` capability have the following coroutines:
 ```pythonstub
     result = await device.switch_on()
     assert result == True
-    
+
     result = await device.switch_off()
     assert result == True
 ```
