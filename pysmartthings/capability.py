@@ -358,10 +358,26 @@ ATTRIBUTE_ON_VALUES = {
     Attribute.filter_status: "replace",
     Attribute.motion: "active",
     Attribute.mute: "muted",
+    Attribute.playback_shuffle: "enabled",
     Attribute.presence: "present",
     Attribute.sound: "detected",
     Attribute.switch: "on",
     Attribute.tamper: "detected",
     Attribute.valve: "open",
     Attribute.water: "wet",
+}
+
+ATTRIBUTE_OFF_VALUES = {
+    Attribute.acceleration: "inactive",
+    Attribute.contact: "closed",
+    Attribute.filter_status: "normal",
+    Attribute.motion: "inactive",
+    Attribute.mute: "unmuted",
+    Attribute.playback_shuffle: "disabled",
+    Attribute.presence: "not present",
+    Attribute.sound: "not detected",
+    Attribute.switch: "off",
+    Attribute.tamper: "clear",
+    Attribute.valve: "closed",
+    Attribute.water: "dry",
 }

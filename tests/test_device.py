@@ -812,6 +812,398 @@ class TestDeviceEntity:
         assert await device.set_air_flow_direction("fixed", set_status=True)
         assert device.status.air_flow_direction == "fixed"
 
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_mute(api):
+        """Test the mute method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.mute = False
+        # Act
+        result = await device.mute()
+        # Assert
+        assert result
+        assert not device.status.mute
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_mute_update(api):
+        """Test the mute method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.mute = False
+        # Act
+        result = await device.mute(set_status=True)
+        # Assert
+        assert result
+        assert device.status.mute
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_unmute(api):
+        """Test the unmute method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.mute = True
+        # Act
+        result = await device.unmute()
+        # Assert
+        assert result
+        assert device.status.mute
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_unmute_update(api):
+        """Test the unmute method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.mute = True
+        # Act
+        result = await device.unmute(set_status=True)
+        # Assert
+        assert result
+        assert not device.status.mute
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_volume(api):
+        """Test the set_volume method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.volume = 9
+        # Act
+        result = await device.set_volume(volume=10)
+        # Assert
+        assert result
+        assert device.status.volume == 9
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_volume_update(api):
+        """Test the set_volume method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.volume = 9
+        # Act
+        result = await device.set_volume(volume=10, set_status=True)
+        # Assert
+        assert result
+        assert device.status.volume == 10
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_volume_up(api):
+        """Test the volume_up method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.volume = 9
+        # Act
+        result = await device.volume_up()
+        # Assert
+        assert result
+        assert device.status.volume == 9
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_volume_up_update(api):
+        """Test the volume_up method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.volume = 9
+        # Act
+        result = await device.volume_up(set_status=True)
+        # Assert
+        assert result
+        assert device.status.volume == 10
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_volume_down(api):
+        """Test the volume_down method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.volume = 11
+        # Act
+        result = await device.volume_down()
+        # Assert
+        assert result
+        assert device.status.volume == 11
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_volume_down_update(api):
+        """Test the volume_down method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.volume = 11
+        # Act
+        result = await device.volume_down(set_status=True)
+        # Assert
+        assert result
+        assert device.status.volume == 10
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_play(api):
+        """Test the play method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.play()
+        # Assert
+        assert result
+        assert device.status.playback_status is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_play_update(api):
+        """Test the play method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.play(set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_status == "play"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_pause(api):
+        """Test the pause method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.pause()
+        # Assert
+        assert result
+        assert device.status.playback_status is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_pause_update(api):
+        """Test the pause method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.pause(set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_status == "pause"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_stop(api):
+        """Test the stop method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.stop()
+        # Assert
+        assert result
+        assert device.status.playback_status is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_stop_update(api):
+        """Test the stop method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.stop(set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_status == "stop"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_fast_forward(api):
+        """Test the fast_forward method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.fast_forward()
+        # Assert
+        assert result
+        assert device.status.playback_status is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_fast_forward_update(api):
+        """Test the fast_forward method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.fast_forward(set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_status == "fast forward"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_rewind(api):
+        """Test the rewind method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.rewind()
+        # Assert
+        assert result
+        assert device.status.playback_status is None
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_rewind_update(api):
+        """Test the rewind method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_status = None
+        # Act
+        result = await device.rewind(set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_status == "rewind"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_input_source(api):
+        """Test the set_input_source method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.update_attribute_value(
+            Attribute.supported_input_sources, ["Source", "OtherSource"]
+        )
+        device.status.input_source = "OtherSource"
+        # Act
+        result = await device.set_input_source("Source")
+        # Assert
+        assert result
+        assert device.status.input_source == "OtherSource"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_input_source_update(api):
+        """Test the set_input_source method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.update_attribute_value(
+            Attribute.supported_input_sources, ["Source", "OtherSource"]
+        )
+        device.status.input_source = "OtherSource"
+        # Act
+        result = await device.set_input_source("Source", set_status=True)
+        # Assert
+        assert result
+        assert device.status.input_source == "Source"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_playback_shuffle(api):
+        """Test the set_playback_shuffle method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_shuffle = False
+        # Act
+        result = await device.set_playback_shuffle(shuffle=True)
+        # Assert
+        assert result
+        assert not device.status.playback_shuffle
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_playback_shuffle_update(api):
+        """Test the set_playback_shuffle method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_shuffle = False
+        # Act
+        result = await device.set_playback_shuffle(True, set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_shuffle
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_repeat(api):
+        """Test the set_repeat method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_repeat_mode = "off"
+        # Act
+        result = await device.set_repeat("all")
+        # Assert
+        assert result
+        assert device.status.playback_repeat_mode == "off"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_repeat_update(api):
+        """Test the set_repeat method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.playback_repeat_mode = "off"
+        # Act
+        result = await device.set_repeat("all", set_status=True)
+        # Assert
+        assert result
+        assert device.status.playback_repeat_mode == "all"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_tv_channel(api):
+        """Test the tv_channel method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.tv_channel = "OtherChannel"
+        # Act
+        result = await device.set_tv_channel("Channel")
+        # Assert
+        assert result
+        assert device.status.tv_channel == "OtherChannel"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_tv_channel_update(api):
+        """Test the tv_channel method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        device.status.tv_channel = "OtherChannel"
+        # Act
+        result = await device.set_tv_channel("Channel", set_status=True)
+        # Assert
+        assert result
+        assert device.status.tv_channel == "Channel"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_channel_up(api):
+        """Test the channel_up method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.channel_up()
+        # Assert
+        assert result
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_channel_down(api):
+        """Test the channel_down method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.channel_down()
+        # Assert
+        assert result
+
 
 class TestDeviceStatus:
     """Tests for the DeviceStatus class."""
@@ -1041,6 +1433,36 @@ class TestDeviceStatus:
         for value in values:
             with pytest.raises(ValueError):
                 status.color = value
+
+    @staticmethod
+    def test_volume_range(api):
+        """Test the volume property's range."""
+        # Arrange
+        status = DeviceStatus(api, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.volume = value
+
+    @staticmethod
+    def test_input_source(api):
+        """Test the volume property's range."""
+        # Arrange
+        status = DeviceStatus(api, device_id=DEVICE_ID)
+        status.update_attribute_value(Attribute.supported_input_sources, "Source")
+        # Act/Assert
+        with pytest.raises(ValueError):
+            status.input_source = "INVALID"
+
+    @staticmethod
+    def test_playback_repeat_mode(api):
+        """Test the volume property's range."""
+        # Arrange
+        status = DeviceStatus(api, device_id=DEVICE_ID)
+        # Act/Assert
+        with pytest.raises(ValueError):
+            status.playback_repeat_mode = "INVALID"
 
     @staticmethod
     def test_is_on():

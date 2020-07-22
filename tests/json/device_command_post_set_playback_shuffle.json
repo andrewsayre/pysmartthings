@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "mediaPlaybackShuffle",
+      "command": "setPlaybackShuffle",
+      "arguments": ["enabled"]
+    }
+  ]
+}
