@@ -674,7 +674,10 @@ class DeviceEntity(Entity, Device):
         response = await self._api.post_device_command(
             self._device_id, component_id, capability, command, args
         )
-        return response == {}
+        try:
+            return response["results"][0]["status"] in ("ACCEPTED", "COMPLETED")
+        except (KeyError, IndexError):
+            return False
 
     async def set_color(
         self,

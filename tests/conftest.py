@@ -55,7 +55,7 @@ def register_device_commands(mocker):
             mocker.post(
                 API_DEVICE_COMMAND.format(device_id=DEVICE_ID),
                 request=match.group(),
-                response={},
+                response={"results": [{"status": "ACCEPTED"}]},
             )
 
 
