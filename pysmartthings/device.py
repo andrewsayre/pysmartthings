@@ -121,26 +121,31 @@ class Device:
 
     def apply_data(self, data: dict):
         """Apply the given data dictionary."""
-        self._device_id = data["deviceId"]
-        self._name = data["name"]
-        self._label = data["label"]
-        self._location_id = data["locationId"]
+        self._device_id = data.get("deviceId")
+        self._name = data.get("name")
+        self._label = data.get("label")
+        self._location_id = data.get("locationId")
         self._room_id = data.get("roomId")
-        self._type = data["type"]
+        self._type = data.get("type")
         self._components.clear()
         self._capabilities.clear()
-        for component in data["components"]:
-            capabilities = [c["id"] for c in component["capabilities"]]
-            component_id = component["id"]
-            if component_id == "main":
-                self._capabilities.extend(capabilities)
-            else:
-                self._components[component_id] = capabilities
+
+        components = data.get("components")
+        if components:
+            for component in components:
+                capabilities = [c["id"] for c in component["capabilities"]]
+                component_id = component["id"]
+                if component_id == "main":
+                    self._capabilities.extend(capabilities)
+                else:
+                    self._components[component_id] = capabilities
+
         if self._type == DEVICE_TYPE_DTH:
-            dth = data["dth"]
-            self._device_type_id = dth["deviceTypeId"]
-            self._device_type_name = dth["deviceTypeName"]
-            self._device_type_network = dth["deviceNetworkType"]
+            dth = data.get("dth")
+            if dth:
+                self._device_type_id = dth.get("deviceTypeId")
+                self._device_type_name = dth.get("deviceTypeName")
+                self._device_type_network = dth.get("deviceNetworkType")
 
     def get_capability(self, *capabilities) -> Optional[str]:
         """Return the first capability held by the device."""
