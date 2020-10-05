@@ -48,6 +48,14 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "filterStatus": ["filterStatus"],
     "formaldehydeMeasurement": ["formaldehydeLevel"],
     "garageDoorControl": ["door"],
+    "gasMeter": [
+        "gasMeter",
+        "gasMeterCalorific",
+        "gasMeterConversion",
+        "gasMeterPrecision",
+        "gasMeterTime",
+        "gasMeterVolume",
+    ],
     "illuminanceMeasurement": ["illuminance"],
     "infraredLevel": ["infraredLevel"],
     "lock": ["lock"],
@@ -183,6 +191,12 @@ class Capability:
     filter_status = "filterStatus"
     formaldehyde_measurement = "formaldehydeMeasurement"
     garage_door_control = "garageDoorControl"
+    gas_meter = "gasMeter"
+    gas_meter_calorific = "gasMeterCalorific"
+    gas_meter_conversion = "gasMeterConversion"
+    gas_meter_precision = "gasMeterPrecision"
+    gas_meter_time = "gasMeterTime"
+    gas_meter_volume = "gasMeterVolume"
     illuminance_measurement = "illuminanceMeasurement"
     infrared_level = "infraredLevel"
     lock = "lock"
@@ -270,6 +284,7 @@ class Attribute:
     filter_status = "filterStatus"
     fine_dust_level = "fineDustLevel"
     formaldehyde_level = "formaldehydeLevel"
+    gas_meter = "gasMeter"
     heating_setpoint = "heatingSetpoint"
     heating_setpoint_range = "heatingSetpointRange"
     hue = "hue"
