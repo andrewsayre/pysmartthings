@@ -1,12 +1,11 @@
 """Define the SmartThings Cloud API."""
 
+from aiohttp import ClientSession
 from typing import (
     List,
     Optional,
     Sequence,
 )
-
-from aiohttp import ClientSession
 
 from .api import Api
 from .app import (
