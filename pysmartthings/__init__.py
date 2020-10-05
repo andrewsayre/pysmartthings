@@ -20,10 +20,7 @@ from .capability import (
     Attribute,
     Capability,
 )
-from .const import (  # noqa
-    __title__,
-    __version__,
-)
+from .const import __title__, __version__  # noqa
 from .device import (
     DEVICE_TYPE_DTH,
     DEVICE_TYPE_ENDPOINT_APP,
@@ -36,36 +33,19 @@ from .device import (
     DeviceStatus,
     DeviceStatusBase,
 )
-from .errors import (
-    APIErrorDetail,
-    APIInvalidGrant,
-    APIResponseError,
-)
+from .errors import APIErrorDetail, APIInvalidGrant, APIResponseError
 from .installedapp import (
     InstalledApp,
     InstalledAppEntity,
     InstalledAppStatus,
     InstalledAppType,
 )
-from .location import (
-    Location,
-    LocationEntity,
-)
+from .location import Location, LocationEntity
 from .oauthtoken import OAuthToken
-from .room import (
-    Room,
-    RoomEntity,
-)
-from .scene import (
-    Scene,
-    SceneEntity,
-)
+from .room import Room, RoomEntity
+from .scene import Scene, SceneEntity
 from .smartthings import SmartThings
-from .subscription import (
-    SourceType,
-    Subscription,
-    SubscriptionEntity,
-)
+from .subscription import SourceType, Subscription, SubscriptionEntity
 
 __all__ = [
     # app

@@ -1,11 +1,7 @@
 """Define the app module."""
 
 import re
-
-from typing import (
-    List,
-    Optional,
-)
+from typing import List, Optional
 
 from .api import Api
 from .entity import Entity

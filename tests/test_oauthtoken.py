@@ -1,13 +1,10 @@
 """Tests for the OAuth module."""
 
-from pysmartthings.oauthtoken import OAuthToken
 import pytest
 
-from .conftest import (
-    CLIENT_ID,
-    CLIENT_SECRET,
-    REFRESH_TOKEN,
-)
+from pysmartthings.oauthtoken import OAuthToken
+
+from .conftest import CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN
 from .utilities import get_json
 
 

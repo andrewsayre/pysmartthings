@@ -1,11 +1,8 @@
 """Tests for the subscription module."""
 
-from pysmartthings.subscription import (
-    SourceType,
-    Subscription,
-    SubscriptionEntity,
-)
 import pytest
+
+from pysmartthings.subscription import SourceType, Subscription, SubscriptionEntity
 
 from .conftest import INSTALLED_APP_ID
 from .utilities import get_json
