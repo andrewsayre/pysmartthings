@@ -1,8 +1,5 @@
 """Defines the rooms module."""
-from typing import (
-    Dict,
-    Optional,
-)
+from typing import Dict, Optional
 
 from .api import Api
 from .entity import Entity

@@ -1,13 +1,10 @@
 """Tests for the SmartThings file."""
 
-from pysmartthings.app import (
-    App,
-    AppOAuth,
-    AppSettings,
-)
+import pytest
+
+from pysmartthings.app import App, AppOAuth, AppSettings
 from pysmartthings.room import Room
 from pysmartthings.subscription import Subscription
-import pytest
 
 from .conftest import (
     APP_ID,

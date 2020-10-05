@@ -1,9 +1,6 @@
 """Define the SmartThing location."""
 
-from typing import (
-    List,
-    Optional,
-)
+from typing import List, Optional
 
 from .api import Api
 from .entity import Entity

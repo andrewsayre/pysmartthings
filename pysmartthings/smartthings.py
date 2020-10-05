@@ -1,11 +1,8 @@
 """Define the SmartThings Cloud API."""
 
+from typing import List, Optional, Sequence
+
 from aiohttp import ClientSession
-from typing import (
-    List,
-    Optional,
-    Sequence,
-)
 
 from .api import Api
 from .app import (
@@ -19,21 +16,12 @@ from .app import (
     AppSettingsEntity,
 )
 from .device import DeviceEntity
-from .installedapp import (
-    InstalledAppEntity,
-    InstalledAppStatus,
-)
+from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
 from .oauthtoken import OAuthToken
-from .room import (
-    Room,
-    RoomEntity,
-)
+from .room import Room, RoomEntity
 from .scene import SceneEntity
-from .subscription import (
-    Subscription,
-    SubscriptionEntity,
-)
+from .subscription import Subscription, SubscriptionEntity
 
 
 class SmartThings:
