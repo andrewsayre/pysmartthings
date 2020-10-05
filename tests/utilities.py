@@ -1,14 +1,14 @@
 """Define testing utilities."""
 import json as _json
+from urllib.parse import parse_qs
+
+from aiohttp import ClientSession
+from aiohttp.client_exceptions import ClientResponseError
 from typing import (
     Optional,
     Sequence,
     Union,
 )
-from urllib.parse import parse_qs
-
-from aiohttp import ClientSession
-from aiohttp.client_exceptions import ClientResponseError
 from yarl import URL
 
 BodyFixtureType = Optional[Union[str, list, dict]]

@@ -1,6 +1,7 @@
 """Define the app module."""
 
 import re
+
 from typing import (
     List,
     Optional,

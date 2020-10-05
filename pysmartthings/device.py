@@ -3,8 +3,9 @@ from collections import (
     defaultdict,
     namedtuple,
 )
-import colorsys
 import re
+
+import colorsys
 from typing import (
     Any,
     Dict,

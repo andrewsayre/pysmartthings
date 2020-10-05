@@ -1,13 +1,12 @@
 """Utility for invoking the SmartThings Cloud API."""
 
-from typing import (
-    Optional,
-    Sequence,
-)
-
 from aiohttp import (
     BasicAuth,
     ClientSession,
+)
+from typing import (
+    Optional,
+    Sequence,
 )
 
 from .errors import (
