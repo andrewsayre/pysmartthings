@@ -23,7 +23,7 @@ setup(
     author="Andrew Sayre",
     author_email="andrew@sayre.net",
     license="ASL 2.0",
-    packages=find_packages(),
+    packages=find_packages(exclude=("tests*",)),
     install_requires=["aiohttp>=3.5.1,<4.0.0"],
     tests_require=["tox>=3.5.0,<4.0.0"],
     platforms=["any"],
