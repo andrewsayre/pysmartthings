@@ -1584,12 +1584,20 @@ class TestDeviceStatus:
         assert status.power_consumption_energy is None
         assert status.power_consumption_power is None
         assert status.power_consumption_start is None
+        assert status.power_consumption_delta_energy is None
+        assert status.power_consumption_energy_saved is None
+        assert status.power_consumption_persisted_energy is None
+        assert status.power_consumption_power_energy is None
         # Populated
         data = {
             "start": "2019-02-24T21:03:04Z",
             "power": 0,
             "energy": 500,
             "end": "2019-02-26T02:05:55Z",
+            "powerEnergy": 1.5,
+            "persistedEnergy": 100,
+            "energySaved": 50,
+            "deltaEnergy": 25,
         }
         status.update_attribute_value(Attribute.power_consumption, data)
         assert status.power_consumption == data
@@ -1597,6 +1605,10 @@ class TestDeviceStatus:
         assert status.power_consumption_energy == 500
         assert status.power_consumption_power == 0
         assert status.power_consumption_start == "2019-02-24T21:03:04Z"
+        assert status.power_consumption_delta_energy == 25
+        assert status.power_consumption_energy_saved == 50
+        assert status.power_consumption_persisted_energy == 100
+        assert status.power_consumption_power_energy == 1.5
         # Missing
         status.update_attribute_value(Attribute.power_consumption, {})
         assert status.power_consumption == {}
@@ -1604,9 +1616,29 @@ class TestDeviceStatus:
         assert status.power_consumption_energy is None
         assert status.power_consumption_power is None
         assert status.power_consumption_start is None
+        assert status.power_consumption_delta_energy is None
+        assert status.power_consumption_energy_saved is None
+        assert status.power_consumption_persisted_energy is None
+        assert status.power_consumption_power_energy is None
+        # Minimal
+        data = {"deltaEnergy": 0, "power": 0, "energy": 60800}
+        status.update_attribute_value(Attribute.power_consumption, data)
+        assert status.power_consumption == data
+        assert status.power_consumption_end is None
+        assert status.power_consumption_energy == 60800
+        assert status.power_consumption_power == 0
+        assert status.power_consumption_start is None
+        assert status.power_consumption_delta_energy == 0
+        assert status.power_consumption_energy_saved is None
+        assert status.power_consumption_persisted_energy is None
+        assert status.power_consumption_power_energy is None
         # Not valid
         data = {"power": "Foo", "energy": "Bar"}
         status.update_attribute_value(Attribute.power_consumption, data)
         assert status.power_consumption == data
         assert status.power_consumption_energy is None
         assert status.power_consumption_power is None
+        assert status.power_consumption_delta_energy is None
+        assert status.power_consumption_energy_saved is None
+        assert status.power_consumption_persisted_energy is None
+        assert status.power_consumption_power_energy is None
