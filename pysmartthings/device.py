@@ -447,7 +447,7 @@ class DeviceStatusBase:
 
     @property
     def power_consumption_start(self) -> Optional[str]:
-        """Get the start component of power consumption data."""
+        """Get the start date of the reporting period in Iso8601Date format."""
         try:
             return self.power_consumption["start"]
         except (KeyError, TypeError):
@@ -455,26 +455,58 @@ class DeviceStatusBase:
 
     @property
     def power_consumption_power(self) -> Optional[int]:
-        """Get the power component of power consumption data."""
+        """Get the instantaneous power consumption during the reporting period in watts (W)."""
         try:
             return int(self.power_consumption["power"])
         except (KeyError, ValueError, TypeError):
             return None
 
     @property
-    def power_consumption_energy(self) -> Optional[int]:
-        """Get the energy component of power consumption data."""
+    def power_consumption_energy(self) -> Optional[float]:
+        """Get the accumulated energy consumption during the reporting period in watt-hours (Wh)."""
         try:
-            return int(self.power_consumption["energy"])
+            return float(self.power_consumption["energy"])
         except (KeyError, ValueError, TypeError):
             return None
 
     @property
     def power_consumption_end(self) -> Optional[str]:
-        """Get the end component of power consumption data."""
+        """Get the end date of the reporting period in Iso8601Date format."""
         try:
             return self.power_consumption["end"]
         except (KeyError, TypeError):
+            return None
+
+    @property
+    def power_consumption_delta_energy(self) -> Optional[float]:
+        """Get the delta of accumulated energy consumption during the reporting period in watt-hours (Wh)."""
+        try:
+            return float(self.power_consumption["deltaEnergy"])
+        except (KeyError, TypeError, TypeError):
+            return None
+
+    @property
+    def power_consumption_power_energy(self) -> Optional[float]:
+        """Get the energy consumption during the reporting period calculated from instantaneous power consumption in watt-hours (Wh)."""
+        try:
+            return float(self.power_consumption["powerEnergy"])
+        except (KeyError, TypeError, TypeError):
+            return None
+
+    @property
+    def power_consumption_energy_saved(self) -> Optional[float]:
+        """Get the energy saved during the report period in watt-hours (Wh)."""
+        try:
+            return float(self.power_consumption["energySaved"])
+        except (KeyError, TypeError, TypeError):
+            return None
+
+    @property
+    def power_consumption_persisted_energy(self) -> Optional[str]:
+        """Get the accumulated energy consumption that was saved into device local DB in watt-hours (Wh)."""
+        try:
+            return float(self.power_consumption["persistedEnergy"])
+        except (KeyError, TypeError, TypeError):
             return None
 
     @property

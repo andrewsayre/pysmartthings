@@ -1,5 +1,5 @@
 @echo off
-isort tests pysmartthings --recursive
+isort tests pysmartthings
 black tests pysmartthings
 pylint tests pysmartthings
 flake8 tests pysmartthings
