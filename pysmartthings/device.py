@@ -725,7 +725,6 @@ class DeviceStatusBase:
         """Get the trackDescription attribute."""
         return self._attributes["trackDescription"].value
     
-    
     @property
     def health(self):
         for attr_map in HEALTH_ATTRIBUTE_MAP.items():
