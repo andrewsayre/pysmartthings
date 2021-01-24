@@ -742,8 +742,7 @@ class DeviceStatus(DeviceStatusBase):
         super().__init__("main")
         self._api = api
         self._device_id = device_id
-        self._components = {}
-        
+        self._components = {} 
         if data:
             self.apply_data(data)
 
