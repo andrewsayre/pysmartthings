@@ -6,8 +6,8 @@ from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 
 from .api import Api
 from .capability import ATTRIBUTE_OFF_VALUES, ATTRIBUTE_ON_VALUES, Attribute, Capability
-from .entity import Entity
 from .const import HEALTH_ATTRIBUTE_MAP
+from .entity import Entity
 
 DEVICE_TYPE_OCF = "OCF"
 DEVICE_TYPE_DTH = "DTH"
