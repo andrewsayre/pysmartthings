@@ -7,6 +7,7 @@ from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 from .api import Api
 from .capability import ATTRIBUTE_OFF_VALUES, ATTRIBUTE_ON_VALUES, Attribute, Capability
 from .entity import Entity
+from .const import HEALTH_ATTRIBUTE_MAP
 
 DEVICE_TYPE_OCF = "OCF"
 DEVICE_TYPE_DTH = "DTH"
@@ -204,6 +205,7 @@ class DeviceStatusBase:
         """Initialize the status class."""
         self._attributes = defaultdict(lambda: STATUS_NONE, attributes or {})
         self._component_id = component_id
+        self._health = {}
 
     def is_on(self, attribute: str) -> bool:
         """Determine if a specific attribute contains an on/True value."""
@@ -722,6 +724,14 @@ class DeviceStatusBase:
     def media_title(self) -> bool:
         """Get the trackDescription attribute."""
         return self._attributes["trackDescription"].value
+    
+    
+    @property
+    def health(self):
+        for attr_map in HEALTH_ATTRIBUTE_MAP.items():
+            if attr_map[1] not in self._health:
+                self._health[attr_map[1]] = None
+        return self._health
 
 
 class DeviceStatus(DeviceStatusBase):
@@ -733,6 +743,7 @@ class DeviceStatus(DeviceStatusBase):
         self._api = api
         self._device_id = device_id
         self._components = {}
+        
         if data:
             self.apply_data(data)
 
@@ -792,6 +803,12 @@ class DeviceStatus(DeviceStatusBase):
         data = await self._api.get_device_status(self.device_id)
         if data:
             self.apply_data(data)
+            
+    async def refresh_health(self):
+        """Refresh the values of the entity."""
+        data = await self._api.get_device_health(self.device_id)
+        for data_key, status_key in HEALTH_ATTRIBUTE_MAP.items():
+            self._health[status_key] = data[data_key]
 
 
 class DeviceEntity(Entity, Device):

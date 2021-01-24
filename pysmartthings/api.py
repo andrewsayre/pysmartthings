@@ -15,6 +15,7 @@ API_ROOM = "locations/{location_id}/rooms/{room_id}"
 API_DEVICES = "devices"
 API_DEVICE = API_DEVICES + "/{device_id}"
 API_DEVICE_STATUS = "devices/{device_id}/status"
+API_DEVICE_HEALTH = "devices/{device_id}/health"
 API_DEVICE_COMMAND = "devices/{device_id}/commands"
 API_APPS = "apps"
 API_APP = "apps/{app_id}"
@@ -123,6 +124,10 @@ class Api:
     async def get_device_status(self, device_id: str) -> dict:
         """Get the status of a specific device."""
         return await self.get(API_DEVICE_STATUS.format(device_id=device_id))
+    
+    async def get_device_health(self, device_id: str) -> dict:
+        """Get the health of a specific device."""
+        return await self.get(API_DEVICE_HEALTH.format(device_id=device_id))
 
     async def post_device_command(
         self, device_id, component_id, capability, command, args
