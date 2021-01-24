@@ -808,7 +808,7 @@ class DeviceStatus(DeviceStatusBase):
         """Refresh the values of the entity."""
         data = await self._api.get_device_health(self.device_id)
         for data_key, status_key in HEALTH_ATTRIBUTE_MAP.items():
-            self._health[status_key] = data[data_key]
+            self._health[status_key] = data.get(data_key)
 
 
 class DeviceEntity(Entity, Device):
