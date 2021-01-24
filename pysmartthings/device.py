@@ -724,7 +724,7 @@ class DeviceStatusBase:
     def media_title(self) -> bool:
         """Get the trackDescription attribute."""
         return self._attributes["trackDescription"].value
-    
+
     @property
     def health(self):
         for attr_map in HEALTH_ATTRIBUTE_MAP.items():
@@ -741,7 +741,7 @@ class DeviceStatus(DeviceStatusBase):
         super().__init__("main")
         self._api = api
         self._device_id = device_id
-        self._components = {} 
+        self._components = {}
         if data:
             self.apply_data(data)
 
@@ -801,7 +801,7 @@ class DeviceStatus(DeviceStatusBase):
         data = await self._api.get_device_status(self.device_id)
         if data:
             self.apply_data(data)
-            
+
     async def refresh_health(self):
         """Refresh the values of the entity."""
         data = await self._api.get_device_health(self.device_id)

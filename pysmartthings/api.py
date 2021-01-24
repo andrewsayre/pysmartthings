@@ -124,7 +124,7 @@ class Api:
     async def get_device_status(self, device_id: str) -> dict:
         """Get the status of a specific device."""
         return await self.get(API_DEVICE_STATUS.format(device_id=device_id))
-    
+
     async def get_device_health(self, device_id: str) -> dict:
         """Get the health of a specific device."""
         return await self.get(API_DEVICE_HEALTH.format(device_id=device_id))
