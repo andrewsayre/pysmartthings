@@ -727,6 +727,7 @@ class DeviceStatusBase:
 
     @property
     def health(self):
+        """Get the health attribute."""
         for attr_map in HEALTH_ATTRIBUTE_MAP.items():
             if attr_map[1] not in self._health:
                 self._health[attr_map[1]] = None
