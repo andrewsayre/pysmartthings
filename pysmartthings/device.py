@@ -4,6 +4,8 @@ import colorsys
 import re
 from typing import Any, Dict, Mapping, Optional, Sequence, Tuple
 
+from aiohttp import ClientSession
+
 from .api import Api
 from .capability import ATTRIBUTE_OFF_VALUES, ATTRIBUTE_ON_VALUES, Attribute, Capability
 from .const import HEALTH_ATTRIBUTE_MAP
@@ -803,8 +805,10 @@ class DeviceStatus(DeviceStatusBase):
         if data:
             self.apply_data(data)
 
-    async def refresh_health(self):
+    async def refresh_health(self, session: Optional[ClientSession] = None):
         """Refresh the values of the entity."""
+        if session is not None:
+            self._api.session = session
         data = await self._api.get_device_health(self.device_id)
         for data_key, status_key in HEALTH_ATTRIBUTE_MAP.items():
             self._health[status_key] = data.get(data_key)
