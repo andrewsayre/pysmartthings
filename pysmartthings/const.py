@@ -1,7 +1,7 @@
 """Define consts for the pysmartthings package."""
 
 __title__ = "pysmartthings"
-__version__ = "0.7.6"
+__version__ = "0.7.7"
 
 # Constants for Health
 HEALTH_API_STATE = "state"
