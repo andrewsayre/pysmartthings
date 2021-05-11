@@ -45,6 +45,9 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "equivalentCarbonDioxideMeasurement": ["equivalentCarbonDioxideMeasurement"],
     "execute": ["data"],
     "fanSpeed": ["fanSpeed"],
+    "custom.spiMode": ["spiMode"],
+    "custom.autoCleaningMode": ["autoCleaningMode"],
+    "custom.airConditionerOptionalMode": ["acOptionalMode"],
     "filterStatus": ["filterStatus"],
     "formaldehydeMeasurement": ["formaldehydeLevel"],
     "garageDoorControl": ["door"],
@@ -188,6 +191,9 @@ class Capability:
     equivalent_carbon_dioxide_measurement = "equivalentCarbonDioxideMeasurement"
     execute = "execute"
     fan_speed = "fanSpeed"
+    spi_mode = "custom.spiMode"
+    autoclean_mode = "custom.autoCleaningMode"
+    ac_optional_mode = "custom.airConditionerOptionalMode"
     filter_status = "filterStatus"
     formaldehyde_measurement = "formaldehydeMeasurement"
     garage_door_control = "garageDoorControl"
@@ -274,7 +280,11 @@ class Attribute:
     dust_level = "dustLevel"
     energy = "energy"
     equivalent_carbon_dioxide_measurement = "equivalentCarbonDioxideMeasurement"
+    samsung_options = "x.com.samsung.da.options"
     fan_mode = "fanMode"
+    spi_mode = "spiMode"
+    autoclean_mode = "autoCleaningMode"
+    ac_optional_mode = "acOptionalMode"
     fan_speed = "fanSpeed"
     filter_status = "filterStatus"
     fine_dust_level = "fineDustLevel"
