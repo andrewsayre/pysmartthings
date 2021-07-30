@@ -784,6 +784,18 @@ class TestDeviceEntity:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_set_air_conditioner_optional_mode(api):
+        """Tests the air_conditioner_optional_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.set_air_conditioner_optional_mode("windFree")
+        assert device.status.air_conditioner_optional_mode is None
+        assert await device.set_air_conditioner_optional_mode("windFree", set_status=True)
+        assert device.status.air_conditioner_optional_mode == "windFree"
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_set_fan_mode(api):
         """Tests the set_fan_mode method."""
         # Arrange
@@ -1478,6 +1490,7 @@ class TestDeviceStatus:
 
         assert status.supported_ac_modes == []
         assert status.supported_ac_fan_modes == []
+        assert status.supported_ac_optional_modes == []
 
         status.update_attribute_value(Attribute.humidity, 50)
         status.update_attribute_value(Attribute.temperature, 55)
@@ -1496,6 +1509,7 @@ class TestDeviceStatus:
         status.update_attribute_value(Attribute.supported_ac_modes, ["auto", "cool"])
         status.update_attribute_value(Attribute.fan_mode, "low")
         status.update_attribute_value(Attribute.supported_ac_fan_modes, ["auto", "low"])
+        status.update_attribute_value(Attribute.supported_ac_optional_modes, ["sleep", "windFree"])
         # Act/Assert
         assert status.humidity == 50
         assert status.temperature == 55
@@ -1509,6 +1523,7 @@ class TestDeviceStatus:
         assert status.three_axis == [0, 0, 0]
         assert status.supported_ac_modes == ["auto", "cool"]
         assert status.supported_ac_fan_modes == ["auto", "low"]
+        assert status.supported_ac_optional_modes == ["sleep", "windFree"]
 
     @staticmethod
     def test_well_known_ocf_attributes():

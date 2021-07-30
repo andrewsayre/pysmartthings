@@ -7,6 +7,7 @@ https://smartthings.developer.samsung.com/docs/api-ref/capabilities.html
 CAPABILITIES_TO_ATTRIBUTES = {
     "accelerationSensor": ["acceleration"],
     "activityLightingMode": ["lightingMode"],
+    "acOptionalMode": ["custom.airConditionerOptionalMode", "supportedAcOptionalMode"],
     "airConditionerFanMode": ["fanMode", "supportedAcFanModes"],
     "airConditionerMode": ["airConditionerMode", "supportedAcModes"],
     "airFlowDirection": ["airFlowDirection"],
@@ -162,6 +163,7 @@ class Capability:
     activity_lighting_mode = "activityLightingMode"
     air_conditioner_fan_mode = "airConditionerFanMode"
     air_conditioner_mode = "airConditionerMode"
+    air_conditioner_optional_mode = "custom.airConditionerOptionalMode"
     air_flow_direction = "airFlowDirection"
     air_quality_sensor = "airQualitySensor"
     alarm = "alarm"
@@ -246,6 +248,7 @@ class Attribute:
 
     acceleration = "acceleration"
     air_conditioner_mode = "airConditionerMode"
+    air_conditioner_optional_mode = "acOptionalMode"
     air_flow_direction = "airFlowDirection"
     air_quality = "airQuality"
     alarm = "alarm"
@@ -338,6 +341,7 @@ class Attribute:
     st = "st"
     supported_ac_fan_modes = "supportedAcFanModes"
     supported_ac_modes = "supportedAcModes"
+    supported_ac_optional_modes = "supportedAcOptionalMode"
     supported_button_values = "supportedButtonValues"
     supported_input_sources = "supportedInputSources"
     supported_machine_states = "supportedMachineStates"
