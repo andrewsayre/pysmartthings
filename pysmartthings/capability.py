@@ -24,6 +24,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "colorControl": ["color", "hue", "saturation"],
     "colorTemperature": ["colorTemperature"],
     "contactSensor": ["contact"],
+    "custom.airConditionerOptionalMode": ["supportedAcOptionalMode", "acOptionalMode"],
     "demandResponseLoadControl": ["drlcStatus"],
     "dishwasherMode": ["dishwasherMode"],
     "dishwasherOperatingState": [
@@ -161,6 +162,7 @@ class Capability:
     acceleration_sensor = "accelerationSensor"
     activity_lighting_mode = "activityLightingMode"
     air_conditioner_fan_mode = "airConditionerFanMode"
+    air_conditioner_optional_mode = "custom.airConditionerOptionalMode"
     air_conditioner_mode = "airConditionerMode"
     air_flow_direction = "airFlowDirection"
     air_quality_sensor = "airQualitySensor"
@@ -246,6 +248,7 @@ class Attribute:
 
     acceleration = "acceleration"
     air_conditioner_mode = "airConditionerMode"
+    ac_optional_mode = "acOptionalMode"
     air_flow_direction = "airFlowDirection"
     air_quality = "airQuality"
     alarm = "alarm"
@@ -338,6 +341,7 @@ class Attribute:
     st = "st"
     supported_ac_fan_modes = "supportedAcFanModes"
     supported_ac_modes = "supportedAcModes"
+    supported_ac_optional_mode = "supportedAcOptionalMode"
     supported_button_values = "supportedButtonValues"
     supported_input_sources = "supportedInputSources"
     supported_machine_states = "supportedMachineStates"

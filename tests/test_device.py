@@ -784,6 +784,18 @@ class TestDeviceEntity:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_set_ac_optional_mode(api):
+        """Tests the set_ac_optional_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.set_ac_optional_mode("windFree")
+        assert device.status.ac_optional_mode is None
+        assert await device.set_ac_optional_mode("windFree", set_status=True)
+        assert device.status.ac_optional_mode == "windFree"
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_set_fan_mode(api):
         """Tests the set_fan_mode method."""
         # Arrange

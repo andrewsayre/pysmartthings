@@ -1,0 +1,12 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "custom.airConditionerOptionalMode",
+      "command": "setAcOptionalMode",
+      "arguments": [
+        "windFree"
+      ]
+    }
+  ]
+}

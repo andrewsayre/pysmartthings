@@ -57,6 +57,7 @@ class Command:
     request_drlc_action = "requestDrlcAction"
     set_air_flow_direction = "setAirFlowDirection"
     set_air_conditioner_mode = "setAirConditionerMode"
+    set_ac_optional_mode = "setAcOptionalMode"
     set_color = "setColor"
     set_color_temperature = "setColorTemperature"
     set_cooling_setpoint = "setCoolingSetpoint"
@@ -598,6 +599,11 @@ class DeviceStatusBase:
     def air_conditioner_mode(self) -> Optional[str]:
         """Get the air conditioner mode attribute."""
         return self._attributes[Attribute.air_conditioner_mode].value
+
+    @property
+    def ac_optional_mode(self) -> Optional[str]:
+        """Get the air conditioner optional mode attribute."""
+        return self._attributes[Attribute.ac_optional_mode].value
 
     @property
     def supported_ac_modes(self) -> Sequence[str]:
@@ -1166,6 +1172,20 @@ class DeviceEntity(Entity, Device):
         )
         if result and set_status:
             self.status.update_attribute_value(Attribute.air_conditioner_mode, mode)
+        return result
+
+    async def set_ac_optional_mode(
+        self, mode: str, *, set_status: bool = False, component_id: str = "main"
+    ):
+        """Call the set air conditioner mode command."""
+        result = await self.command(
+            component_id,
+            Capability.air_conditioner_optional_mode,
+            Command.set_ac_optional_mode,
+            [mode],
+        )
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.ac_optional_mode, mode)
         return result
 
     async def set_fan_mode(
