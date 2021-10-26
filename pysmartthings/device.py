@@ -1177,7 +1177,8 @@ class DeviceEntity(Entity, Device):
     async def set_ac_optional_mode(
         self, mode: str, *, set_status: bool = False, component_id: str = "main"
     ):
-        """Call the set air conditioner mode command."""
+        """Call the set air conditioner optional mode command."""
+
         result = await self.command(
             component_id,
             Capability.air_conditioner_optional_mode,
