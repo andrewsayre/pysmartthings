@@ -3,7 +3,6 @@
 [![image](https://img.shields.io/pypi/v/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/pypi/pyversions/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/pypi/l/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
-[![image](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com)
 
 A python library for interacting with the SmartThings cloud API build with [asyncio](https://docs.python.org/3/library/asyncio.html) and [aiohttp](https://aiohttp.readthedocs.io/en/stable/).
 
@@ -12,7 +11,7 @@ A python library for interacting with the SmartThings cloud API build with [asyn
 The package is still in beta, but the following features are available:
 
 1. Locations: List, Get
-1. Rooms: List, Get, Create, Update, Delete
+1. Rooms: List, Get, Create, Update, Deletegit
 1. Devices: List, Get, Command, Status
 1. Apps: List, Get, Create, Update, Delete, Settings Get & Update, OAuth: Get, Update, & Generate
 1. InstalledApps: List, Get, Delete
