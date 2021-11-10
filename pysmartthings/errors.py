@@ -65,9 +65,7 @@ class APIResponseError(ClientResponseError):
 
     def __str__(self):
         """Return a string represenation of the error."""
-        return "{} ({}): {}".format(
-            self.message, self.status, json.dumps(self._raw_error_response)
-        )
+        return f"{self.message} ({self.status}): {json.dumps(self._raw_error_response)}"
 
     @property
     def raw_error_response(self):

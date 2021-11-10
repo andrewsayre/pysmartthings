@@ -22,12 +22,10 @@ STATUS_NONE = Status(None, None, None)
 def hs_to_hex(hue: float, saturation: float) -> str:
     """Convert hue and saturation to a string hex color."""
     rgb = colorsys.hsv_to_rgb(hue / 100, saturation / 100, 100)
-    return "#{:02x}{:02x}{:02x}".format(
-        round(rgb[0]), round(rgb[1]), round(rgb[2])
-    ).upper()
+    return f"#{round(rgb[0]):02x}{round(rgb[1]):02x}{round(rgb[2]):02x}".upper()
 
 
-def hex_to_hs(color_hex: str) -> (int, int):
+def hex_to_hs(color_hex: str) -> Tuple[int, int]:
     """Convert a string hex color to hue and saturation components."""
     color_hex = color_hex.lstrip("#")
     rgb = [
@@ -101,7 +99,7 @@ class Device:
         self._device_type_id = None
         self._device_type_name = None
         self._device_type_network = None
-        self._components = dict()
+        self._components = {}
         self._capabilities = []
 
     def apply_data(self, data: dict):
@@ -837,7 +835,7 @@ class DeviceEntity(Entity, Device):
         color_hex: Optional[str] = None,
         set_status: bool = False,
         *,
-        component_id: str = "main"
+        component_id: str = "main",
     ) -> bool:
         """Call the set color command."""
         color_map = {}
@@ -920,7 +918,7 @@ class DeviceEntity(Entity, Device):
         duration: int = 0,
         set_status: bool = False,
         *,
-        component_id: str = "main"
+        component_id: str = "main",
     ) -> bool:
         """Call the set level device command."""
         if not 0 <= level <= 100:
@@ -1093,7 +1091,7 @@ class DeviceEntity(Entity, Device):
         reporting_period: int = None,
         *,
         set_status: bool = False,
-        component_id: str = "main"
+        component_id: str = "main",
     ):
         """Call the drlc action command."""
         args = [drlc_type, drlc_level, start, duration]

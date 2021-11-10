@@ -13,7 +13,7 @@ BodyType = Optional[Union[list, dict]]
 
 def get_json(file):
     """Load a json file."""
-    with open("tests/json/" + file, "r") as json_file:
+    with open("tests/json/" + file, "r", encoding="utf-8") as json_file:
         return _json.load(json_file)
 
 
@@ -85,7 +85,7 @@ class ClientMocker:
         status=200,
         headers=None,
         request=None,
-        response=None
+        response=None,
     ):
         """Register a mock request."""
         self._mocks.append(
@@ -110,7 +110,7 @@ class ClientMocker:
         headers=None,
         allow_redirects=None,
         timeout=None,
-        json=None
+        json=None,
     ):
         """Match a request against pre-registered requests."""
         url = URL(url)
@@ -121,9 +121,7 @@ class ClientMocker:
             if response.match_request(method, url, headers or [], json):
                 return response
 
-        assert False, "No mock registered for {} {} {}".format(
-            method.upper(), url, params
-        )
+        assert False, f"No mock registered for {method.upper()} {url} {params}"
 
 
 class MockResponse:
