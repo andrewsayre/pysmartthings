@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - dev
+      - master
+  pull_request: ~
+
+jobs:
+  lint:
+    name: "Check style and lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }-${{ hashFiles('test-requirements.txt') }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r test-requirements.txt --upgrade --upgrade-strategy eager
+      - name: Check isort
+        run: isort tests pysmartthings --check-only
+      - name: Check black
+        run: black tests pysmartthings --check --fast --quiet
+      - name: Check pylint
+        run: pylint tests pysmartthings
+      - name: Check flake8
+        run: flake8 tests pysmartthings --doctests
+
+  tests:
+    name: "Run tests on ${{ matrix.python-version }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: actions/cache@v2
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }-${{ hashFiles('test-requirements.txt') }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r test-requirements.txt --upgrade --upgrade-strategy eager
+      - name: Run pytest on ${{ matrix.python-version }}
+        run: pytest
