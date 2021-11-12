@@ -62,15 +62,12 @@ jobs:
     name: "Check code coverage"
     runs-on: ubuntu-latest
     needs: lint
-    strategy:
-      matrix:
-        python-version: 3.9
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.9
       - uses: actions/cache@v2
         with:
           path: ${{ env.pythonLocation }}
