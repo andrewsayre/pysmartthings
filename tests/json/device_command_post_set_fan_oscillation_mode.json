@@ -1,0 +1,12 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "fanOscillationMode",
+      "command": "setFanOscillationMode",
+      "arguments": [
+        "all"
+      ]
+    }
+  ]
+}
