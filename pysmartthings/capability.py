@@ -44,6 +44,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "energyMeter": ["energy"],
     "equivalentCarbonDioxideMeasurement": ["equivalentCarbonDioxideMeasurement"],
     "execute": ["data"],
+    "fanOscillationMode": ["fanOscillationMode", "supportedFanOscillationModes"],
     "fanSpeed": ["fanSpeed"],
     "filterStatus": ["filterStatus"],
     "formaldehydeMeasurement": ["formaldehydeLevel"],
@@ -187,6 +188,7 @@ class Capability:
     energy_meter = "energyMeter"
     equivalent_carbon_dioxide_measurement = "equivalentCarbonDioxideMeasurement"
     execute = "execute"
+    fan_oscillation_mode = "fanOscillationMode"
     fan_speed = "fanSpeed"
     filter_status = "filterStatus"
     formaldehyde_measurement = "formaldehydeMeasurement"
@@ -275,6 +277,7 @@ class Attribute:
     energy = "energy"
     equivalent_carbon_dioxide_measurement = "equivalentCarbonDioxideMeasurement"
     fan_mode = "fanMode"
+    fan_oscillation_mode = "fanOscillationMode"
     fan_speed = "fanSpeed"
     filter_status = "filterStatus"
     fine_dust_level = "fineDustLevel"
