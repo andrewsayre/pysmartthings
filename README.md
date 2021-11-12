@@ -1,5 +1,7 @@
 # pysmartthings
 
+[![CI Status](https://github.com/andrewsayre/pysmartthings/workflows/CI/badge.svg)](https://github.com/andrewsayre/pysmartthings/actions)
+[![codecov](https://codecov.io/gh/andrewsayre/pysmartthings/branch/dev/graph/badge.svg?token=Q13LDPU5MF)](https://codecov.io/gh/andrewsayre/pysmartthings)
 [![image](https://img.shields.io/pypi/v/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/pypi/pyversions/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)
 [![image](https://img.shields.io/pypi/l/pysmartthings.svg)](https://pypi.org/project/pysmartthings/)

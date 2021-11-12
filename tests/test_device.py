@@ -796,6 +796,18 @@ class TestDeviceEntity:
 
     @staticmethod
     @pytest.mark.asyncio
+    async def test_set_fan_oscillation_mode(api):
+        """Tests the set_fan_oscillation_mode method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act/Assert
+        assert await device.set_fan_oscillation_mode("all")
+        assert device.status.fan_oscillation_mode is None
+        assert await device.set_fan_oscillation_mode("all", set_status=True)
+        assert device.status.fan_oscillation_mode == "all"
+
+    @staticmethod
+    @pytest.mark.asyncio
     async def test_set_air_flow_direction(api):
         """Tests the set_air_flow_direction method."""
         # Arrange
@@ -1495,6 +1507,7 @@ class TestDeviceStatus:
         status.update_attribute_value(Attribute.three_axis, [0, 0, 0])
         status.update_attribute_value(Attribute.supported_ac_modes, ["auto", "cool"])
         status.update_attribute_value(Attribute.fan_mode, "low")
+        status.update_attribute_value(Attribute.fan_oscillation_mode, "fixed")
         status.update_attribute_value(Attribute.supported_ac_fan_modes, ["auto", "low"])
         # Act/Assert
         assert status.humidity == 50

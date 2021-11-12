@@ -58,6 +58,7 @@ class Command:
     set_color = "setColor"
     set_color_temperature = "setColorTemperature"
     set_cooling_setpoint = "setCoolingSetpoint"
+    set_fan_oscillation_mode = "setFanOscillationMode"
     set_fan_mode = "setFanMode"
     set_fan_speed = "setFanSpeed"
     set_heating_setpoint = "setHeatingSetpoint"
@@ -610,6 +611,11 @@ class DeviceStatusBase:
     def fan_mode(self) -> Optional[str]:
         """Get the fan mode attribute."""
         return self._attributes[Attribute.fan_mode].value
+
+    @property
+    def fan_oscillation_mode(self) -> Optional[str]:
+        """Get the fan oscillation mode attribute."""
+        return self._attributes[Attribute.fan_oscillation_mode].value
 
     @property
     def supported_ac_fan_modes(self) -> Sequence[str]:
@@ -1178,6 +1184,20 @@ class DeviceEntity(Entity, Device):
         )
         if result and set_status:
             self.status.update_attribute_value(Attribute.fan_mode, mode)
+        return result
+
+    async def set_fan_oscillation_mode(
+        self, mode: str, *, set_status: bool = False, component_id: str = "main"
+    ):
+        """Call the setFanOscillationMode command."""
+        result = await self.command(
+            component_id,
+            Capability.fan_oscillation_mode,
+            Command.set_fan_oscillation_mode,
+            [mode],
+        )
+        if result and set_status:
+            self.status.update_attribute_value(Attribute.fan_oscillation_mode, mode)
         return result
 
     async def set_air_flow_direction(
