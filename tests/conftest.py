@@ -13,6 +13,7 @@ from pysmartthings.api import (
     API_BASE,
     API_DEVICE,
     API_DEVICE_COMMAND,
+    API_DEVICE_HEALTH,
     API_DEVICE_STATUS,
     API_DEVICES,
     API_INSTALLEDAPP,
@@ -100,6 +101,7 @@ def register_url_mocks(mocker):
     )
     mocker.get(API_DEVICE.format(device_id=DEVICE_ID), response="device")
     mocker.get(API_DEVICE_STATUS.format(device_id=DEVICE_ID), response="device_status")
+    mocker.get(API_DEVICE_HEALTH.format(device_id=DEVICE_ID), response="device_health")
 
     # Device Commands
     register_device_commands(mocker)

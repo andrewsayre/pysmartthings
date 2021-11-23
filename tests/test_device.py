@@ -8,6 +8,7 @@ from pysmartthings.device import (
     DEVICE_TYPE_UNKNOWN,
     Device,
     DeviceEntity,
+    DeviceHealth,
     DeviceStatus,
     Status,
 )
@@ -1655,3 +1656,38 @@ class TestDeviceStatus:
         assert status.power_consumption_energy_saved is None
         assert status.power_consumption_persisted_energy is None
         assert status.power_consumption_power_energy is None
+
+
+class TestDeviceHealth:
+    """Tests for the DeviceStatus class."""
+
+    @staticmethod
+    def test_init():
+        """Tests the init method."""
+        # Arrange/Act
+        device_health = DeviceHealth(None, device_id=DEVICE_ID)
+        # Assert
+        assert device_health.device_id == DEVICE_ID
+        assert not device_health.device_state
+        assert not device_health.last_update_date
+
+    @staticmethod
+    def test_apply_data():
+        """Tests the apply_data method."""
+        # Arrange
+        data = get_json("device_health.json")
+        # Act
+        device_health = DeviceHealth(None, DEVICE_ID, data)
+        # Assert
+        assert device_health.device_state
+        assert device_health.last_update_date
+
+    @staticmethod
+    def test_values():
+        """Test the values property."""
+        # Arrange
+        data = get_json("device_health.json")
+        device_health = DeviceHealth(None, DEVICE_ID, data)
+        # Act/Assert
+        assert device_health.device_state == "ONLINE"
+        assert device_health.last_update_date == "2021-11-20T17:08:32.396Z"

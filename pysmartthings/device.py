@@ -798,6 +798,64 @@ class DeviceStatus(DeviceStatusBase):
             self.apply_data(data)
 
 
+class DeviceHealth:
+    """Define the device health."""
+
+    def __init__(self, api: Api, device_id: str, data=None):
+        """Create a new instance of the DeviceStatusEntity class."""
+        self._api = api
+        self._device_id = device_id
+        self._state = None
+        self._last_update_date = None
+        if data:
+            self.apply_data(data)
+
+    def apply_data(self, data: dict):
+        """Apply the values from the given data structure."""
+        self._state = None
+        self._last_update_date = None
+        if "lastUpdatedDate" in data:
+            self._last_update_date = data["lastUpdatedDate"]
+        if "state" in data:
+            self._state = data["state"]
+
+    @property
+    def device_id(self) -> str:
+        """Get the device id."""
+        return self._device_id
+
+    @device_id.setter
+    def device_id(self, value: str):
+        """Set the device id."""
+        self._device_id = value
+
+    @property
+    def device_state(self) -> str:
+        """Get the device id."""
+        return self._state
+
+    @device_state.setter
+    def device_state(self, value: str):
+        """Set the device id."""
+        self._state = value
+
+    @property
+    def last_update_date(self) -> str:
+        """Get the device health last update time."""
+        return self._last_update_date
+
+    @last_update_date.setter
+    def last_update_date(self, value: str):
+        """Set the device health last update time."""
+        self._last_update_date = value
+
+    async def refresh(self):
+        """Refresh the values of the entity."""
+        data = await self._api.get_device_health(self.device_id)
+        if data:
+            self.apply_data(data)
+
+
 class DeviceEntity(Entity, Device):
     """Define a device entity."""
 
@@ -812,6 +870,7 @@ class DeviceEntity(Entity, Device):
         if device_id:
             self._device_id = device_id
         self._status = DeviceStatus(api, self._device_id)
+        self._health = DeviceHealth(api, self._device_id)
 
     async def refresh(self):
         """Refresh the device information using the API."""
@@ -819,6 +878,7 @@ class DeviceEntity(Entity, Device):
         if data:
             self.apply_data(data)
         self._status.device_id = self._device_id
+        self._health.device_id = self._device_id
 
     async def save(self):
         """Save the changes made to the device."""
@@ -1394,3 +1454,8 @@ class DeviceEntity(Entity, Device):
     def status(self):
         """Get the status entity of the device."""
         return self._status
+
+    @property
+    def health(self):
+        """Get the status entity of the device."""
+        return self._health
