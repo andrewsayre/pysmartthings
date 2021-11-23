@@ -6,8 +6,8 @@
 
 ## Checklist:
 
-- [ ] The code change is tested and works locally.
-- [ ] Local tests pass.
-- [ ] There is no commented out code in this PR.
-- [ ] Tests have been added/updated and code coverage percentage does not drop. No exclusions in `.coveragerc` allowed
-- [ ] `README.MD` updated (if necessary)
+- [X] The code change is tested and works locally.
+- [X] Local tests pass.
+- [X] There is no commented out code in this PR.
+- [X] Tests have been added/updated and code coverage percentage does not drop. No exclusions in `.coveragerc` allowed
+- [X] `README.MD` updated (if necessary)

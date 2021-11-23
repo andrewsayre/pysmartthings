@@ -113,6 +113,20 @@ True
 100
 ```
 
+The health state of the device is populated when the coroutine `health.refresh()` is called. The DeviceHealth class represents the current values of the device health state.
+
+```pythonstub
+    await device.health.refresh()
+    print(device.health.device_state)
+    print(device.status.last_update_date)
+```
+
+Outputs:
+
+```pythonstub
+ONLINE
+2021-11-20T17:08:32.396Z
+```
 #### Device Commands
 
 You can execute a command on a device by calling the coroutine `command(component_id, capability, command, args=None)` function. The `component_id` parameter is the identifier of the component within the device (`main` is the device itself); `capability` is the name of the capability implemented by the device; and `command` is one of the defined operations within the capability. `args` is an array of parameters to pass to the command when it accepts parameters (optional). See the [SmartThings Capability Reference](https://smartthings.developer.samsung.com/develop/api-ref/capabilities.html) for more information.
