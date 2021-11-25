@@ -1665,8 +1665,10 @@ class TestDeviceHealth:
     def test_init():
         """Tests the init method."""
         # Arrange/Act
+        device = DeviceEntity(None, device_id=DEVICE_ID)
         device_health = DeviceHealth(None, device_id=DEVICE_ID)
         # Assert
+        assert device.health.device_id == DEVICE_ID
         assert device_health.device_id == DEVICE_ID
         assert not device_health.device_state
         assert not device_health.last_update_date
@@ -1683,11 +1685,32 @@ class TestDeviceHealth:
         assert device_health.last_update_date
 
     @staticmethod
+    @pytest.mark.asyncio
+    async def test_refresh(api):
+        """Tests the refresh method."""
+        device_health = DeviceHealth(api, DEVICE_ID)
+        await device_health.refresh()
+        # Assert
+        assert device_health.device_id == DEVICE_ID
+
+    @staticmethod
     def test_values():
         """Test the values property."""
         # Arrange
         data = get_json("device_health.json")
         device_health = DeviceHealth(None, DEVICE_ID, data)
         # Act/Assert
+        assert device_health.device_state == "ONLINE"
+        assert device_health.last_update_date == "2021-11-20T17:08:32.396Z"
+
+    @staticmethod
+    def test_setters():
+        """Test the values property."""
+        device_health = DeviceHealth(None, DEVICE_ID)
+        # Act/Assert
+        device_health.device_id = DEVICE_ID
+        device_health.device_state = "ONLINE"
+        device_health.last_update_date = "2021-11-20T17:08:32.396Z"
+        assert device_health.device_id == DEVICE_ID
         assert device_health.device_state == "ONLINE"
         assert device_health.last_update_date == "2021-11-20T17:08:32.396Z"
