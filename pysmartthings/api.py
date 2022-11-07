@@ -10,6 +10,9 @@ API_OAUTH_TOKEN = "https://auth-global.api.smartthings.com/oauth/token"
 API_BASE = "https://api.smartthings.com/v1/"
 API_LOCATIONS = "locations"
 API_LOCATION = API_LOCATIONS + "/{location_id}"
+API_LOCATION_MODES = API_LOCATION + "/modes"
+API_LOCATION_MODE = API_LOCATION_MODES + "/{mode_id}"
+API_LOCATION_MODE_CURRENT = API_LOCATION_MODES + "/current"
 API_ROOMS = "locations/{location_id}/rooms"
 API_ROOM = "locations/{location_id}/rooms/{room_id}"
 API_DEVICES = "devices"
@@ -59,6 +62,68 @@ class Api:
         https://smartthings.developer.samsung.com/docs/api-ref/st-api.html#operation/getLocation
         """
         return await self.get(API_LOCATION.format(location_id=location_id))
+
+    async def get_modes(self, location_id: str) -> dict:
+        """
+        Get modes for a location.
+        
+        This API call is undocumented.
+        """
+        return await self.get_items(API_LOCATION_MODES.format(location_id=location_id))
+
+    async def get_mode(self, location_id: str, mode_id: str) -> dict:
+        """
+        Get a mode for a specific location.
+        
+        This API call is undocumented.
+        """
+        return await self.get(API_LOCATION_MODE.format(location_id=location_id, mode_id=mode_id))
+
+    async def create_mode(self, location_id: str, data: dict):
+        """
+        Create a mode.
+
+        This API call is undocumented.
+        """
+        return await self.post(API_LOCATION_MODES.format(location_id=location_id), data)
+
+    async def update_mode(self, location_id: str, mode_id: str, data: dict):
+        """
+        Update a mode.
+
+        This API call is undocumented.
+        """
+        return await self.put(
+            API_LOCATION_MODE.format(location_id=location_id, mode_id=mode_id), data
+        )
+
+    async def delete_mode(self, location_id: str, mode_id: str):
+        """
+        Delete a mode.
+
+        This API call is undocumented.
+        """
+        return await self.delete(
+            API_LOCATION_MODE.format(location_id=location_id, mode_id=mode_id)
+        )
+
+    async def get_current_mode(self, location_id: str) -> dict:
+        """
+        Get the current mode for a specific location.
+        
+        This API call is undocumented.
+        """
+        return await self.get(API_LOCATION_MODE_CURRENT.format(location_id=location_id))
+
+    async def set_current_mode(self, location_id: str, mode_id: str) -> dict:
+        """
+        Set the current mode for a specific location.
+        
+        This API call is undocumented.
+        """
+        return await self.put(API_LOCATION_MODE_CURRENT.format(location_id=location_id), data={
+            "modeId": mode_id,
+        })
 
     async def get_rooms(self, location_id: str) -> dict:
         """

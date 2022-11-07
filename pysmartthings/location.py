@@ -5,7 +5,7 @@ from typing import List, Optional
 from .api import Api
 from .entity import Entity
 from .room import RoomEntity
-
+from .mode import ModeEntity
 
 class Location:
     """Represents a SmartThings Location."""
@@ -108,3 +108,25 @@ class LocationEntity(Entity, Location):
         """Get the rooms contained within the location."""
         resp = await self._api.get_rooms(self._location_id)
         return [RoomEntity(self._api, entity) for entity in resp]
+
+    async def modes(self) -> List[ModeEntity]:
+        """Get the modes contained within the location."""
+        resp = await self._api.get_modes(self._location_id)
+        for entity in resp:
+            entity["locationId"] = self._location_id
+        return [ModeEntity(self._api, entity) for entity in resp]
+
+    async def get_mode(self) -> ModeEntity:
+        """Retrieve the active mode for this location."""
+        entity = await self._api.get_current_mode(self._location_id)
+        if entity:
+            entity["locationId"] = self._location_id
+        return ModeEntity(self._api, entity)
+
+    async def set_mode(self, mode: ModeEntity) -> ModeEntity:
+        """Change the active mode for this location."""
+        assert mode.location_id == self._location_id
+        entity = await self._api.set_current_mode(mode.location_id, mode.mode_id)
+        if entity:
+            entity["locationId"] = mode.location_id
+        return ModeEntity(self._api, entity)

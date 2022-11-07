@@ -1,0 +1,21 @@
+{
+    "items": [
+        {
+	    "id": "77021384-4a38-11ed-a748-1fde2d0c9f86",
+	    "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+	    "name": "Home",
+	    "label": "Home",
+	    "allowed": "['w:modes', 'd:modes']",
+	    "lastModified": "1653325206032"
+        },
+        {
+	    "id": "5fa5da9c-4a3b-11ed-a248-2bf247caa794",
+	    "locationId": "397678e5-9995-4a39-9d9f-ae6ba310236b",
+	    "name": "Away",
+	    "label": "Away",
+	    "allowed": "['w:modes', 'd:modes']",
+	    "lastModified": "1653325206032"
+        }
+    ],
+    "_links": null
+}

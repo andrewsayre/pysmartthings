@@ -71,6 +71,36 @@ Outputs:
 '5c03e518-118a-44cb-85ad-7877d0b302e4'
 ```
 
+### Location Modes
+
+A list of modes in a SmartThings location can be retrieved by invoking the coroutine `location.modes()`.  The current location mode is retrieved using get_mode() and set using set_mode().
+
+```pythonstub
+    locations = await api.locations()
+    location = locations[0]
+    print(location.name)
+    modes = await location.modes()
+    for mode in modes:
+      print(mode.name)
+      print(mode.mode_id)
+    mode = await location.get_mode()
+    print(mode.name)
+    mode = await location.set_mode(mode)
+    print(mode.name)
+```
+
+Outputs:
+
+```pythonstub
+'Test Home'
+'Home'
+'77021384-4a38-11ed-a748-1fde2d0c9f86'
+'Away'
+'5fa5da9c-4a3b-11ed-a248-2bf247caa794'
+'Home'
+'Home'
+```
+
 ### Devices
 
 A list of devices can be retrieved by invoking the coroutine `devices(location_ids=None, capabilities=None, device_ids=None)`. The optional parameters allow filtering the returned list.

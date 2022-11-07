@@ -41,6 +41,7 @@ from .installedapp import (
     InstalledAppType,
 )
 from .location import Location, LocationEntity
+from .mode import Mode, ModeEntity
 from .oauthtoken import OAuthToken
 from .room import Room, RoomEntity
 from .scene import Scene, SceneEntity
@@ -89,6 +90,9 @@ __all__ = [
     # location
     "Location",
     "LocationEntity",
+    # mode
+    "Mode",
+    "ModeEntity",
     # room
     "Room",
     "RoomEntity",

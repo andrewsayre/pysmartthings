@@ -3,6 +3,7 @@
 import pytest
 
 from pysmartthings.location import Location, LocationEntity
+from pysmartthings.mode import Mode, ModeEntity
 
 from .conftest import LOCATION_ID
 from .utilities import get_json
@@ -65,3 +66,14 @@ class TestLocationEntity:
         rooms = await entity.rooms()
         # Assert
         assert len(rooms) == 1
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_modes(api):
+        """Tests the refresh method."""
+        # Arrange
+        entity = LocationEntity(api, location_id=LOCATION_ID)
+        # Act
+        modes = await entity.modes()
+        # Assert
+        assert len(modes) == 2

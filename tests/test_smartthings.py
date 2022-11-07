@@ -4,6 +4,7 @@ import pytest
 
 from pysmartthings.app import App, AppOAuth, AppSettings
 from pysmartthings.room import Room
+from pysmartthings.mode import Mode
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
@@ -13,6 +14,7 @@ from .conftest import (
     DEVICE_ID,
     INSTALLED_APP_ID,
     LOCATION_ID,
+    MODE_ID,
     REFRESH_TOKEN,
     ROOM_ID,
     SCENE_ID,
@@ -75,6 +77,60 @@ class TestSmartThings:
         location = await smartthings.location(LOCATION_ID)
         # Assert
         assert location.location_id == LOCATION_ID
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_modes(smartthings):
+        """Tests modes for a location are retrieved."""
+        # Act
+        modes = await smartthings.modes(LOCATION_ID)
+        # Assert
+        assert len(modes) == 2
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_mode(smartthings):
+        """Tests the mode for a location method."""
+        # Act
+        mode = await smartthings.mode(LOCATION_ID, MODE_ID)
+        # Assert
+        assert mode.mode_id == MODE_ID
+        assert mode.location_id == LOCATION_ID
+        assert mode.name == "Home"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_delete_mode(smartthings):
+        """Tests the delete mode."""
+        # Act
+        result = await smartthings.delete_mode(LOCATION_ID, MODE_ID)
+        # Assert
+        assert result
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_get_mode(smartthings):
+        """Tests the current mode for a location method."""
+        # Act
+        mode = await smartthings.get_mode(LOCATION_ID)
+        # Assert
+        assert mode.mode_id == MODE_ID
+        assert mode.location_id == LOCATION_ID
+        assert mode.name == "Home"
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_mode(smartthings):
+        """Tests the set mode for a location method."""
+        # Act
+        mode = Mode()
+        mode.id = MODE_ID
+        mode.location_id = LOCATION_ID
+        mode = await smartthings.set_mode(mode)
+        # Assert
+        assert mode.mode_id == MODE_ID
+        assert mode.location_id == LOCATION_ID
+        assert mode.name == "Home"
 
     @staticmethod
     @pytest.mark.asyncio

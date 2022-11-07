@@ -18,6 +18,7 @@ from .app import (
 from .device import DeviceEntity
 from .installedapp import InstalledAppEntity, InstalledAppStatus
 from .location import LocationEntity
+from .mode import Mode, ModeEntity
 from .oauthtoken import OAuthToken
 from .room import Room, RoomEntity
 from .scene import SceneEntity
@@ -42,6 +43,54 @@ class SmartThings:
         """Retrieve a location with the specified ID."""
         entity = await self._service.get_location(location_id)
         return LocationEntity(self._service, entity)
+
+    async def modes(self, location_id: str) -> List[ModeEntity]:
+        """Retrieve the available modes for a location with the specified ID."""
+        resp = await self._service.get_modes(location_id)
+        for entity in resp:
+            entity["locationId"] = location_id
+        return [ModeEntity(self._service, entity) for entity in resp]
+
+    async def mode(self, location_id: str, mode_id: str) -> ModeEntity:
+        """Retrieve a mode for a location with the specified ID."""
+        entity = await self._service.get_mode(location_id, mode_id)
+        if entity:
+            entity["locationId"] = location_id
+        return ModeEntity(self._service, entity)
+
+    async def get_mode(self, location_id: str) -> ModeEntity:
+        """Retrieve the active mode for a location with the specified ID."""
+        entity = await self._service.get_current_mode(location_id)
+        if entity:
+            entity["locationId"] = location_id
+        return ModeEntity(self._service, entity)
+
+    async def set_mode(self, mode: Mode) -> ModeEntity:
+        """Change the active mode for a location with the specified ID."""
+        entity = await self._service.set_current_mode(mode.location_id, mode.mode_id)
+        if entity:
+            entity["locationId"] = mode.location_id
+        return ModeEntity(self._service, entity)
+
+    async def create_mode(self, mode: Mode) -> ModeEntity:
+        """Create a mode."""
+        entity = await self._service.create_mode(mode.location_id, mode.to_data())
+        if entity:
+            entity["locationId"] = mode.location_id
+        return ModeEntity(self._service, entity)
+
+    async def update_mode(self, mode: Mode) -> ModeEntity:
+        """Update a mode."""
+        entity = await self._service.update_mode(
+            mode.location_id, mode.mode_id, mode.to_data()
+        )
+        if entity:
+            entity["locationId"] = mode.location_id
+        return ModeEntity(self._service, entity)
+
+    async def delete_mode(self, location_id: str, mode_id: str):
+        """Delete a mode."""
+        return await self._service.delete_mode(location_id, mode_id) == {}
 
     async def rooms(self, location_id: str) -> List[RoomEntity]:
         """Retrieve a list of rooms for a location."""
