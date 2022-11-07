@@ -3,8 +3,8 @@
 import pytest
 
 from pysmartthings.app import App, AppOAuth, AppSettings
-from pysmartthings.room import Room
 from pysmartthings.mode import Mode
+from pysmartthings.room import Room
 from pysmartthings.subscription import Subscription
 
 from .conftest import (
