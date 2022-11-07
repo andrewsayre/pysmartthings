@@ -66,7 +66,7 @@ class Api:
     async def get_modes(self, location_id: str) -> dict:
         """
         Get modes for a location.
-        
+
         This API call is undocumented.
         """
         return await self.get_items(API_LOCATION_MODES.format(location_id=location_id))
@@ -74,10 +74,12 @@ class Api:
     async def get_mode(self, location_id: str, mode_id: str) -> dict:
         """
         Get a mode for a specific location.
-        
+
         This API call is undocumented.
         """
-        return await self.get(API_LOCATION_MODE.format(location_id=location_id, mode_id=mode_id))
+        return await self.get(
+            API_LOCATION_MODE.format(location_id=location_id, mode_id=mode_id)
+        )
 
     async def create_mode(self, location_id: str, data: dict):
         """
@@ -110,7 +112,7 @@ class Api:
     async def get_current_mode(self, location_id: str) -> dict:
         """
         Get the current mode for a specific location.
-        
+
         This API call is undocumented.
         """
         return await self.get(API_LOCATION_MODE_CURRENT.format(location_id=location_id))
@@ -118,12 +120,15 @@ class Api:
     async def set_current_mode(self, location_id: str, mode_id: str) -> dict:
         """
         Set the current mode for a specific location.
-        
+
         This API call is undocumented.
         """
-        return await self.put(API_LOCATION_MODE_CURRENT.format(location_id=location_id), data={
-            "modeId": mode_id,
-        })
+        return await self.put(
+            API_LOCATION_MODE_CURRENT.format(location_id=location_id),
+            data={
+                "modeId": mode_id,
+            },
+        )
 
     async def get_rooms(self, location_id: str) -> dict:
         """
