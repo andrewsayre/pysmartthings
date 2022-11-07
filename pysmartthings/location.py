@@ -4,8 +4,9 @@ from typing import List, Optional
 
 from .api import Api
 from .entity import Entity
-from .room import RoomEntity
 from .mode import ModeEntity
+from .room import RoomEntity
+
 
 class Location:
     """Represents a SmartThings Location."""
