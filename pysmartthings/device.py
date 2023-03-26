@@ -67,6 +67,7 @@ class Command:
     set_saturation = "setSaturation"
     set_thermostat_fan_mode = "setThermostatFanMode"
     set_thermostat_mode = "setThermostatMode"
+    set_shade_level = "setShadeLevel"
     unlock = "unlock"
     mute = "mute"
     unmute = "unmute"
@@ -1389,6 +1390,28 @@ class DeviceEntity(Entity, Device):
         return await self.command(
             component_id, Capability.tv_channel, Command.channel_down
         )
+
+    async def set_window_shade_level(
+        self,
+        level: int,
+        set_status: bool = False,
+        *,
+        component_id: str = "main",
+    ) -> bool:
+        """Call the set shade level device command."""
+        if not 0 <= level <= 100:
+            raise ValueError("level must be scaled between 0-100.")
+
+        result = await self.command(
+            component_id,
+            Capability.window_shade_level,
+            Command.set_shade_level,
+            [level],
+        )
+        if result and set_status:
+            self.status.level = level
+            self.status.switch = level > 0
+        return result
 
     @property
     def status(self):

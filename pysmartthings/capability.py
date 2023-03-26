@@ -241,6 +241,7 @@ class Capability:
     washer_operating_state = "washerOperatingState"
     water_sensor = "waterSensor"
     window_shade = "windowShade"
+    window_shade_level = "windowShadeLevel"
 
 
 class Attribute:
