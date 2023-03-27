@@ -1693,3 +1693,24 @@ class TestDeviceStatus:
         assert status.power_consumption_energy_saved is None
         assert status.power_consumption_persisted_energy is None
         assert status.power_consumption_power_energy is None
+
+    @staticmethod
+    def test_shade_level():
+        """Tests the shade_level property."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act
+        status.shade_level = 50
+        # Assert
+        assert status.shade_level == 50
+
+    @staticmethod
+    def test_shade_level_range():
+        """Tests the shade_level property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.shade_level = value
