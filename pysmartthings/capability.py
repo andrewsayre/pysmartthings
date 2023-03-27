@@ -337,6 +337,7 @@ class Attribute:
     rssi = "rssi"
     saturation = "saturation"
     schedule = "schedule"
+    shade_level = "shadeLevel"
     smoke = "smoke"
     sound = "sound"
     st = "st"

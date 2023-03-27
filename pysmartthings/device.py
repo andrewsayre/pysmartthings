@@ -728,6 +728,18 @@ class DeviceStatusBase:
         """Get the trackDescription attribute."""
         return self._attributes["trackDescription"].value
 
+    @property
+    def shade_level(self) -> int:
+        """Get the shadeLevel attribute, scaled 0-100."""
+        return int(self._attributes[Attribute.shade_level].value or 0)
+
+    @shade_level.setter
+    def shade_level(self, value: int):
+        """Set the level of the attribute, scaled 0-100."""
+        if not 0 <= value <= 100:
+            raise ValueError("value must be scaled between 0-100.")
+        self.update_attribute_value(Attribute.shade_level, value)
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -1409,7 +1421,7 @@ class DeviceEntity(Entity, Device):
             [level],
         )
         if result and set_status:
-            self.status.level = level
+            self.status.shade_level = level
             self.status.switch = level > 0
         return result
 
