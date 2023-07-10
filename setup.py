@@ -24,7 +24,7 @@ setup(
     author_email="andrew@sayre.net",
     license="ASL 2.0",
     packages=find_packages(exclude=("tests*",)),
-    install_requires=["aiohttp>=3.8.0,<4.0.0"],
+    install_requires=["aiohttp>=3.8.4,<4.0.0"],
     tests_require=[],
     platforms=["any"],
     keywords="smartthings",
@@ -36,7 +36,7 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries",
         "Topic :: Home Automation",
-        "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
     ],
 )
