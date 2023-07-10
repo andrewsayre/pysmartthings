@@ -1,0 +1,10 @@
+{
+  "commands": [
+    {
+      "component": "main",
+      "capability": "windowShadeLevel",
+      "command": "setShadeLevel",
+      "arguments": [75]
+    }
+  ]
+}
