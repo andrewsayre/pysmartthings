@@ -10,12 +10,12 @@ jobs:
     name: "Package and Publish"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.11
-      - uses: actions/cache@v2
+          python-version: "3.11"
+      - uses: actions/cache@v3
         with:
           path: ${{ env.pythonLocation }}
           key: ${{ env.pythonLocation }}-${{ hashFiles('requirements.txt') }}-${{ hashFiles('test-requirements.txt') }}
