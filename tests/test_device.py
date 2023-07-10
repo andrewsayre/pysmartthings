@@ -26,8 +26,8 @@ class TestDevice:
         device = Device()
         # Assert
         assert device.type == DEVICE_TYPE_UNKNOWN
-        assert device.capabilities == []
-        assert device.components == {}
+        assert not device.capabilities
+        assert not device.components
 
     @staticmethod
     def test_apply_data():
@@ -1259,7 +1259,7 @@ class TestDeviceStatus:
         status = DeviceStatus(None, device_id=DEVICE_ID)
         # Assert
         assert status.device_id == DEVICE_ID
-        assert status.attributes == {}
+        assert not status.attributes
         assert not status.switch
         assert not status.motion
         assert status.level == 0

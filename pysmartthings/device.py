@@ -861,7 +861,7 @@ class DeviceEntity(Entity, Device):
         if color_hex:
             if not COLOR_HEX_MATCHER.match(color_hex):
                 raise ValueError(
-                    "color_hex was not a properly formatted " "color hex, i.e. #000000."
+                    "color_hex was not a properly formatted color hex, i.e. #000000."
                 )
             color_map["hex"] = color_hex
         else:
