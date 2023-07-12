@@ -147,6 +147,8 @@ CAPABILITIES_TO_ATTRIBUTES = {
     ],
     "waterSensor": ["water"],
     "windowShade": ["windowShade"],
+    "windowShadeLevel": ["shadeLevel"],
+    "windowShadePreset": ["presetPosition"],
 }
 CAPABILITIES = list(CAPABILITIES_TO_ATTRIBUTES)
 ATTRIBUTES = {
@@ -241,6 +243,8 @@ class Capability:
     washer_operating_state = "washerOperatingState"
     water_sensor = "waterSensor"
     window_shade = "windowShade"
+    window_shade_level = "windowShadeLevel"
+    window_shade_preset = "windowShadePreset"
 
 
 class Attribute:
@@ -327,6 +331,7 @@ class Attribute:
     power_consumption = "powerConsumption"
     power_source = "powerSource"
     presence = "presence"
+    preset_position = "presetPosition"
     progress = "progress"
     rapid_cooling = "rapidCooling"
     refrigeration_setpoint = "refrigerationSetpoint"
@@ -336,12 +341,14 @@ class Attribute:
     rssi = "rssi"
     saturation = "saturation"
     schedule = "schedule"
+    shade_level = "shadeLevel"
     smoke = "smoke"
     sound = "sound"
     st = "st"
     supported_ac_fan_modes = "supportedAcFanModes"
     supported_ac_modes = "supportedAcModes"
     supported_button_values = "supportedButtonValues"
+    supported_fan_oscillation_modes = "supportedFanOscillationModes"
     supported_input_sources = "supportedInputSources"
     supported_machine_states = "supportedMachineStates"
     supported_playback_commands = "supportedPlaybackCommands"

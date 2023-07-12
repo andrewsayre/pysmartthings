@@ -141,3 +141,10 @@ Devices with the `switchLevel` capability have the following function that sets 
     result = await device.set_level(75, 2)
     assert result == True
 ```
+
+Devices with the `windowShadeLevel` capability have the following function that sets the target shade level.
+
+```pythonstub
+    result = await device.set_window_shade_level(50)
+    assert result == True
+```

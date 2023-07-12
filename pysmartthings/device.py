@@ -67,6 +67,7 @@ class Command:
     set_saturation = "setSaturation"
     set_thermostat_fan_mode = "setThermostatFanMode"
     set_thermostat_mode = "setThermostatMode"
+    set_shade_level = "setShadeLevel"
     unlock = "unlock"
     mute = "mute"
     unmute = "unmute"
@@ -727,6 +728,18 @@ class DeviceStatusBase:
         """Get the trackDescription attribute."""
         return self._attributes["trackDescription"].value
 
+    @property
+    def shade_level(self) -> int:
+        """Get the shadeLevel attribute, scaled 0-100."""
+        return int(self._attributes[Attribute.shade_level].value or 0)
+
+    @shade_level.setter
+    def shade_level(self, value: int):
+        """Set the level of the attribute, scaled 0-100."""
+        if not 0 <= value <= 100:
+            raise ValueError("value must be scaled between 0-100.")
+        self.update_attribute_value(Attribute.shade_level, value)
+
 
 class DeviceStatus(DeviceStatusBase):
     """Define the device status."""
@@ -848,7 +861,7 @@ class DeviceEntity(Entity, Device):
         if color_hex:
             if not COLOR_HEX_MATCHER.match(color_hex):
                 raise ValueError(
-                    "color_hex was not a properly formatted " "color hex, i.e. #000000."
+                    "color_hex was not a properly formatted color hex, i.e. #000000."
                 )
             color_map["hex"] = color_hex
         else:
@@ -1389,6 +1402,28 @@ class DeviceEntity(Entity, Device):
         return await self.command(
             component_id, Capability.tv_channel, Command.channel_down
         )
+
+    async def set_window_shade_level(
+        self,
+        level: int,
+        set_status: bool = False,
+        *,
+        component_id: str = "main",
+    ) -> bool:
+        """Call the set shade level device command."""
+        if not 0 <= level <= 100:
+            raise ValueError("level must be scaled between 0-100.")
+
+        result = await self.command(
+            component_id,
+            Capability.window_shade_level,
+            Command.set_shade_level,
+            [level],
+        )
+        if result and set_status:
+            self.status.shade_level = level
+            self.status.switch = level > 0
+        return result
 
     @property
     def status(self):

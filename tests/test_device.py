@@ -26,8 +26,8 @@ class TestDevice:
         device = Device()
         # Assert
         assert device.type == DEVICE_TYPE_UNKNOWN
-        assert device.capabilities == []
-        assert device.components == {}
+        assert not device.capabilities
+        assert not device.components
 
     @staticmethod
     def test_apply_data():
@@ -1210,6 +1210,44 @@ class TestDeviceEntity:
         # Assert
         assert result
 
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_window_shade_level(api):
+        """Tests the set_window_shade_level method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_window_shade_level(75)
+        # Assert
+        assert result
+        assert device.status.level == 0
+        assert not device.status.switch
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_window_shade_level_invalid(api):
+        """Tests the set_window_shade_level method invalid values."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Assert level
+        levels = [-1, 101]
+        for level in levels:
+            with pytest.raises(ValueError):
+                await device.set_window_shade_level(level)
+
+    @staticmethod
+    @pytest.mark.asyncio
+    async def test_set_window_shade_level_update(api):
+        """Tests the set_window_shade_level method."""
+        # Arrange
+        device = DeviceEntity(api, device_id=DEVICE_ID)
+        # Act
+        result = await device.set_window_shade_level(75, True)
+        # Assert
+        assert result
+        assert device.status.shade_level == 75
+        assert device.status.switch
+
 
 class TestDeviceStatus:
     """Tests for the DeviceStatus class."""
@@ -1221,7 +1259,7 @@ class TestDeviceStatus:
         status = DeviceStatus(None, device_id=DEVICE_ID)
         # Assert
         assert status.device_id == DEVICE_ID
-        assert status.attributes == {}
+        assert not status.attributes
         assert not status.switch
         assert not status.motion
         assert status.level == 0
@@ -1655,3 +1693,24 @@ class TestDeviceStatus:
         assert status.power_consumption_energy_saved is None
         assert status.power_consumption_persisted_energy is None
         assert status.power_consumption_power_energy is None
+
+    @staticmethod
+    def test_shade_level():
+        """Tests the shade_level property."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act
+        status.shade_level = 50
+        # Assert
+        assert status.shade_level == 50
+
+    @staticmethod
+    def test_shade_level_range():
+        """Tests the shade_level property's range."""
+        # Arrange
+        status = DeviceStatus(None, device_id=DEVICE_ID)
+        # Act/Assert
+        values = [-1, 101]
+        for value in values:
+            with pytest.raises(ValueError):
+                status.shade_level = value

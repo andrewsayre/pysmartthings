@@ -177,9 +177,7 @@ class App:
     def app_type(self, value: str):
         """Set the app type."""
         if value not in (APP_TYPE_LAMBDA, APP_TYPE_WEBHOOK):
-            raise ValueError(
-                "value must be 'LAMBDA_SMART_APP' " "or 'WEBHOOK_SMART_APP'"
-            )
+            raise ValueError("value must be 'LAMBDA_SMART_APP' or 'WEBHOOK_SMART_APP'")
         self._app_type = value
 
     @property
