@@ -228,6 +228,13 @@ class DeviceStatusBase:
         )
 
     @property
+    def disabled_components(self) -> []:
+        """Get the list of disabled components for this device."""
+        if self._attributes.get("disabledComponents"):
+            return self._attributes["disabledComponents"].value
+        return []
+
+    @property
     def color(self) -> Optional[str]:
         """Get the color attribute."""
         return self._attributes[Attribute.color].value
