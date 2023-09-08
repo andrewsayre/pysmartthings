@@ -58,6 +58,16 @@ class TestDevice:
             "light",
         ]
         assert device.components == {
+            "main": [
+                "switch",
+                "switchLevel",
+                "refresh",
+                "indicator",
+                "sensor",
+                "actuator",
+                "healthCheck",
+                "light",
+            ],
             "bottomButton": ["button"],
             "topButton": ["button"],
         }

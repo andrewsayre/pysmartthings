@@ -122,8 +122,7 @@ class Device:
                 component_id = component["id"]
                 if component_id == "main":
                     self._capabilities.extend(capabilities)
-                else:
-                    self._components[component_id] = capabilities
+                self._components[component_id] = capabilities
 
         if self._type == DEVICE_TYPE_DTH:
             dth = data.get("dth")
