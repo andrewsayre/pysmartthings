@@ -58,6 +58,16 @@ class TestDevice:
             "light",
         ]
         assert device.components == {
+            "main": [
+                "switch",
+                "switchLevel",
+                "refresh",
+                "indicator",
+                "sensor",
+                "actuator",
+                "healthCheck",
+                "light",
+            ],
             "bottomButton": ["button"],
             "topButton": ["button"],
         }
@@ -1363,6 +1373,22 @@ class TestDeviceStatus:
             "DeviceWatch-DeviceStatus": (None, None, {}),
             "level": (100, "%", None),
         }
+
+    @staticmethod
+    def test_disabled_components():
+        """Test the disabled_components property."""
+        # Arrange
+        data = get_json("device_status.json")
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.disabled_components == []
+        # Arrange
+        data["components"]["main"]["custom.disabledComponents"] = {
+            "disabledComponents": {"value": ["SomeDisabledComponent"]}
+        }
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.disabled_components == ["SomeDisabledComponent"]
 
     @staticmethod
     def test_attributes_default():

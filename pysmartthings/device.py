@@ -122,8 +122,7 @@ class Device:
                 component_id = component["id"]
                 if component_id == "main":
                     self._capabilities.extend(capabilities)
-                else:
-                    self._components[component_id] = capabilities
+                self._components[component_id] = capabilities
 
         if self._type == DEVICE_TYPE_DTH:
             dth = data.get("dth")
@@ -227,6 +226,13 @@ class DeviceStatusBase:
         return defaultdict(
             lambda: None, {k: v.value for k, v in self._attributes.items()}
         )
+
+    @property
+    def disabled_components(self) -> []:
+        """Get the list of disabled components for this device."""
+        if self._attributes.get("disabledComponents"):
+            return self._attributes["disabledComponents"].value
+        return []
 
     @property
     def color(self) -> Optional[str]:
