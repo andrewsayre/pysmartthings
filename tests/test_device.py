@@ -1375,6 +1375,22 @@ class TestDeviceStatus:
         }
 
     @staticmethod
+    def test_disabled_components():
+        """Test the disabled_components property."""
+        # Arrange
+        data = get_json("device_status.json")
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.disabled_components == []
+        # Arrange
+        data["components"]["main"]["custom.disabledComponents"] = {
+            "disabledComponents": {"value": ["SomeDisabledComponent"]}
+        }
+        status = DeviceStatus(None, DEVICE_ID, data)
+        # Act/Assert
+        assert status.disabled_components == ["SomeDisabledComponent"]
+
+    @staticmethod
     def test_attributes_default():
         """Test the attributes property."""
         # Arrange
