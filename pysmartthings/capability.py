@@ -40,7 +40,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
         "dryerJobState",
         "completionTime",
     ],
-    "dustSensor": ["fineDustLevel", "dustLevel"],
+    "dustSensor": ["veryFineDustLevel", "fineDustLevel", "dustLevel"],
     "energyMeter": ["energy"],
     "equivalentCarbonDioxideMeasurement": ["equivalentCarbonDioxideMeasurement"],
     "execute": ["data"],
@@ -368,6 +368,7 @@ class Attribute:
     tvoc_level = "tvocLevel"
     ultraviolet_index = "ultravioletIndex"
     valve = "valve"
+    very_fine_dust_level = "veryFineDustLevel"
     vid = "vid"
     voltage = "voltage"
     volume = "volume"
