@@ -137,6 +137,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "tvocMeasurement": ["tvocLevel"],
     "ultravioletIndex": ["ultravioletIndex"],
     "valve": ["valve"],
+    "veryFineDustSensor": ["veryFineDustLevel"],
     "voltageMeasurement": ["voltage"],
     "washerMode": ["washerMode"],
     "washerOperatingState": [
