@@ -137,6 +137,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
     "tvocMeasurement": ["tvocLevel"],
     "ultravioletIndex": ["ultravioletIndex"],
     "valve": ["valve"],
+    "veryFineDustSensor": ["veryFineDustLevel"],
     "voltageMeasurement": ["voltage"],
     "washerMode": ["washerMode"],
     "washerOperatingState": [
@@ -238,6 +239,7 @@ class Capability:
     tvoc_measurement = "tvocMeasurement"
     ultraviolet_index = "ultravioletIndex"
     valve = "valve"
+    very_fine_dust_sensor = "veryFineDustSensor"
     voltage_measurement = "voltageMeasurement"
     washer_mode = "washerMode"
     washer_operating_state = "washerOperatingState"
@@ -368,6 +370,7 @@ class Attribute:
     tvoc_level = "tvocLevel"
     ultraviolet_index = "ultravioletIndex"
     valve = "valve"
+    very_fine_dust_level = "veryFineDustLevel"
     vid = "vid"
     voltage = "voltage"
     volume = "volume"
