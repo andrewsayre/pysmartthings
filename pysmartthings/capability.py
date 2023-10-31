@@ -41,6 +41,7 @@ CAPABILITIES_TO_ATTRIBUTES = {
         "completionTime",
     ],
     "dustSensor": ["fineDustLevel", "dustLevel"],
+    "veryFineDustSensor": ["veryFineDustLevel"],
     "energyMeter": ["energy"],
     "equivalentCarbonDioxideMeasurement": ["equivalentCarbonDioxideMeasurement"],
     "execute": ["data"],
@@ -187,6 +188,7 @@ class Capability:
     dryer_mode = "dryerMode"
     dryer_operating_state = "dryerOperatingState"
     dust_sensor = "dustSensor"
+    very_fine_dust_sensor = "veryFineDustSensor"
     energy_meter = "energyMeter"
     equivalent_carbon_dioxide_measurement = "equivalentCarbonDioxideMeasurement"
     execute = "execute"
@@ -278,6 +280,7 @@ class Attribute:
     dryer_job_state = "dryerJobState"
     dryer_mode = "dryerMode"
     dust_level = "dustLevel"
+    very_fine_dust_level = "veryFineDustLevel"
     energy = "energy"
     equivalent_carbon_dioxide_measurement = "equivalentCarbonDioxideMeasurement"
     fan_mode = "fanMode"
