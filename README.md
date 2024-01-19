@@ -27,12 +27,6 @@ The package is still in beta, but the following features are available:
 pip install pysmartthings
 ```
 
-or
-
-```commandline
-pip install --use-wheel pysmartthings
-```
-
 ## Usage
 
 ### Initialization
