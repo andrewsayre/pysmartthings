@@ -1,3 +1,5 @@
+`DEPRECATED:` This project is no longer maintained. If you are interested in taking over ownership, please contact me: andrew at sayre dot net.
+
 # pysmartthings
 
 [![CI Status](https://github.com/andrewsayre/pysmartthings/workflows/CI/badge.svg)](https://github.com/andrewsayre/pysmartthings/actions)
